@@ -1,0 +1,61 @@
+I want to set up RAG with my MongoDB Atlas
+
+
+Thinking (6 steps)
+MongoDB Atlas KB Agent
+(95%)
+Could not load agent 'MongoDB Atlas KB Agent'.
+
+
+Thinking (3 steps)
+MongoDB Atlas KB Agent
+(100%)
+Successfully connected to MongoDB Atlas!
+
+Upload document: workflows_document.pdf
+
+
+Thinking (10 steps)
+MongoDB Atlas KB Agent
+(100%)
+Successfully ingested 'workflows_document.pdf'!
+
+Text extracted: 1,123 characters
+Chunks created: 6
+Embeddings generated: 6
+Documents stored: 6
+Total chunks in collection: 30
+Vector search index: vector_index
+Files indexed: workflows_document.pdf
+You can now ask questions about the content, or upload more files!
+
+generate BPMN diagram for Loan Approval Workflow
+
+
+Thinking (11 steps)
+BPMN Generator Agent
+(95%)
+The BPMN 2.0 diagram represents a simplified loan approval workflow. The process begins with a Start Event, signifying the initiation of the workflow. The first task is "Receive Loan Application," followed by "Verify Applicant Details." Subsequently, a "Perform Creditworthiness Assessment" task is executed. Finally, the process involves "Evaluate Collateral (if any)" before reaching the End Event, marking the completion of the loan approval process.
+
+The process flow is sequential, with each task executed in order. There are no explicit decision points or parallel activities in this simplified representation. Each task represents a specific step in the loan approval process, contributing to the overall assessment and decision-making regarding the loan application. The sequence flows clearly define the order of execution, ensuring a structured and controlled workflow.
+
+BPMN Diagram
+Editable
+
+
+
+
+
+
+Click and drag elements to move them. Use the context menu (right-click) to add or delete elements.
+Receive Loan Application
+Verify Applicant Details
+Perform Creditworthiness Assessment
+Evaluate Collateral (if any)
+generate a BRD for the above
+
+
+Thinking (8 steps)
+BRD Generation Agent
+(95%)
+Error calling BRD Generation Agent: BRDGenerationAgent.process_query() got an unexpected keyword argument 'query'

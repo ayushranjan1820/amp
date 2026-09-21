@@ -1,0 +1,182 @@
+clone https://github.com/Biswanathdas1996/card-onboarding-sample
+
+
+Thinking (7 steps)
+GitHub Repo Agent
+(95%)
+Successfully cloned Biswanathdas1996/card-onboarding-sample!
+
+Repository Structure:
+
+├── api/
+│   ├── APIService.js
+│   ├── APIService_DB.js
+│   └── KYCModel.js
+├── db/
+│   ├── models/
+│   │   ├── CustomerModel.js
+│   │   └── KYCModel.js
+│   ├── config.js
+│   └── init.sql
+├── public/
+│   ├── images/
+│   └── index.html
+├── src/
+│   ├── api/
+│   │   ├── CustomerDataSubmission.js
+│   │   └── CustomerDataSubmission_DB.js
+│   ├── pages/
+│   │   ├── CustomerForm.js
+│   │   ├── KYCPage.css
+│   │   ├── KYCPage.js
+│   │   └── LandingPage.js
+│   ├── services/
+│   │   ├── FormValidator.js
+│   │   └── KYCEncryption.js
+│   ├── App.css
+│   ├── App.js
+│   └── index.js
+├── tests/
+│   ├── APIService.test.js
+│   ├── CustomerDataSubmission.test.js
+│   ├── Encryption.test.js
+│   ├── FormValidator.test.js
+│   ├── PANValidation.test.js
+│   └── Performance.test.js
+├── .gitignore
+├── .replit
+├── init-db.js
+├── package-lock.json
+├── package.json
+├── README.md
+├── server-debug.js
+└── server.js
+You can now ask me to:
+
+📝 Generate technical documentation (reverse engineering)
+🛠️ Extract the tech stack
+🏗️ Generate architecture/flow diagrams
+✨ Extract features
+✏️ Make code changes
+🚀 Push changes (requires GitHub token)
+Generate architecture/flow diagrams
+
+
+Thinking (9 steps)
+GitHub Repo Agent
+(95%)
+Successfully cloned Biswanathdas1996/card-onboarding-sample!
+
+Repository Structure:
+
+├── api/
+│   ├── APIService.js
+│   ├── APIService_DB.js
+│   └── KYCModel.js
+├── db/
+│   ├── models/
+│   │   ├── CustomerModel.js
+│   │   └── KYCModel.js
+│   ├── config.js
+│   └── init.sql
+├── public/
+│   ├── images/
+│   └── index.html
+├── src/
+│   ├── api/
+│   │   ├── CustomerDataSubmission.js
+│   │   └── CustomerDataSubmission_DB.js
+│   ├── pages/
+│   │   ├── CustomerForm.js
+│   │   ├── KYCPage.css
+│   │   ├── KYCPage.js
+│   │   └── LandingPage.js
+│   ├── services/
+│   │   ├── FormValidator.js
+│   │   └── KYCEncryption.js
+│   ├── App.css
+│   ├── App.js
+│   └── index.js
+├── tests/
+│   ├── APIService.test.js
+│   ├── CustomerDataSubmission.test.js
+│   ├── Encryption.test.js
+│   ├── FormValidator.test.js
+│   ├── PANValidation.test.js
+│   └── Performance.test.js
+├── .gitignore
+├── .replit
+├── init-db.js
+├── package-lock.json
+├── package.json
+├── README.md
+├── server-debug.js
+└── server.js
+You can now ask me to:
+
+📝 Generate technical documentation (reverse engineering)
+🛠️ Extract the tech stack
+🏗️ Generate architecture/flow diagrams
+✨ Extract features
+✏️ Make code changes
+🚀 Push changes (requires GitHub token)
+Generate architecture/flow diagrams
+
+
+Thinking (9 steps)
+GitHub Repo Agent
+(95%)
+Successfully cloned Biswanathdas1996/card-onboarding-sample!
+
+Repository Structure:
+
+├── api/
+│   ├── APIService.js
+│   ├── APIService_DB.js
+│   └── KYCModel.js
+├── db/
+│   ├── models/
+│   │   ├── CustomerModel.js
+│   │   └── KYCModel.js
+│   ├── config.js
+│   └── init.sql
+├── public/
+│   ├── images/
+│   └── index.html
+├── src/
+│   ├── api/
+│   │   ├── CustomerDataSubmission.js
+│   │   └── CustomerDataSubmission_DB.js
+│   ├── pages/
+│   │   ├── CustomerForm.js
+│   │   ├── KYCPage.css
+│   │   ├── KYCPage.js
+│   │   └── LandingPage.js
+│   ├── services/
+│   │   ├── FormValidator.js
+│   │   └── KYCEncryption.js
+│   ├── App.css
+│   ├── App.js
+│   └── index.js
+├── tests/
+│   ├── APIService.test.js
+│   ├── CustomerDataSubmission.test.js
+│   ├── Encryption.test.js
+│   ├── FormValidator.test.js
+│   ├── PANValidation.test.js
+│   └── Performance.test.js
+├── .gitignore
+├── .replit
+├── init-db.js
+├── package-lock.json
+├── package.json
+├── README.md
+├── server-debug.js
+└── server.js
+You can now ask me to:
+
+📝 Generate technical documentation (reverse engineering)
+🛠️ Extract the tech stack
+🏗️ Generate architecture/flow diagrams
+✨ Extract features
+✏️ Make code changes

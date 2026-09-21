@@ -1,0 +1,21 @@
+# Railway deployment configuration
+# Docs: https://docs.railway.com/reference/config-as-code
+#
+# This config targets the backend-only Dockerfile so that the Python/FastAPI
+# service builds without the heavy frontend npm step.
+# Deploy the frontend separately on Vercel or Netlify (see vercel.json).
+
+[build]
+builder = "dockerfile"
+# Use Dockerfile.backend (Python only — no npm/Vite build stage).
+# The full Dockerfile (with the frontend build stage) is kept as a fallback
+# for all-in-one deployments; rename this value to "Dockerfile" to use it.
+dockerfilePath = "Dockerfile.backend"
+
+[deploy]
+# Railway injects $PORT; the Dockerfile CMD picks it up automatically
+# Port 8080 is the application's listening port — must match EXPOSE and CMD fallback
+healthcheckPath = "/api/health"
+healthcheckTimeout = 300
+restartPolicyType = "ON_FAILURE"
+restartPolicyMaxRetries = 3

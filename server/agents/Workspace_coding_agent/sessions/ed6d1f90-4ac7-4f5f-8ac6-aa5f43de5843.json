@@ -1,0 +1,16 @@
+{
+  "repo_path": "C:\\Users\\daspa\\Desktop\\Projects\\Local LLM",
+  "repo_name": "Local LLM",
+  "cloned": true,
+  "modified_files": [],
+  "local_workspace": true,
+  "repo_url": null,
+  "cli_session_id": null,
+  "token_usage": {
+    "prompt_tokens": 0,
+    "completion_tokens": 0,
+    "calls": 0
+  },
+  "created_at": 1776156418.8946018,
+  "updated_at": 1776156418.8949857
+}

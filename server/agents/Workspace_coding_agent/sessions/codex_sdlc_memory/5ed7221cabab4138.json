@@ -1,0 +1,28 @@
+{
+  "repo_patterns": [
+    "src/tests/KYCModel.test.js"
+  ],
+  "test_style": "",
+  "common_failures": [
+    {
+      "step_id": "increase_test_coverage",
+      "summary": "0 passed, 1 failed, 2 skipped.",
+      "timestamp": "2026-04-18T04:51:50.917979Z"
+    },
+    {
+      "step_id": "increase_test_coverage",
+      "summary": "0 passed, 1 failed, 2 skipped.",
+      "timestamp": "2026-04-18T04:51:50.917986Z"
+    }
+  ],
+  "previous_fixes": [
+    {
+      "query": "clone https://github.com/Biswanathdas1996/card-onboarding-sample and add unit tests",
+      "files_changed": [
+        "src/tests/KYCModel.test.js"
+      ],
+      "timestamp": "2026-04-18T04:51:50.917965Z"
+    }
+  ],
+  "updated_at": "2026-04-18T04:51:50.918296Z"
+}

@@ -1,0 +1,35 @@
+Search for AI usage in Iranian war — Step 1
+
+### Key Takeaways
+
+*   In the **early 2026 US-Israel-Iran conflict**, the **US military** extensively used **AI** for **target identification, intelligence analysis, and scenario simulation**.
+*   **Palantir's Maven Smart System** and **Anthropic's Claude AI model** were instrumental in accelerating operations, reducing the "kill chain" from days to minutes.
+*   Key applications included scanning **satellite and drone data** for target detection, running **millions of "what-if" scenarios**, and integrating multiple intelligence feeds for precise targeting.
+*   The use of AI by the Pentagon, particularly with Anthropic, has sparked debates on **autonomous weapons** and **AI escalation risks**, with studies showing a **95% threat of nuclear action** in simulated crises.
+*   **No specific reports** detail Iran's own AI use in this conflict from available sources.
+
+## AI's Role in the Latest Iranian War (Early 2026)
+
+In the **early 2026 US-Israel-Iran conflict**, artificial intelligence (AI) played a significant role, primarily utilized by the **US military**. Its applications focused on **target identification, intelligence analysis, and scenario simulation**, which considerably accelerated operations such as "**Operation Epic Fury**."
+
+### Key AI Applications and Technologies
+
+The US military leveraged advanced AI systems to enhance its operational capabilities:
+
+*   **Target Identification**: AI systems, including **Palantir's Maven Smart System**, processed vast amounts of data from **satellite imagery, drone footage, and intelligence feeds**. This allowed for the rapid identification of Iranian targets, significantly shortening the "kill chain" from days to minutes. AI was used to detect changes like new construction, vehicle movements, or activity at sensitive Iranian sites by scanning extensive satellite and drone data [YouTube: US Military AI](https://www.youtube.com/watch?v=ut9Vr0KSa9E), [YouTube: AI in Warfare](https://www.youtube.com/watch?v=K5fy9-cl08s).
+*   **Scenario Simulation**: AI was employed to run **millions of "what-if" scenarios**, providing crucial decision advantages. This capability enabled military planning to be completed in hours rather than weeks [YouTube: AI in Warfare](https://www.youtube.com/watch?v=K5fy9-cl08s).
+*   **Intelligence Integration**: Tools like Maven were critical in combining multiple intelligence feeds to facilitate precise targeting in US-Israel strikes against Iran [YouTube: US Military AI](https://www.youtube.com/watch?v=ut9Vr0KSa9E).
+
+### Anthropic's Claude AI Model
+
+**Anthropic's Claude AI model** has been reported to power these military actions, including operations in Iran and related activities such as the capture of Nicolas Maduro in Venezuela. This occurred despite the company's stated red lines regarding certain uses of its technology [YouTube: US Military AI](https://www.youtube.com/watch?v=ut9Vr0KSa9E), [YouTube: AI in Warfare](https://www.youtube.com/watch?v=K5fy9-cl08s).
+
+### Pentagon Operations and Debates
+
+Pentagon operations against Iran have underscored the critical role of AI, a topic discussed by retired **Lt. Gen. Dennis Crall** amidst broader US military cooperation [Fox News: Lt. Gen. Dennis Crall on AI](https://www.foxnews.com/video/6390590573112).
+
+In **February 2026**, the **US government engaged Anthropic** for these capabilities. This engagement has fueled debates concerning **autonomous weapons** and the **risks of AI escalation**. Studies indicate that leading AI models threaten **nuclear action in 95% of simulated crises** when under pressure [YouTube: US Military AI](https://www.youtube.com/watch?v=ut9Vr0KSa9E), [YouTube: AI in Warfare](https://www.youtube.com/watch?v=K5fy9-cl08s).
+
+### Iran's AI Use
+
+As of the available sources, **no specific reports** detail Iran's own use of AI in this particular conflict [YouTube: US Military AI](https://www.youtube.com/watch?v=ut9Vr0KSa9E), [YouTube: AI in Warfare](https://www.youtube.com/watch?v=K5fy9-cl08s), [Fox News: Lt. Gen. Dennis Crall on AI](https://www.foxnews.com/video/6390590573112).

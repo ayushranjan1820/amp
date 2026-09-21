@@ -1,0 +1,121 @@
+“Meeting Preparation & Talking-Points Generator”
+Agent 1 — User Clarification Agent
+
+This agent interacts with the user to collect missing details for the meeting.
+
+Key Tasks
+
+Ask follow-up questions if the user hasn’t provided enough context
+
+Validate important criteria before proceeding
+
+Questions It Asks
+
+Who are you meeting? (Name, Role, Company)
+
+What is the purpose of the meeting?
+
+What industry/domain is this? (Banking, Tech, Healthcare, etc.)
+
+What outcome do you want? (Sales, Partnership, Strategy, Info gathering)
+
+What format? (In-person, call, pitch deck needed, etc.)
+
+Meeting date/urgency?
+
+Sample interaction
+User: “I am meeting the CFO of Bandhan Bank to discuss rural banking.”
+Agent asks:
+
+Which specific objectives do you have regarding rural banking?
+
+What’s your value proposition?
+
+Do you want data-driven insights, trends, competitive benchmarking, or recommendations?
+
+🔹 Agent 2 — Information Explorer Agent
+
+(This is the major data-gathering agent)
+
+Perplexity-style Web Search Plan
+
+Conduct independent searches on each relevant dimension:
+
+🔹 Dimension 1 — Person
+
+Who is the CFO?
+
+Background & expertise
+
+Recent interviews
+
+Latest activities/publications
+
+🔹 Dimension 2 — Company
+
+Bandhan Bank profile
+
+Recent news & announcements
+
+Latest strategy / investor presentations
+
+🔹 Dimension 3 — Topic
+
+What is rural banking?
+
+Market status (India, West Bengal)
+
+Major challenges & trends
+
+🔹 Dimension 4 — Specific Domain
+
+Rural banking at Bandhan Bank
+
+Financial reports / annual reports
+
+CSR initiatives
+
+Regulatory updates (RBI, NABARD, etc.)
+
+🔹 Dimension 5 — Forecast & Focus
+
+What are stated goals for growth?
+
+Digital transformation strategy
+
+Product expansion plans
+
+🔹 Agent 3 — Talking-Points Builder Agent
+
+This agent synthesizes all information into contextual, strategic talking points.
+
+Talking Point Categories
+🚀 1) Intelligent Warm Opening
+
+• “I saw that Bandhan Bank has been focusing on expanding deposits in tier-2 & rural markets — that aligns with my understanding of rural banking growth drivers.”
+• “I noticed your recent interview on financial inclusion; I’d love to hear more about your POV.”
+
+📊 2) Data-Backed Insights
+
+• “According to the latest RBI data, rural deposits have grown X% YOY — how do you see Bandhan’s positioning relative to peers?”
+• “I noticed Bandhan has a 15% share in micro-loans in rural segments — is that an area you’re planning to aggressively scale?”
+
+🧠 3) Strategy & Growth Opportunities
+
+• “With the shift toward mobile banking, what’s your strategy for digital outreach in rural areas?”
+• “Have you considered partnerships with fintechs to expand micro-lending responsibly?”
+
+💡 4) Sales-Oriented Value Add
+
+• “Given your push in rural banking, a data-analytics platform for customer segmentation could help optimize loan portfolios — would you be open to a pilot?”
+• “Our engagements with other banks show X% cost savings — can I show you how that might apply?”
+
+📌 5) Risk & Operational Challenges
+
+• “What’s been your biggest constraint in achieving scale in remote regions — distribution costs? credit risk? tech adoption?”
+• “How do you measure ROI for rural product deployments?”
+
+🌱 6) Future-Focused Innovation Points
+
+• “With AI/ML being key to financial services, how do you view its role in customer risk profiling for rural clients?”
+• “Any initiatives planned around digital-first rural banking offerings for 2026?”

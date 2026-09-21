@@ -1,0 +1,115 @@
+Create a modern, interactive AI Agents Platform with the following requirements:
+
+OVERVIEW:
+Build a full-stack web application that showcases and allows users to interact with multiple AI agents. The platform should have a sleek, modern UI with agent cards, interactive chat interfaces, and real-time testing capabilities.
+
+TECH STACK:
+- Frontend: React with TypeScript, Tailwind CSS for styling
+- Backend: Python Flask API
+- UI Components: Shadcn/ui or Material-UI for modern components
+- State Management: React Context or Zustand
+- Icons: Lucide React or React Icons
+
+FEATURES TO IMPLEMENT:
+
+1. LANDING PAGE:
+   - Hero section with platform title "AI Agents Platform"
+   - Grid display of available agents (2 agents initially: Basic Agent 🤖 and JIRA Agent 🎫)
+   - Each agent card should show: logo, name, description, status badge, capabilities list, and "Try Agent" button
+   - Responsive design (mobile, tablet, desktop)
+   - Dark mode toggle
+   - Filter/search functionality for agents
+
+2. AGENT DETAIL PAGE:
+   - Full agent information: capabilities, tools, LLM providers, configuration requirements
+   - Interactive "Test Agent" section with chat interface
+   - Tabbed interface: Overview, Tools, Configuration, Documentation, API Info
+   - Copy-to-clipboard for code snippets and API endpoints
+   - Visual indicators for required vs optional settings
+   - Credential management UI (mock - security warning displayed)
+
+3. INTERACTIVE CHAT INTERFACE:
+   - Chat window with message history
+   - Input field with send button
+   - Display agent responses with proper formatting
+   - Loading states and typing indicators
+   - Support for markdown rendering in responses
+   - Session management (maintain conversation context)
+   - Example prompts as quick-start buttons
+
+4. avialable BACKEND API :
+   
+POST {{baseUrl}}/api/basic-agent
+Content-Type: application/json
+
+{
+  "query": "what is the weather today in kolkata?",
+  "clear_history": false
+}
+
+### 2. JIRA Agent API
+
+POST {{baseUrl}}/api/jira-agent
+Content-Type: application/json
+
+{
+  "query": "what are the bugs",
+  "session_id": "user123-session"
+}
+### 3. Get All Agents Catalog
+
+GET {{baseUrl}}/api/agents
+
+### 4. Get Specific Agent Details - Basic Agent
+
+GET {{baseUrl}}/api/agents/basic_agent
+
+### 5. Get Specific Agent Details - JIRA Agent
+
+GET {{baseUrl}}/api/agents/jira_agent
+
+
+
+6. UI/UX REQUIREMENTS:
+   - Modern glassmorphism or neumorphism design
+   - Smooth animations and transitions
+   - Toast notifications for actions
+   - Loading skeletons
+   - Error states with helpful messages
+   - Accessible (ARIA labels, keyboard navigation)
+   - Color-coded status indicators (active=green, inactive=gray)
+
+7. ADDITIONAL FEATURES:
+   - Agent comparison view
+   - Usage statistics dashboard (mock data)
+   - API documentation viewer
+   - Export conversation history
+   - Share agent interactions
+   - Feedback/rating system for agents
+
+8. DATA SOURCE:
+   Use this agents catalog JSON structure for agent data:
+   - Load from agents_catalog.json file
+   - Parse metadata, capabilities, tools, configuration
+   - Display all relevant agent information
+   - Support for extensibility (easy to add new agents)
+
+9. STYLING GUIDELINES:
+   - Primary colors: Blue (#3B82F6) for actions, Purple (#8B5CF6) for accents
+   - Clean, spacious layout with plenty of whitespace
+   - Card-based design with subtle shadows
+   - Consistent typography hierarchy
+   - Agent logos displayed prominently (emoji or icon)
+   - Status badges with appropriate colors
+
+
+
+DELIVERABLES:
+1. Fully functional web application
+2. Responsive UI that works on all devices
+3. Working API endpoints
+4. Agent integration (with mock fallbacks if no credentials)
+5. Clean, well-commented code
+6. README with setup instructions
+
+Start by creating the project structure, then implement the landing page with agent cards, followed by the detail page and chat interface. Use the agents_catalog.json as the single source of truth for all agent information.

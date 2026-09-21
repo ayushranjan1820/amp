@@ -1,0 +1,15 @@
+{
+  "repo_patterns": [],
+  "test_style": "",
+  "common_failures": [],
+  "previous_fixes": [
+    {
+      "query": "clone https://github.com/Biswanathdas1996/card-onboarding-sample and add unit test",
+      "files_changed": [],
+      "timestamp": "2026-04-18T05:09:41.346185Z"
+    }
+  ],
+  "updated_at": "2026-04-18T05:09:41.346546Z",
+  "source_workspace_root": "C:\\Users\\daspa\\Desktop\\Projects\\Agents\\repos\\session-1776488956995\\Biswanathdas1996_card-onboarding-sample",
+  "isolated_workspace_mode": "git-clone"
+}

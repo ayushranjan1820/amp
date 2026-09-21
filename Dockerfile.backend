@@ -1,0 +1,61 @@
+# ─────────────────────────────────────────────────────────────────────────────
+# Backend-only Dockerfile — FastAPI / Python service.
+# Use this when the frontend is deployed separately (Vercel / Netlify / etc.).
+# Build command for Railway:
+#   Set "Dockerfile Path" to "Dockerfile.backend" in the Railway service settings.
+# ─────────────────────────────────────────────────────────────────────────────
+FROM python:3.11-slim
+
+# System packages:
+#   - Playwright/Chromium runtime dependencies
+#   - Tesseract for pytesseract, fonts, curl for healthchecks
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    # Playwright Chromium dependencies
+    libnss3 \
+    libatk1.0-0 \
+    libatk-bridge2.0-0 \
+    libcups2 \
+    libdrm2 \
+    libdbus-1-3 \
+    libxkbcommon0 \
+    libxcomposite1 \
+    libxdamage1 \
+    libxfixes3 \
+    libxrandr2 \
+    libgbm1 \
+    libasound2 \
+    libpango-1.0-0 \
+    libpangocairo-1.0-0 \
+    libgtk-3-0 \
+    libx11-xcb1 \
+    libxss1 \
+    fonts-liberation \
+    # Tesseract OCR (pytesseract)
+    tesseract-ocr \
+    # Utilities
+    curl \
+    && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /app
+
+# Install Python dependencies from pyproject.toml
+COPY pyproject.toml ./
+RUN pip install --no-cache-dir --upgrade pip setuptools wheel \
+    && pip install --no-cache-dir --no-build-isolation -e .
+
+# Install Playwright's bundled Chromium browser
+RUN python -m playwright install chromium
+
+# Copy source (no frontend dist needed — frontend is served by its own service)
+COPY server/ ./server/
+COPY prompts/ ./prompts/
+# frontend/public/images is served by the backend on the /images route
+# (api.py mounts it via StaticFiles). Do NOT remove this line.
+COPY frontend/public ./frontend/public
+
+# Railway injects $PORT at runtime (defaults to 8080 if not set)
+EXPOSE 8080
+
+WORKDIR /app/server
+
+CMD ["sh", "-c", "gunicorn --bind=0.0.0.0:${PORT:-8080} --workers=2 --timeout=120 --worker-class=uvicorn.workers.UvicornWorker api:app"]

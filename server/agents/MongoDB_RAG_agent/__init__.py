@@ -1,0 +1,1 @@
+"""MongoDB Atlas KB Agent"""

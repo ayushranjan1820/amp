@@ -1,0 +1,108 @@
+026-03-27 16:17:30.52
+78a068d3
+User
+~~~~~~~~~^^
+2026-03-27 16:17:30.52
+78a068d3
+User
+Traceback (most recent call last):
+2026-03-27 16:17:30.52
+78a068d3
+User
+~~~~~~~~~~~~~~~~~~~^^
+2026-03-27 16:17:30.52
+78a068d3
+User
+worker.init_process()
+2026-03-27 16:17:30.52
+78a068d3
+User
+[2026-03-27 10:47:30 +0000] [35] [ERROR] Exception in worker process
+2026-03-27 16:17:30.52
+78a068d3
+User
+File "/home/runner/workspace/.pythonlibs/lib/python3.13/site-packages/gunicorn/workers/base.py", line 148, in load_wsgi
+2026-03-27 16:17:30.52
+78a068d3
+User
+~~~~~~~~~~~~~~^^
+2026-03-27 16:17:30.52
+78a068d3
+User
+File "/home/runner/workspace/.pythonlibs/lib/python3.13/site-packages/gunicorn/app/wsgiapp.py", line 47, in load_wsgiapp
+2026-03-27 16:17:30.52
+78a068d3
+User
+File "/home/runner/workspace/.pythonlibs/lib/python3.13/site-packages/gunicorn/app/base.py", line 66, in wsgi
+2026-03-27 16:17:30.52
+78a068d3
+User
+self.wsgi = self.app.wsgi()
+2026-03-27 16:17:30.52
+78a068d3
+User
+~~~~~~~~~~~~~~~^^^^^^^^^^^^^^
+2026-03-27 16:17:30.52
+78a068d3
+User
+return self.load_wsgiapp()
+2026-03-27 16:17:30.52
+78a068d3
+User
+return util.import_app(self.app_uri)
+2026-03-27 16:17:30.52
+78a068d3
+User
+~~~~~~~~~~~~~^^
+2026-03-27 16:17:30.52
+78a068d3
+User
+~~~~~~~~~~~~~~~~~^^
+2026-03-27 16:17:30.52
+78a068d3
+User
+File "/home/runner/workspace/.pythonlibs/lib/python3.13/site-packages/gunicorn/workers/base.py", line 136, in init_process
+2026-03-27 16:17:30.52
+78a068d3
+User
+self.callable = self.load()
+2026-03-27 16:17:30.52
+78a068d3
+User
+File "/home/runner/workspace/.pythonlibs/lib/python3.13/site-packages/gunicorn/arbiter.py", line 708, in spawn_worker
+2026-03-27 16:17:30.52
+78a068d3
+User
+self.load_wsgi()
+2026-03-27 16:17:30.52
+78a068d3
+User
+File "/home/runner/workspace/.pythonlibs/lib/python3.13/site-packages/gunicorn/app/wsgiapp.py", line 57, in load
+2026-03-27 16:17:34.51
+78a068d3
+User
+return self.load_wsgiapp()
+2026-03-27 16:17:34.51
+78a068d3
+User
+~~~~~~~~~~~~~^^
+2026-03-27 16:17:34.51
+78a068d3
+User
+return util.import_app(self.app_uri)
+2026-03-27 16:17:34.51
+78a068d3
+User
+~~~~~~~~~~~~~~~~~^^
+2026-03-27 16:17:34.51
+78a068d3
+User
+self.callable = self.load()
+2026-03-27 16:17:34.51
+78a068d3
+User
+~~~~~~~~~~~~~~~^^^^^^^^^^^^^^
+2026-03-27 16:17:34.51
+78a068d3
+User
+~~~~~~~~~^^

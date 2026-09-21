@@ -1,0 +1,58 @@
+{
+  "repo_url": "https://github.com/Biswanathdas1996/workshop-boilerplate-online-food-ordering-system",
+  "repo_name": "workshop-boilerplate-online-food-ordering-system",
+  "language": "typescript",
+  "file_tree": "  .env.example\n  .gitignore\n  README.md\n  features.csv\n  setup.bat\n  start.bat\n  backend/\n    requirements.txt\n    app/\n      __init__.py\n      main.py\n  frontend/\n    index.html\n    package-lock.json\n    package.json\n    tsconfig.json\n    tsconfig.node.json\n    tsconfig.node.tsbuildinfo\n    tsconfig.tsbuildinfo\n    vite.config.d.ts\n    vite.config.js\n    vite.config.ts\n    src/\n      App.tsx\n      main.tsx\n      styles.css\n      vite-env.d.ts",
+  "key_files_text": "--- README.md ---\n# Boilerplate App\n\nA minimal full-stack starter with a React frontend, a Python FastAPI backend, and MongoDB connectivity.\n\n## What it shows\n- Frontend active\n- Backend connected\n- Database connected\n\n## Structure\n- `frontend/` - React + Vite UI\n- `backend/` - FastAPI API and MongoDB health check\n\n## Environment\n- `FRONTEND_PORT` controls the Vite dev server port\n- `BACKEND_PORT` controls the FastAPI server port\n- `MONGODB_URI` controls the database connection\n\n## Setup\n1. Run `setup.bat` from the repository root.\n2. Make sure `.env` contains `MONGODB_URI`, `FRONTEND_PORT`, and `BACKEND_PORT`.\n\n## Run\nRun `start.bat` from the repository root.\n\nThe frontend proxy automatically points to the backend port from `.env`.\n",
+  "refreshed_at": "2026-05-13T10:36:57.295196+00:00",
+  "run_notes": [
+    {
+      "at": "2026-05-12T20:02:23.164826+00:00",
+      "summary": "Perfect! I've successfully implemented a comprehensive end-to-end online food ordering system with all 18 requested features. Here's a summary of what was built:\n\n## Summary of Changes\n\n### Backend (FastAPI + MongoDB)\n**Modified/Created Files:**\n- `backend/requirements.txt` - Added dependencies for JWT, OAuth, WebSockets, Stripe, PDF generation\n- `backend/app/models.py` (NEW) - Complete data models for User, MenuItem, Category, Cart, Order, Invoice, RestaurantProfile, Venue, Notification with enums for roles, statuses, and preferences\n- `backend/app/auth.py` (NEW) - Authentication utilities in",
+      "changed_files": [
+        ".env.example",
+        "backend\\app\\auth.py",
+        "backend\\app\\main.py",
+        "backend\\app\\models.py",
+        "backend\\requirements.txt",
+        "frontend\\package.json",
+        "frontend\\src\\App.tsx",
+        "frontend\\src\\contexts\\AuthContext.tsx",
+        "frontend\\src\\contexts\\CartContext.tsx",
+        "frontend\\src\\styles.css",
+        "manual_test_cases\\test_cases_20260513-000000.csv"
+      ],
+      "cost_usd": 1.4118,
+      "duration_seconds": 695.9
+    },
+    {
+      "at": "2026-05-13T10:47:20.493270+00:00",
+      "summary": "## Summary\n\nI've successfully implemented a comprehensive end-to-end food ordering system with all 18 requested features from the JIRA tickets (KAN-442 to KAN-465). Here's what was built:\n\n### Backend Changes (FastAPI + MongoDB):\n1. **Updated** `backend/requirements.txt` - Added JWT, OAuth, PDF generation, and validation libraries\n2. **Created** `backend/app/models.py` - Complete Pydantic models for all entities (User, MenuItem, Cart, Order, Invoice, Notification, Venue, RestaurantProfile)\n3. **Created** `backend/app/auth.py` - JWT authentication, password hashing, and RBAC middleware\n4. **Cre",
+      "changed_files": [
+        ".env.example",
+        "FEATURES.md",
+        "backend\\app\\auth.py",
+        "backend\\app\\database.py",
+        "backend\\app\\main.py",
+        "backend\\app\\models.py",
+        "backend\\requirements.txt",
+        "frontend\\package.json",
+        "frontend\\src\\App.tsx",
+        "frontend\\src\\api.ts",
+        "frontend\\src\\context\\AuthContext.tsx",
+        "frontend\\src\\pages\\AdminDashboard.tsx",
+        "frontend\\src\\pages\\Cart.tsx",
+        "frontend\\src\\pages\\Checkout.tsx",
+        "frontend\\src\\pages\\Login.tsx",
+        "frontend\\src\\pages\\Menu.tsx",
+        "frontend\\src\\pages\\MenuManagement.tsx",
+        "frontend\\src\\pages\\Orders.tsx",
+        "frontend\\src\\pages\\Register.tsx",
+        "frontend\\src\\styles.css",
+        "manual_test_cases\\test_cases_20260513-103700.csv"
+      ],
+      "cost_usd": 1.303,
+      "duration_seconds": 616.2
+    }
+  ]
+}

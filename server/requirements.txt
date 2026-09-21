@@ -1,0 +1,83 @@
+# Core web framework
+fastapi>=0.109.0
+uvicorn[standard]>=0.27.0
+gunicorn>=21.2.0
+pydantic>=2.0.0
+pydantic-settings>=2.0.0
+python-dotenv>=1.0.0
+
+# HTTP clients
+httpx>=0.25.0
+requests>=2.31.0
+langfuse>=2.0.0
+
+# Anthropic SDK (Claude Code Agent — review/validation pass)
+anthropic>=0.92.0
+
+# LangChain dependencies
+langchain-classic>=1.0.0
+langchain-core>=1.2.8
+
+# Database (MongoDB — core platform; SQLAlchemy + drivers for SQL DB Agent user databases)
+pymongo>=4.6.0
+motor>=3.4.0
+sqlalchemy>=2.0.0
+psycopg2-binary>=2.9.9
+pymysql>=1.1.0
+
+# Authentication
+bcrypt>=4.1.0
+PyJWT>=2.8.0
+cryptography>=42.0.0
+
+# Web scraping & parsing
+beautifulsoup4>=4.12.0
+lxml>=6.0.2
+
+# Search
+duckduckgo-search>=8.1.1
+# Perplexity Search API (module `perplexity` — PPT Generator, Meeting Prep, Company Research, etc.)
+perplexityai>=0.27.0
+
+# Document processing
+pypdf>=3.17.1
+python-docx>=1.1.0
+openpyxl>=3.1.0
+python-pptx>=0.6.21
+reportlab>=4.0.9
+
+# Embeddings & vector search (lazy-loaded, optional for MongoDB RAG Agent)
+fastembed>=0.7.4
+openai>=1.51.0
+numpy>=1.24.0
+
+# Token management
+tiktoken>=0.7.0
+
+# Email
+resend>=2.21.0
+
+# Configuration
+PyYAML>=6.0
+nest-asyncio>=1.5.0
+
+# MCP (Model Context Protocol): Streamable HTTP at /mcp, legacy SSE at /mcp/sse (Cursor/VS Code)
+mcp[cli]>=1.0.0
+
+# Chroma Cloud client (Knowledge base agent)
+chromadb>=1.0.0
+
+# Knowledge base agent — enterprise RAG pipeline (optional, lazy-loaded)
+cohere>=5.0.0                   # Cohere Rerank API (optional: KB_RERANKER_PROVIDER=cohere)
+redis>=5.0.0                    # Redis cache & session store (optional: KB_CACHE_BACKEND=redis)
+pytesseract>=0.3.10             # OCR for scanned docs/images (optional: KB_OCR_ENABLED=true)
+PyMuPDF>=1.24.0                 # PDF image extraction & OCR rendering (optional: KB_VISION_ENABLED=true)
+sentence-transformers>=3.0.0    # Cross-encoder reranking (optional: KB_RERANKER_PROVIDER=cross-encoder)
+
+# Workflow memory (mem0 cloud) — enables per-workflow memory toggle.
+# API key read from MEMO_GRAPH_MEMEORY_API_KEY in .env.
+mem0ai>=0.1.0
+
+# Test dependencies (agent unit tests; not needed at runtime)
+pytest>=8.0.0
+pytest-asyncio>=0.24.0

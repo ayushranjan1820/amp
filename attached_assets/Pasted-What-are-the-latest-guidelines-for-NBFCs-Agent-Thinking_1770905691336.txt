@@ -1,0 +1,75 @@
+What are the latest guidelines for NBFCs?
+
+
+Agent Thinking Process (8 steps)
+Thinking
+🔍 Analyzing query intent: 'What are the latest guidelines for NBFCs?'
+Thinking
+🎯 Decision: SEARCH - No previous conversation history
+Thinking
+🔎 Initiating RBI website search
+Calling: perplexity_search
+Query: What are the latest guidelines for NBFCs?, Domain: https://www.rbi.org.in/
+Searching RBI website via Perplexity API for relevant documents
+Result from perplexity_search
+✅ Found 2 relevant documents from RBI website
+Thinking
+🤖 Analyzing documents with PWC LLM to extract key points and insights
+Calling: pwc_llm_analyzer
+Processing 2 RBI documents
+Summarizing and extracting key points from 2 documents
+Result from pwc_llm_analyzer
+✅ Successfully analyzed and formatted RBI documents
+🏦 RBI Circular Analysis Report
+Query: What are the latest guidelines for NBFCs? Source: Reserve Bank of India Official Website
+Here's an analysis of the provided RBI documents regarding the latest guidelines for NBFCs, as of February 2026:
+
+Based on the provided documents, here are the latest guidelines for NBFCs from late 2025 and earlier:
+
+I. Recent RBI Circulars Related to NBFCs (Late 2025):
+
+The following circulars from late 2025 may be relevant, although they are not specifically targeted at NBFCs, but rather at banks and other financial institutions, and may have implications for NBFC operations:
+
+📅 Publish Date: October 1, 2025
+RBI/2025-26/89 A.P. (DIR Series) Circular No.12 - Export Data Processing and Monitoring System (EDPMS) & Import Data Processing and Monitoring System (IDPMS) – reconciliation of export /import entries – Review of Guidelines This circular pertains to the reconciliation of export/import entries under EDPMS and IDPMS and is meant for All Authorised Dealer Category-I Banks.
+📅 Publish Date: October 1, 2025
+RBI/2025-26/88 A.P. (DIR Series) Circular No. 11 - Merchanting Trade Transactions (MTT) – Review of time period for outlay of foreign exchange This circular reviews the time period for outlay of foreign exchange in Merchanting Trade Transactions (MTT) and is meant for All Authorised Dealer Category-I Banks.
+📅 Publish Date: September 29, 2025
+RBI/2025-26/87 DOR.CAP.REC.No.55/21.01.002/2025-26 - Reserve Bank of India (Basel III Capital Regulations - Perpetual Debt Instruments (PDI) in Additional Tier 1 Capital – Eligible Limit for Instruments Denominated in Foreign Currency/Rupee Denominated Bonds Overseas) Directions, 2025 This circular relates to Basel III Capital Regulations and the eligible limit for Perpetual Debt Instruments (PDI) in Additional Tier 1 Capital for Payments Banks.
+📅 Publish Date: September 29, 2025
+RBI/2025-26/86 DOR.CAP.REC.No.54/21.01.002/2025-26 - Reserve Bank of India (Basel III Capital Regulations - Perpetual Debt Instruments (PDI) in Additional Tier 1 Capital – Eligible Limit for Instruments Denominated in Foreign Currency/Rupee Denominated Bonds Overseas) Directions, 2025 This circular relates to Basel III Capital Regulations and the eligible limit for Perpetual Debt Instruments (PDI) in Additional Tier 1 Capital for Small Finance Banks.
+📅 Publish Date: September 29, 2025
+RBI/2025-26/85 DOR.CAP.REC.No.53/21.01.002/2025-26 - Reserve Bank of India (Basel III Capital Regulations - Perpetual Debt Instruments (PDI) in Additional Tier 1 Capital – Eligible Limit for Instruments Denominated in Foreign Currency/Rupee Denominated Bonds Overseas) Directions, 2025 This circular relates to Basel III Capital Regulations and the eligible limit for Perpetual Debt Instruments (PDI) in Additional Tier 1 Capital for Scheduled Commercial Banks (Excluding Small Finance Banks, Payments Banks and Regional Rural Banks).
+📅 Publish Date: September 29, 2025
+RBI/2025-26/84 DOR.CRE.REC.52/21.01.023/2025-26 - Reserve Bank of India (Lending Against Gold and Silver Collateral) – (1st Amendment) Directions, 2025 This circular relates to lending against gold and silver collateral.
+📅 Publish Date: September 29, 2025
+RBI/2025-26/83 DOR.CRE.REC.51/13.03.00/2025-26 - Reserve Bank of India (Interest Rate on Advances) (Amendment Directions), 2025 This circular relates to Interest Rate on Advances.
+II. Master Direction – Reserve Bank of India (Non-Banking Financial Company – Scale Based Regulation) Directions, 2023:
+
+This Master Direction provides a comprehensive framework for the regulation of NBFCs based on a scale-based approach. While not the "latest" in the context of February 2026, it is a crucial document for understanding NBFC regulations.
+
+📅 Publish Date: October 19, 2023 (Updated as on March 21, 2024 and November 10, 2023)
+Master Direction – Reserve Bank of India (Non-Banking Financial Company – Scale Based Regulation) Directions, 2023
+Key Points from the Master Direction:
+
+Scale-Based Regulatory Structure: The regulatory structure for NBFCs comprises four layers: Base Layer (NBFCs-BL), Middle Layer (NBFCs-ML), Upper Layer (NBFCs-UL), and Top Layer (NBFCs-TL) (Master Direction – Reserve Bank of India (Non-Banking Financial Company – Scale Based Regulation) Directions, 2023).
+Base Layer Composition: The Base Layer includes non-deposit taking NBFCs with an asset size below ₹1,000 crore and NBFCs undertaking specific activities like Peer-to-Peer lending (Master Direction – Reserve Bank of India (Non-Banking Financial Company – Scale Based Regulation) Directions, 2023).
+Middle Layer Inclusion: NBFC-D, CIC, NBFC-IFC, and HFC will be included in the Middle Layer or Upper Layer, as applicable. SPD and IDF-NBFC will always remain in the Middle Layer (Master Direction – Reserve Bank of India (Non-Banking Financial Company – Scale Based Regulation) Directions, 2023).
+Upper Layer Identification: The Upper Layer will consist of NBFCs specifically identified by the Reserve Bank as warranting enhanced regulatory requirements based on a scoring methodology (Master Direction – Reserve Bank of India (Non-Banking Financial Company – Scale Based Regulation) Directions, 2023).
+Applicability: The provisions of these Directions apply to various categories of NBFCs registered with the Reserve Bank, including NBFC-D, NBFC-ICC, NBFC-Factor, NBFC-MFI, NBFC-IFC, and IDF-NBFC (Master Direction – Reserve Bank of India (Non-Banking Financial Company – Scale Based Regulation) Directions, 2023).
+Regulations for Multiple NBFCs in a Group: The total assets of all NBFCs in a Group shall be consolidated to determine the threshold for their classification in the Middle Layer (Master Direction – Reserve Bank of India (Non-Banking Financial Company – Scale Based Regulation) Directions, 2023).
+III. Conclusion:
+
+Based on the provided documents and the current date context of February 2026, there are no specific circulars from 2026 available in the provided data. The most recent circulars directly related to NBFCs are from late 2025, with the Master Direction from October 2023 (updated in March and November 2024) providing the overarching regulatory framework. For the absolute latest guidelines, it is recommended to consult the RBI website directly using targeted searches.
+
+📚 Source Documents
+Index to RBI Circulars - RBI
+
+📅 Published: 2022-11-23
+RESERVE BANK OF INDIA
+
+📅 Published: None
+ℹ️ Disclaimer
+All information is sourced from the official RBI website (https://www.rbi.org.in/). Please refer to the original documents for complete and authoritative information. This summary is generated using AI and should be verified with official sources.
+
+🔗 Visit RBI Website | Search RBI Circulars

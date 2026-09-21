@@ -1,0 +1,170 @@
+relevance_check: |
+  Given the following user query and JIRA search results, identify which ticket keys are most relevant.
+  Return ONLY a comma-separated list of ticket keys (e.g., "PROJ-1, PROJ-5, PROJ-8").
+  If none are relevant, return "NONE".
+
+  User query: {user_prompt}
+
+  Search results:
+  {tickets_summary}
+
+  Relevant ticket keys:
+
+search_analysis: |
+  Analyze the following JIRA search results in context of the user's query.
+  Provide a clear, helpful summary of the results.
+
+  User query: {user_prompt}
+
+  Search results:
+  {tickets_summary}
+
+  Provide a well-formatted response summarizing these results for the user.
+
+analyze_search_results: |
+  Analyze the following JIRA search results and provide a helpful summary for the user.
+
+  User query: {user_prompt}
+
+  Search results:
+  {tickets_summary}
+
+  Context: {context_info}
+  {history_context}
+
+  Instructions:
+  - Summarize the results clearly
+  - Highlight key tickets and their statuses
+  - Note any patterns or trends
+  {history_note}
+
+  Provide a well-formatted response:
+
+extract_simple_ticket_data: |
+  Extract ticket creation data from the user's message. Return ONLY valid JSON:
+  {{
+    "summary": "ticket summary",
+    "description": "detailed description",
+    "issue_type": "Task|Bug|Story|Epic",
+    "priority": "High|Medium|Low|Highest|Lowest"
+  }}
+
+  User message: {user_prompt}
+
+  JSON:
+
+extract_conversation_ticket_data: |
+  Extract ticket creation data from the conversation. Return ONLY valid JSON:
+  {{
+    "summary": "ticket summary",
+    "description": "detailed description",
+    "issue_type": "Task|Bug|Story|Epic",
+    "priority": "High|Medium|Low|Highest|Lowest",
+    "assignee": null,
+    "labels": []
+  }}
+
+  Conversation history:
+  {conversation_history}
+
+  Latest message: {user_prompt}
+
+  Previously collected data: {collected_data}
+
+  Context: {context_info}
+
+  JSON:
+
+extract_simple_update_details: |
+  Extract update details from the user's message for ticket {ticket_key}. Return ONLY valid JSON
+  with double-quoted keys and strings (no markdown fences). Use this flat shape — omit keys you are not updating:
+  {{
+    "ticket_key": "{ticket_key}",
+    "status": null,
+    "priority": null,
+    "summary": null,
+    "description": null,
+    "labels": null,
+    "comment": null
+  }}
+
+  User message: {user_prompt}
+
+  JSON:
+
+extract_update_details: |
+  Extract update details from the conversation. Return ONLY valid JSON with double-quoted keys and strings.
+  Use this flat shape — omit keys you are not updating:
+  {{
+    "ticket_key": "PROJ-123",
+    "status": null,
+    "priority": null,
+    "summary": null,
+    "description": null,
+    "labels": null,
+    "comment": null
+  }}
+
+  Conversation history:
+  {conversation_history}
+
+  Latest message: {user_prompt}
+
+  Previously collected data: {collected_data}
+
+  Ticket context: {ticket_context}
+
+  JSON:
+
+enhance_description: |
+  Enhance the following JIRA ticket description using relevant knowledge base content.
+  Create a professional, well-structured description in Markdown format.
+
+  Issue type: {issue_type}
+  Summary: {summary_text}
+
+  Knowledge base content:
+  {kb_content}
+
+  Generate an enhanced description with proper sections (Overview, Details, Requirements, Acceptance Criteria as appropriate).
+
+build_codebase_ticket_description: |
+  Build a JIRA ticket description in Markdown using the provided codebase context.
+
+  You MUST include these exact sections and headings:
+  ## Technical Details
+  ## Related Files and Folders
+  ## Implementation Steps
+  ## Acceptance Criteria
+  ## Definition of Done
+
+  Requirements:
+  - Use only facts available in User Request, Existing Description, and Codebase Context.
+  - Do not invent files, APIs, classes, or behavior that are not present in Codebase Context.
+  - Under "Related Files and Folders", list concrete paths from the context when available.
+  - Under "Implementation Steps", provide ordered actionable steps.
+  - Under "Acceptance Criteria", provide testable outcomes.
+  - Under "Definition of Done", include quality gates (tests, review, validation).
+  - Output Markdown only (no JSON, no explanation, no preamble).
+
+  Issue type: {issue_type}
+  Summary: {summary_text}
+  User Request: {user_prompt}
+  Existing Description: {existing_description}
+
+  Codebase Context:
+  {codebase_context}
+
+  Markdown Description:
+
+extract_search_query: |
+  The user is reporting an issue or problem. Extract a concise search query to find related JIRA tickets.
+  Return ONLY valid JSON:
+  {{
+    "search_query": "keywords to search for related tickets",
+    "issue_summary": "brief summary of the user's issue"
+  }}
+
+  User message: {message}
+
+  JSON:

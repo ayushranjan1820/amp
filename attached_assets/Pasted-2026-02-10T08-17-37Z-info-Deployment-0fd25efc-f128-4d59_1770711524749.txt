@@ -1,0 +1,85 @@
+2026-02-10T08:17:37Z info: Deployment: 0fd25efc-f128-4d59-b3d6-93aed425ce70
+2026-02-10T08:17:37Z info: Running Security Scan
+2026-02-10T08:18:24Z info: Security Scan Complete
+2026-02-10T08:18:24Z info: Connecting to builder
+2026-02-10T08:18:24Z info: Builder connected
+2026-02-10T08:18:24Z info: Installing packages
+--> npm install
+
+
+up to date, audited 125 packages in 644ms
+
+
+found 0 vulnerabilities
+
+npm notice
+npm notice New major version of npm available! 10.8.2 -> 11.9.0
+npm notice Changelog: https://github.com/npm/cli/releases/tag/v11.9.0
+npm notice To update run: npm install -g npm@11.9.0
+npm notice
+
+--> uv lock
+
+--> uv lock
+
+Resolved 66 packages in 761ms
+
+Resolved 66 packages in 761ms
+
+--> uv sync
+
+Resolved 66 packages in 0.80ms
+
+Prepared 7 packages in 111ms
+
+Prepared 7 packages in 111ms
+
+Uninstalled 57 packages in 888ms
+
+Uninstalled 57 packages in 888ms
+
+Installed 8 packages in 23ms
+
+ - 
+aiosignal==
+.0
+.67.3
+ - typer-slim==0.21.1
+ -
+ typing-inspect==0.9.0
+ - yarl==1.22
+2026-02-10T08:18:27Z info: Starting Build
+npm <command>
+
+Usage:
+
+npm install        install all the dependencies in your project
+npm install <foo>  add the <foo> dependency to your project
+npm test           run this project's tests
+npm run <foo>      run the script named <foo>
+npm <command> -h   quick help on <command>
+npm -l             display usage info for all commands
+npm help <term>    search for help on <term>
+npm help npm       more involved overview
+
+All commands:
+
+    access, adduser, audit, bugs, cache, ci, completion,
+    config, dedupe, deprecate, diff, dist-tag, docs, doctor,
+    edit, exec, explain, explore, find-dupes, fund, get, help,
+    help-search, hook, init, install, install-ci-test,
+    install-test, link, ll, login, logout, ls, org, outdated,
+    owner, pack, ping, pkg, prefix, profile, prune, publish,
+    query, rebuild, repo, restart, root, run-script, sbom,
+    search, set, shrinkwrap, star, stars, start, stop, team,
+    test, token, uninstall, unpublish, unstar, update, version,
+    view, whoami
+
+Specify configs in the ini-formatted file:
+    /home/runner/.npmrc
+or on the command line via: npm <command> --key=value
+
+More configuration info: npm help config
+Configuration fields: npm help 7 config
+
+npm@10.8.2 /nix/store/jfar9wnj6kvr0gr6klh1gk7vgckkfr5j-nodejs-20.20.0/lib/node_modules/npm

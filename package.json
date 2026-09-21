@@ -1,0 +1,26 @@
+{
+  "name": "workspace",
+  "version": "1.0.0",
+  "scripts": {
+    "build": "cd frontend && npm install && npm run build",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "@bpmn-io/properties-panel": "^3.38.0",
+    "@stackblitz/sdk": "^1.11.0",
+    "bpmn-js": "^18.11.0",
+    "bpmn-js-properties-panel": "^5.50.0",
+    "react-simple-maps": "^3.0.0",
+    "recharts": "^3.7.0",
+    "remark-gfm": "^4.0.1",
+    "sql-formatter": "^15.7.2"
+  },
+  "devDependencies": {
+    "@types/jest": "^30.0.0",
+    "jest": "^30.3.0"
+  }
+}

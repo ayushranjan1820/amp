@@ -1,0 +1,18 @@
+{
+  "repo_path": "C:\\Users\\daspa\\Desktop\\Projects\\Agents\\repos\\session-wf-522d9eb4-d5cb-4622-9ddf-350024f50d6d\\Biswanathdas1996_freelance-web-app-demo",
+  "repo_name": "Biswanathdas1996_freelance-web-app-demo",
+  "cloned": true,
+  "modified_files": [],
+  "local_workspace": true,
+  "repo_url": "https://github.com/Biswanathdas1996/freelance-web-app-demo",
+  "cli_session_id": null,
+  "token_usage": {
+    "prompt_tokens": 0,
+    "completion_tokens": 0,
+    "calls": 0
+  },
+  "created_at": 1777830795.316885,
+  "updated_at": 1777830797.7559588,
+  "repo_branch": "main",
+  "head_sha": "ae06b9d23e1a8c34d1c1d962b82c379c3e97f4ab"
+}

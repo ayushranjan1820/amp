@@ -1,0 +1,85 @@
+2026-05-03T09:02:33Z info: Deployment: 0fd25efc-f128-4d59-b3d6-93aed425ce70
+2026-05-03T09:02:33Z info: Build: 0a90ee53-9859-4890-af3b-0e47aae03824
+2026-05-03T09:02:35Z info: Running Security Scan
+2026-05-03T09:07:36Z info: Running Security Scan
+2026-05-03T09:07:41Z info: Security Scan Complete
+2026-05-03T09:07:46Z info: Installing packages
+--> npm install
+
+2026-05-03T09:07:47Z info: Security Scan Complete
+npm warn deprecated inflight@1.0.6: This module is not supported, and leaks memory. Do not use it. Check out lru-cache if you want a good and tested way to coalesce async requests by a key value, which is much more comprehensive and powerful.
+
+npm warn deprecated glob@7.2.3: Old versions of glob are not supported, and contain widely publicized security vulnerabilities, which have been fixed in the current version. Please update. Support for old versions may be purchased (at exorbitant rates) by contacting i@izs.me
+
+npm warn deprecated glob@10.5.0: Old versions of glob are not supported, and contain widely publicized security vulnerabilities, which have been fixed in the current version. Please update. Support for old versions may be purchased (at exorbitant rates) by contacting i@izs.me
+
+
+added 292 packages, and audited 489 packages in 4s
+
+110 packages are looking for funding
+  run `npm fund` for details
+
+
+5 high severity vulnerabilities
+
+To address issues that do not require attention, run:
+  npm audit fix
+
+To address all issues (including breaking changes), run:
+  npm audit fix --force
+
+Run `npm audit` for details.
+
+npm notice
+npm notice New major version of npm available! 10.8.2 -> 11.13.0
+npm notice Changelog: https://github.com/npm/cli/releases/tag/v11.13.0
+npm notice To update run: npm install -g npm@11.13.0
+npm notice
+
+--> uv lock
+
+--> uv lock
+
+Resolved 196 packages in 2.17s
+
+Resolved 196 packages in 2.17s
+
+Added h2 v4.3.0
+Added hpack 
+ mem0ai v2.0.1
+Added 
+motor 
+ v1.17.1
+--> uv sync
+
+--> uv sync
+
+warning: Skipping installation of entry points (`project.scripts`) because this project is not packaged; to install entry points, set `tool.uv.package = true` or define a `build-system`
+
+warning: Skipping installation of entry points (`project.scripts`) because this project is not packaged; to install entry points, set `tool.uv.package = true` or define a `build-system`
+
+  × No solution found when resolving dependencies for split (markers:
+  │ python_full_version >= '3.14' and sys_platform == 'linux'):
+  ╰─▶ Because only sentence-transformers{sys_platform == 'linux'}<3.0.0 is
+      available and your project depends on sentence-transformers{sys_platform
+      == 'linux'}>=3.0.0, we can conclude that your project's requirements
+      are unsatisfiable.
+
+      hint: While the active Python version is 3.13, the resolution failed for
+      other Python versions supported by your project. Consider limiting your
+      project's supported Python versions using `requires-python`.
+
+  × No solution found when resolving dependencies for split (markers:
+  │ python_full_version >= '3.14' and sys_platform == 'linux'):
+  ╰─▶ Because only sentence-transformers{sys_platform == 'linux'}<3.0.0 is
+      available and your project depends on sentence-transformers{sys_platform
+      == 'linux'}>=3.0.0, we can conclude that your project's requirements
+      are unsatisfiable.
+
+      hint: While the active Python version is 3.13, the resolution failed for
+      other Python versions supported by your project. Consider limiting your
+      project's supported Python versions using `requires-python`.
+
+exit status 1
+
+exit status 1

@@ -1,0 +1,3420 @@
+{
+  "metadata": {
+    "version": "1.0.0",
+    "last_updated": "2026-03-29",
+    "total_agents": 24
+  },
+  "categories": [
+    {
+      "id": "general",
+      "name": "General",
+      "description": "Multi-purpose AI agents for common tasks",
+      "icon": "Bot",
+      "order": 1
+    },
+    {
+      "id": "finance",
+      "name": "Finance",
+      "description": "Financial and regulatory compliance agents",
+      "icon": "Landmark",
+      "order": 2
+    },
+    {
+      "id": "sdlc",
+      "name": "SDLC",
+      "description": "Software development lifecycle agents",
+      "icon": "Code",
+      "order": 3
+    },
+    {
+      "id": "qa_testing",
+      "name": "QA Testing",
+      "description": "Quality assurance and test automation agents",
+      "icon": "FlaskConical",
+      "order": 4
+    },
+    {
+      "id": "telecom",
+      "name": "Telecom",
+      "description": "Telecommunications standards and specification agents",
+      "icon": "Radio",
+      "order": 5
+    },
+    {
+      "id": "security",
+      "name": "Security",
+      "description": "Application security testing and vulnerability assessment agents",
+      "icon": "Shield",
+      "order": 6
+    },
+    {
+      "id": "data",
+      "name": "Data & ETL",
+      "description": "Data transformation, ETL pipelines, and analytics agents",
+      "icon": "Database",
+      "order": 7
+    }
+  ],
+  "agents": [
+    {
+      "id": "basic_agent",
+      "name": "Basic Agent",
+      "type": "Multi-Tool AI Agent",
+      "category": "general",
+      "status": "active",
+      "admin_only": false,
+      "autonomy_quotient": 65,
+      "description": "A sophisticated AI agent built with modern cloud LLM backends. Provides web searching, data persistence, document generation, and weather information capabilities.",
+      "logo": "/images/basic-agent-logo.svg",
+      "version": "1.0.0",
+      "path": "agents/Basic_agent",
+      "capabilities": [
+        "Web Search (DuckDuckGo)",
+        "JSON Data Export",
+        "PDF Document Generation",
+        "Weather Information",
+        "Interactive CLI"
+      ],
+      "tools": [
+        {
+          "name": "search",
+          "description": "DuckDuckGo-powered web search tool for finding information online",
+          "module": "tools.search"
+        },
+        {
+          "name": "json_handler",
+          "description": "Save structured data to JSON files with automatic timestamps",
+          "module": "tools.json_handler"
+        },
+        {
+          "name": "pdf_handler",
+          "description": "Generate professional PDF documents with formatted content",
+          "module": "tools.pdf_handler"
+        },
+        {
+          "name": "weather",
+          "description": "Get real-time weather information for any location",
+          "module": "tools.weather"
+        }
+      ],
+      "llm_providers": [
+        {
+          "name": "Ollama",
+          "type": "local",
+          "default": true,
+          "cost": "Free",
+          "description": "Local LLM inference - no API costs, completely private",
+          "models": [
+            "llama2",
+            "mistral",
+            "neural-chat",
+            "orca-mini",
+            "gpt-oss:20b",
+            "openhermes"
+          ]
+        },
+        {
+          "name": "Gemini 2.5 Flash Image",
+          "type": "cloud",
+          "default": false,
+          "cost": "API-based",
+          "description": "PWC GenAI service powered by Google Gemini",
+          "models": [
+            ""
+          ]
+        }
+      ],
+      "configuration": {
+        "required_settings": [
+          {
+            "key": "PWC_GENAI_API_KEY",
+            "description": "API key for PwC GenAI service (if using cloud LLM)"
+          }
+        ],
+        "optional_settings": [
+          {
+            "key": "OLLAMA_HOST",
+            "description": "Ollama server host URL (default: http://localhost:11434)"
+          },
+          {
+            "key": "DEFAULT_LLM_PROVIDER",
+            "description": "Choose 'ollama' or 'pwc_genai' as default provider"
+          },
+          {
+            "key": "USE_LOCAL_LLM",
+            "description": "Run this agent on your local LLM server (http://127.0.0.1:4099) instead of PwC GenAI",
+            "default": "false",
+            "control": "boolean"
+          }
+        ]
+      },
+      "usage": {
+        "entry_point": "agent.py",
+        "class_name": "BasicAgent",
+        "api_endpoint": "POST /api/basic-agent",
+        "example_prompts": [
+          "Search for the latest developments in artificial intelligence",
+          "Create a JSON file with project data",
+          "Export an article about AI to PDF",
+          "What's the weather in New York?"
+        ]
+      },
+      "import_config": {
+        "module": "agents.Basic_agent.agent",
+        "instance_name": "basic_agent",
+        "type": "instance"
+      },
+      "routing": {
+        "keywords": [],
+        "is_fallback": true,
+        "confidence": 0.5
+      },
+      "invocation": {
+        "method": "process_query",
+        "params": {
+          "user_input": "query"
+        },
+        "is_async": false,
+        "result_path": [
+          "response",
+          "thinking_steps"
+        ]
+      },
+      "dispatch": {
+        "getter_key": "basic_agent",
+        "call_style": "qsk",
+        "async_native": false
+      },
+      "progress_phases": [
+        "Processing query...",
+        "Searching for information...",
+        "Generating response..."
+      ]
+    },
+    {
+      "id": "jira_agent",
+      "name": "JIRA Agent",
+      "type": "JIRA Integration Agent",
+      "category": "sdlc",
+      "status": "active",
+      "admin_only": false,
+      "autonomy_quotient": 85,
+      "description": "Robust JIRA agent with intelligent query analysis and interactive info gathering. Supports searching, creating, updating tickets, chained operations, and multi-turn conversations.",
+      "logo": "/images/jira-logo.png",
+      "version": "1.0.0",
+      "path": "agents/JIRA_agent",
+      "capabilities": [
+        "Search JIRA tickets",
+        "Create new tickets",
+        "Update existing tickets",
+        "Chained operations",
+        "Multi-turn conversations",
+        "Intent analysis",
+        "Interactive information gathering"
+      ],
+      "tools": [
+        {
+          "name": "jira_operations",
+          "description": "Core JIRA operations for ticket management",
+          "module": "tools.jira_operations"
+        },
+        {
+          "name": "ticket_tools",
+          "description": "Tools for creating and updating JIRA tickets",
+          "module": "tools.ticket_tools"
+        },
+        {
+          "name": "search",
+          "description": "Search JIRA tickets with JQL queries",
+          "module": "tools.search"
+        }
+      ],
+      "llm_providers": [
+        {
+          "name": "PwC GenAI",
+          "type": "cloud",
+          "default": true,
+          "cost": "API-based",
+          "description": "PWC GenAI service for natural language processing",
+          "models": [
+            "Custom PWC GenAI Model"
+          ]
+        }
+      ],
+      "architecture": {
+        "pattern": "ReAct Agent",
+        "components": [
+          {
+            "name": "JiraService",
+            "description": "Handles JIRA API interactions"
+          },
+          {
+            "name": "AIService",
+            "description": "Manages AI/LLM interactions"
+          },
+          {
+            "name": "ConversationManager",
+            "description": "Manages multi-turn conversation context"
+          }
+        ]
+      },
+      "configuration": {
+        "required_settings": [
+          {
+            "key": "JIRA_EMAIL",
+            "description": "Your JIRA account email address"
+          },
+          {
+            "key": "JIRA_API_TOKEN",
+            "description": "JIRA API token generated from Atlassian account settings"
+          },
+          {
+            "key": "JIRA_INSTANCE_URL",
+            "description": "Your JIRA instance URL (e.g., https://yourcompany.atlassian.net)"
+          },
+          {
+            "key": "JIRA_PROJECT_KEY",
+            "description": "Default project key for ticket operations (e.g., PROJ)"
+          }
+        ],
+        "optional_settings": [
+          {
+            "key": "JIRA_DEFAULT_ISSUE_TYPE",
+            "description": "Default issue type for new tickets (default: Task)"
+          },
+          {
+            "key": "USE_LOCAL_LLM",
+            "description": "Run this agent on your local LLM server (http://127.0.0.1:4099) instead of PwC GenAI",
+            "default": "false",
+            "control": "boolean"
+          }
+        ]
+      },
+      "usage": {
+        "entry_point": "jira_agent.py",
+        "class_name": "JiraAgent",
+        "api_endpoint": "POST /api/jira-agent",
+        "example_prompts": [
+          "Show me the project dashboard with analytics",
+          "Search for tickets assigned to me",
+          "Create a bug ticket for login issue",
+          "Find all high-priority tickets in sprint"
+        ]
+      },
+      "import_config": {
+        "module": "agents.JIRA_agent.jira_agent",
+        "instance_name": "jira_agent",
+        "type": "instance"
+      },
+      "routing": {
+        "keywords": [
+          "jira",
+          "ticket",
+          "sprint",
+          "backlog",
+          "epic",
+          "story point",
+          "create issue",
+          "create a ticket",
+          "bug fix ticket",
+          "user story"
+        ],
+        "confidence": 0.95
+      },
+      "invocation": {
+        "method": "process_query_interactive",
+        "params": {
+          "user_prompt": "query"
+        },
+        "is_async": true,
+        "result_path": [
+          "success",
+          "response",
+          "intermediate_steps",
+          "chart_data"
+        ]
+      },
+      "dispatch": {
+        "getter_key": "jira_agent",
+        "call_style": "q",
+        "async_native": false
+      },
+      "progress_phases": [
+        "Processing JIRA request...",
+        "Executing JIRA operation...",
+        "Formatting response..."
+      ],
+      "default_config": {
+        "JIRA_PROJECT_KEY": "KAN"
+      }
+    },
+    {
+      "id": "brd_generation",
+      "name": "BRD Generation Agent",
+      "type": "Document Generation AI Agent",
+      "category": "sdlc",
+      "status": "active",
+      "admin_only": false,
+      "autonomy_quotient": 90,
+      "description": "An intelligent AI agent that automatically generates comprehensive, professional Business Requirements Documents (BRDs) based on user input and web research. Produces detailed BRDs with all critical sections including Executive Summary, Business Objectives, and Risk Analysis.",
+      "logo": "/images/brd-generation-logo.svg",
+      "version": "1.0.0",
+      "path": "agents/BRD_generation",
+      "capabilities": [
+        "Automated Web Research",
+        "Professional BRD Generation",
+        "Comprehensive Requirement Analysis",
+        "Risk Assessment & Mitigation",
+        "Industry Best Practices Integration",
+        "Markdown Document Export",
+        "Multi-Section Document Structure"
+      ],
+      "tools": [
+        {
+          "name": "web_search",
+          "description": "DuckDuckGo-powered web search for gathering project-relevant information",
+          "module": "tools.search"
+        },
+        {
+          "name": "generate_brd",
+          "description": "Generates professional Business Requirements Document with all standard sections",
+          "module": "tools.brd_generator"
+        }
+      ],
+      "llm_providers": [
+        {
+          "name": "PwC GenAI (Gemini 2.5 Flash Image)",
+          "type": "cloud",
+          "default": true,
+          "cost": "API-based",
+          "description": "PWC GenAI service powered by Google Gemini for comprehensive BRD generation",
+          "models": [
+            ""
+          ]
+        }
+      ],
+      "brd_sections": [
+        "Executive Summary",
+        "Business Objectives",
+        "Functional Requirements",
+        "Non-Functional Requirements",
+        "Integration Requirements",
+        "Data Requirements",
+        "Assumptions & Constraints",
+        "Acceptance Criteria",
+        "Risks & Mitigation"
+      ],
+      "configuration": {
+        "required_settings": [
+          {
+            "key": "PWC_GENAI_API_KEY",
+            "description": "API key for PwC GenAI service"
+          },
+          {
+            "key": "PWC_GENAI_BEARER_TOKEN",
+            "description": "Bearer token for PwC GenAI authentication"
+          }
+        ],
+        "optional_settings": [
+          {
+            "key": "BRD_OUTPUT_DIR",
+            "description": "Directory path for saving generated BRD files"
+          },
+          {
+            "key": "USE_LOCAL_LLM",
+            "description": "Run this agent on your local LLM server (http://127.0.0.1:4099) instead of PwC GenAI",
+            "default": "false",
+            "control": "boolean"
+          }
+        ]
+      },
+      "usage": {
+        "entry_point": "agent.py",
+        "class_name": "BRDGenerationAgent",
+        "api_endpoint": "POST /api/brd-generation",
+        "example_prompts": [
+          "Create a BRD for a mobile banking app with biometric authentication",
+          "Generate a BRD for implementing single sign-on across enterprise applications",
+          "Build a BRD for a real-time inventory management system with IoT integration"
+        ]
+      },
+      "import_config": {
+        "module": "agents.BRD_generation.agent",
+        "class_name": "BRDGenerationAgent",
+        "type": "class"
+      },
+      "routing": {
+        "keywords": [
+          "brd",
+          "business requirements document",
+          "business requirement",
+          "requirements document",
+          "functional requirements",
+          "generate a brd",
+          "write a brd",
+          "create a brd"
+        ],
+        "confidence": 0.95
+      },
+      "invocation": {
+        "method": "process_query",
+        "params": {
+          "user_input": "query"
+        },
+        "is_async": false,
+        "result_path": [
+          "response",
+          "thinking_steps"
+        ]
+      },
+      "dispatch": {
+        "getter_key": "brd_agent",
+        "call_style": "qsk",
+        "async_native": false
+      },
+      "progress_phases": [
+        "Researching requirements and scope...",
+        "Structuring business requirements document...",
+        "Generating detailed requirement specifications...",
+        "Finalizing BRD with acceptance criteria..."
+      ]
+    },
+    {
+      "id": "rbi_circular",
+      "name": "RBI Agent",
+      "type": "Regulatory Research Agent",
+      "category": "finance",
+      "status": "active",
+      "admin_only": false,
+      "autonomy_quotient": 75,
+      "description": "An intelligent AI agent that fetches, searches, and summarizes RBI (Reserve Bank of India) circulars and notifications. Provides quick access to regulatory updates, compliance requirements, and policy changes from the official RBI website.",
+      "logo": "/images/rbi-logo.png",
+      "version": "1.0.0",
+      "path": "agents/RBI_circular_agent",
+      "capabilities": [
+        "Fetch RBI Notifications",
+        "Search Circulars by Keyword",
+        "Summarize Document Content",
+        "Extract Compliance Requirements",
+        "Identify Key Dates and Deadlines",
+        "Link to Original Documents"
+      ],
+      "tools": [
+        {
+          "name": "rbi_scraper",
+          "description": "Web scraper to fetch notifications from RBI website",
+          "module": "tools.rbi_scraper"
+        },
+        {
+          "name": "content_fetcher",
+          "description": "Fetches full content of specific notifications",
+          "module": "tools.rbi_scraper"
+        },
+        {
+          "name": "summarizer",
+          "description": "AI-powered summarization of regulatory documents",
+          "module": "ai_service"
+        }
+      ],
+      "llm_providers": [
+        {
+          "name": "PwC GenAI (Gemini 2.5 Flash Image)",
+          "type": "cloud",
+          "default": true,
+          "cost": "API-based",
+          "description": "PWC GenAI service for document analysis and summarization",
+          "models": [
+            ""
+          ]
+        }
+      ],
+      "data_source": {
+        "name": "Reserve Bank of India",
+        "url": "https://www.rbi.org.in",
+        "endpoints": [
+          "https://www.rbi.org.in/scripts/NotificationUser.aspx",
+          "https://www.rbi.org.in/scripts/SearchResults.aspx"
+        ]
+      },
+      "configuration": {
+        "required_settings": [
+          {
+            "key": "PWC_GENAI_API_KEY",
+            "description": "API key for PwC GenAI service"
+          },
+          {
+            "key": "PWC_GENAI_BEARER_TOKEN",
+            "description": "Bearer token for PwC GenAI authentication"
+          }
+        ],
+        "optional_settings": [
+          {
+            "key": "RBI_SEARCH_LIMIT",
+            "description": "Maximum number of search results to fetch (default: 5)"
+          },
+          {
+            "key": "USE_LOCAL_LLM",
+            "description": "Run this agent on your local LLM server (http://127.0.0.1:4099) instead of PwC GenAI",
+            "default": "false",
+            "control": "boolean"
+          }
+        ]
+      },
+      "usage": {
+        "entry_point": "agent.py",
+        "class_name": "RBICircularAgent",
+        "api_endpoint": "POST /api/rbi-circular",
+        "example_prompts": [
+          "Summarize the RBI notification on export and import regulations for 2026",
+          "Search for recent notifications on digital lending",
+          "What are the latest guidelines for NBFCs?",
+          "Summarize RBI's policy on UPI transactions"
+        ]
+      },
+      "import_config": {
+        "module": "agents.RBI_circular_agent.agent",
+        "instance_name": "rbi_agent",
+        "type": "instance"
+      },
+      "routing": {
+        "keywords": [
+          "rbi",
+          "reserve bank of india",
+          "rbi circular",
+          "rbi notification",
+          "monetary policy india",
+          "rbi regulation"
+        ],
+        "confidence": 0.95
+      },
+      "invocation": {
+        "method": "process_query",
+        "params": {
+          "query": "query",
+          "session_id": "session_id"
+        },
+        "is_async": true,
+        "result_path": [
+          "response",
+          "thinking_steps"
+        ]
+      },
+      "dispatch": {
+        "getter_key": "rbi_agent",
+        "call_style": "qsk",
+        "async_native": false
+      },
+      "progress_phases": [
+        "Searching RBI master directions and circulars...",
+        "Querying governance and risk frameworks...",
+        "Scanning regulatory notification archives...",
+        "Filtering relevant circulars by entity and topic...",
+        "Compiling regulatory summary with references..."
+      ]
+    },
+    {
+      "id": "bpmn_generator",
+      "name": "BPMN Generator Agent",
+      "type": "Process Modeling AI Agent",
+      "category": "sdlc",
+      "status": "active",
+      "admin_only": false,
+      "autonomy_quotient": 80,
+      "description": "An intelligent AI agent that generates detailed BPMN (Business Process Model and Notation) diagrams from various document formats. Upload PDF, Word, Excel files or describe your process in plain text to get a professional BPMN diagram with full visualization.",
+      "logo": "/images/bpmn-logo.png",
+      "version": "1.0.0",
+      "path": "agents/BPMN_generator_agent",
+      "capabilities": [
+        "PDF Document Parsing",
+        "Word Document Parsing",
+        "Excel File Parsing",
+        "Plain Text Processing",
+        "BPMN 2.0 XML Generation",
+        "Interactive Diagram Visualization",
+        "Conversation Context Memory",
+        "Iterative Diagram Refinement"
+      ],
+      "tools": [
+        {
+          "name": "file_extractor",
+          "description": "Extracts text content from PDF, Word, Excel, and text files",
+          "module": "tools.file_extractor"
+        },
+        {
+          "name": "bpmn_generator",
+          "description": "Generates BPMN 2.0 XML diagrams using AI analysis",
+          "module": "agent"
+        }
+      ],
+      "llm_providers": [
+        {
+          "name": "PwC GenAI (Gemini 2.5 Flash Image)",
+          "type": "cloud",
+          "default": true,
+          "cost": "API-based",
+          "description": "PWC GenAI service for process analysis and BPMN generation",
+          "models": [
+            ""
+          ]
+        }
+      ],
+      "supported_file_types": [
+        {
+          "extension": "pdf",
+          "description": "Adobe PDF documents"
+        },
+        {
+          "extension": "docx",
+          "description": "Microsoft Word documents"
+        },
+        {
+          "extension": "xlsx",
+          "description": "Microsoft Excel spreadsheets"
+        },
+        {
+          "extension": "txt",
+          "description": "Plain text files"
+        }
+      ],
+      "configuration": {
+        "required_settings": [
+          {
+            "key": "PWC_GENAI_API_KEY",
+            "description": "API key for PwC GenAI service"
+          },
+          {
+            "key": "PWC_GENAI_BEARER_TOKEN",
+            "description": "Bearer token for PwC GenAI authentication"
+          }
+        ],
+        "optional_settings": [
+          {
+            "key": "USE_LOCAL_LLM",
+            "description": "Run this agent on your local LLM server (http://127.0.0.1:4099) instead of PwC GenAI",
+            "default": "false",
+            "control": "boolean"
+          }
+        ]
+      },
+      "usage": {
+        "entry_point": "agent.py",
+        "class_name": "BPMNGeneratorAgent",
+        "api_endpoint": "POST /api/bpmn-generator",
+        "example_prompts": [
+          "Generate a BPMN diagram for a customer onboarding process",
+          "Create a process flow for order fulfillment with approval steps",
+          "Modify the diagram to add an exception handling path",
+          "Add a parallel gateway for concurrent review tasks"
+        ]
+      },
+      "import_config": {
+        "module": "agents.BPMN_generator_agent.agent",
+        "instance_name": "bpmn_agent",
+        "type": "instance"
+      },
+      "routing": {
+        "keywords": [
+          "bpmn",
+          "bpnm",
+          "process diagram",
+          "workflow diagram",
+          "process flow",
+          "business process",
+          "flowchart",
+          "flow chart",
+          "process model",
+          "swim lane",
+          "swimlane",
+          "activity diagram"
+        ],
+        "confidence": 0.95
+      },
+      "invocation": {
+        "method": "process_query",
+        "params": {
+          "query": "query",
+          "session_id": "session_id",
+          "file_content": "file_content",
+          "file_type": "file_type"
+        },
+        "is_async": false,
+        "result_path": [
+          "success",
+          "response",
+          "bpmn_xml",
+          "thinking_steps"
+        ]
+      },
+      "dispatch": {
+        "getter_key": "bpmn_agent",
+        "call_style": "qs",
+        "async_native": false
+      }
+    },
+    {
+      "id": "market_research",
+      "name": "Market Research Agent",
+      "type": "Research & Analysis AI Agent",
+      "category": "general",
+      "status": "active",
+      "admin_only": true,
+      "autonomy_quotient": 85,
+      "description": "An intelligent AI agent that performs comprehensive market research. It searches the web for detailed information, analyzes multiple sources, and generates professional research reports with proper references. Reports can be automatically sent to configured email addresses.",
+      "logo": "/images/market-research-logo.svg",
+      "version": "1.0.0",
+      "path": "agents/Market_research_agent",
+      "capabilities": [
+        "Web Search & Data Gathering",
+        "Multi-Source Analysis",
+        "Professional Report Generation",
+        "Executive Summary Creation",
+        "Source Citation & References",
+        "Email Report Delivery",
+        "Market Trend Analysis",
+        "Competitive Landscape Research"
+      ],
+      "tools": [
+        {
+          "name": "web_search",
+          "description": "Searches the web for market research data using DuckDuckGo",
+          "module": "tools.web_search"
+        },
+        {
+          "name": "content_analyzer",
+          "description": "Fetches and analyzes web page content for detailed insights",
+          "module": "tools.web_search"
+        },
+        {
+          "name": "email_sender",
+          "description": "Sends professional research reports via email using Resend",
+          "module": "tools.email_sender"
+        }
+      ],
+      "llm_providers": [
+        {
+          "name": "PwC GenAI (Gemini 2.5 Flash Image)",
+          "type": "cloud",
+          "default": true,
+          "cost": "API-based",
+          "description": "PWC GenAI service for research analysis and summarization",
+          "models": [
+            ""
+          ]
+        }
+      ],
+      "configuration": {
+        "required_settings": [
+          {
+            "key": "PWC_GENAI_API_KEY",
+            "description": "API key for PwC GenAI service"
+          },
+          {
+            "key": "PWC_GENAI_BEARER_TOKEN",
+            "description": "Bearer token for PwC GenAI authentication"
+          },
+          {
+            "key": "PWC_GENAI_ENDPOINT_URL",
+            "description": "Endpoint URL for PwC GenAI service"
+          }
+        ],
+        "optional_settings": [
+          {
+            "key": "RESEND_API_KEY",
+            "description": "Resend API key for email delivery (free tier: 100 emails/day)"
+          },
+          {
+            "key": "RESEND_FROM_EMAIL",
+            "description": "Verified sender email address for Resend"
+          },
+          {
+            "key": "USE_LOCAL_LLM",
+            "description": "Run this agent on your local LLM server (http://127.0.0.1:4099) instead of PwC GenAI",
+            "default": "false",
+            "control": "boolean"
+          }
+        ]
+      },
+      "usage": {
+        "entry_point": "agent.py",
+        "class_name": "MarketResearchAgent",
+        "api_endpoint": "POST /api/market-research",
+        "example_prompts": [
+          "Research the current state of the electric vehicle market",
+          "Analyze the competitive landscape for cloud computing services",
+          "What are the latest trends in sustainable packaging?",
+          "Research AI adoption in healthcare industry"
+        ]
+      },
+      "import_config": {
+        "module": "agents.Market_research_agent.agent",
+        "class_name": "MarketResearchAgent",
+        "type": "class"
+      },
+      "routing": {
+        "keywords": [
+          "market research",
+          "market analysis",
+          "competitive analysis",
+          "industry analysis",
+          "market trend",
+          "market report",
+          "market study",
+          "competitor analysis"
+        ],
+        "confidence": 0.95
+      },
+      "invocation": {
+        "method": "research",
+        "params": {
+          "query": "query",
+          "session_id": "session_id"
+        },
+        "is_async": true,
+        "result_path": [
+          "success",
+          "response",
+          "thinking_steps"
+        ],
+        "has_model_dump": true
+      },
+      "dispatch": {
+        "getter_key": "market_research_agent",
+        "call_style": "qsk",
+        "async_native": false
+      },
+      "progress_phases": [
+        "Defining research scope and key questions...",
+        "Searching market size and growth data...",
+        "Analyzing competitive landscape...",
+        "Researching industry trends and drivers...",
+        "Compiling market research report..."
+      ]
+    },
+    {
+      "id": "sebi_circular",
+      "name": "SEBI Agent",
+      "type": "Regulatory Research Agent",
+      "category": "finance",
+      "status": "active",
+      "admin_only": false,
+      "autonomy_quotient": 75,
+      "description": "An intelligent AI agent that fetches, searches, and summarizes SEBI (Securities and Exchange Board of India) circulars and notifications. Provides quick access to regulatory updates, compliance requirements, and policy changes from the official SEBI website.",
+      "logo": "/images/sebi-logo.png",
+      "version": "1.0.0",
+      "path": "agents/SEBI_circular_agent",
+      "capabilities": [
+        "Fetch SEBI Notifications",
+        "Search Circulars by Keyword",
+        "Summarize Document Content",
+        "Extract Compliance Requirements",
+        "Identify Key Dates and Deadlines",
+        "Link to Original Documents",
+        "Email Report Delivery",
+        "Multi-language Support"
+      ],
+      "tools": [
+        {
+          "name": "perplexity_search",
+          "description": "Perplexity API to search and fetch content from SEBI website",
+          "module": "tools.perplexity_search"
+        },
+        {
+          "name": "content_fetcher",
+          "description": "Fetches full content of specific notifications",
+          "module": "tools.perplexity_search"
+        },
+        {
+          "name": "summarizer",
+          "description": "AI-powered summarization of regulatory documents",
+          "module": "ai_service"
+        },
+        {
+          "name": "email_sender",
+          "description": "Send professional SEBI reports via email using Resend",
+          "module": "tools.email_sender"
+        }
+      ],
+      "llm_providers": [
+        {
+          "name": "PwC GenAI (Gemini 2.5 Flash Image)",
+          "type": "cloud",
+          "default": true,
+          "cost": "API-based",
+          "description": "PWC GenAI service for document analysis and summarization",
+          "models": [
+            ""
+          ]
+        }
+      ],
+      "data_source": {
+        "name": "Securities and Exchange Board of India",
+        "url": "https://www.sebi.gov.in",
+        "endpoints": [
+          "https://www.sebi.gov.in/sebiweb/home/HomeAction.do?doListing=yes&sid=1&ssid=1&smid=0",
+          "https://www.sebi.gov.in/sebiweb/home/HomeAction.do?doMasterCircular=yes"
+        ]
+      },
+      "configuration": {
+        "required_settings": [
+          {
+            "key": "PWC_GENAI_API_KEY",
+            "description": "API key for PwC GenAI service"
+          },
+          {
+            "key": "PWC_GENAI_BEARER_TOKEN",
+            "description": "Bearer token for PwC GenAI authentication"
+          },
+          {
+            "key": "PERPLEXITY_API_KEY",
+            "description": "API key for Perplexity search service"
+          }
+        ],
+        "optional_settings": [
+          {
+            "key": "RESEND_API_KEY",
+            "description": "Resend API key for email delivery (free tier: 100 emails/day)"
+          },
+          {
+            "key": "RESEND_FROM_EMAIL",
+            "description": "Verified sender email address for Resend"
+          },
+          {
+            "key": "SEBI_SEARCH_LIMIT",
+            "description": "Maximum number of search results to fetch (default: 10)"
+          },
+          {
+            "key": "USE_LOCAL_LLM",
+            "description": "Run this agent on your local LLM server (http://127.0.0.1:4099) instead of PwC GenAI",
+            "default": "false",
+            "control": "boolean"
+          }
+        ]
+      },
+      "usage": {
+        "entry_point": "agent.py",
+        "class_name": "SEBICircularAgent",
+        "api_endpoint": "POST /api/sebi-circular",
+        "example_prompts": [
+          "Summarize the SEBI notification on insider trading regulations",
+          "Search for recent notifications on mutual fund schemes",
+          "What are the latest guidelines for listing obligations?",
+          "Summarize SEBI's policy on ESG disclosures",
+          "Send report about LODR amendments to user@example.com"
+        ]
+      },
+      "import_config": {
+        "module": "agents.SEBI_circular_agent.agent",
+        "instance_name": "sebi_agent",
+        "type": "instance"
+      },
+      "routing": {
+        "keywords": [
+          "sebi",
+          "securities and exchange board",
+          "sebi circular",
+          "sebi regulation",
+          "stock market regulation",
+          "insider trading regulation",
+          "securities regulation india"
+        ],
+        "confidence": 0.95
+      },
+      "invocation": {
+        "method": "process_query",
+        "params": {
+          "query": "query",
+          "session_id": "session_id"
+        },
+        "is_async": true,
+        "result_path": [
+          "response",
+          "thinking_steps"
+        ]
+      },
+      "dispatch": {
+        "getter_key": "sebi_agent",
+        "call_style": "qsk",
+        "async_native": false
+      },
+      "progress_phases": [
+        "Searching SEBI regulatory notifications...",
+        "Analyzing relevant circular categories...",
+        "Extracting key regulatory requirements...",
+        "Compiling SEBI compliance summary..."
+      ]
+    },
+    {
+      "id": "github_repo",
+      "name": "GitHub Repo Agent",
+      "type": "Repository Analysis Agent",
+      "category": "sdlc",
+      "status": "active",
+      "admin_only": true,
+      "autonomy_quotient": 80,
+      "description": "An intelligent agent that clones public GitHub repositories and performs deep analysis including reverse engineering, technical documentation generation, tech stack extraction, architecture diagram creation, feature extraction, and code modifications with push capabilities.",
+      "logo": "/images/github-logo.png",
+      "version": "1.0.0",
+      "path": "agents/GitHub_repo_agent",
+      "capabilities": [
+        "Clone Public Repositories",
+        "Reverse Engineering & Documentation",
+        "Tech Stack Extraction",
+        "Architecture & Flow Diagrams",
+        "Feature Extraction",
+        "Code Modification",
+        "Push to GitHub"
+      ],
+      "tools": [
+        {
+          "name": "clone_repo",
+          "description": "Clone a public GitHub repository for analysis"
+        },
+        {
+          "name": "extract_tech_stack",
+          "description": "Analyze and extract the complete technology stack"
+        },
+        {
+          "name": "generate_documentation",
+          "description": "Reverse engineer the codebase and generate technical documentation"
+        },
+        {
+          "name": "generate_architecture",
+          "description": "Generate architecture and flow diagrams using Mermaid syntax"
+        },
+        {
+          "name": "extract_features",
+          "description": "Extract all features and functionalities from the codebase"
+        },
+        {
+          "name": "modify_code",
+          "description": "Make AI-assisted code modifications to the repository"
+        },
+        {
+          "name": "push_to_github",
+          "description": "Commit and push changes to the GitHub repository"
+        }
+      ],
+      "configuration": {
+        "environment_variables": [],
+        "optional_settings": [
+          {
+            "key": "USE_LOCAL_LLM",
+            "description": "Run this agent on your local LLM server (http://127.0.0.1:4099) instead of PwC GenAI",
+            "default": "false",
+            "control": "boolean"
+          }
+        ]
+      },
+      "usage": {
+        "entry_point": "agent.py",
+        "class_name": "GitHubRepoAgent",
+        "api_endpoint": "POST /api/github-repo",
+        "example_prompts": [
+          "Clone https://github.com/owner/repo and analyze it",
+          "What tech stack does this repository use?",
+          "Generate technical documentation for this codebase",
+          "Show me the architecture diagram",
+          "Extract all features from this repository",
+          "Add error handling to the main module",
+          "Push the changes to GitHub"
+        ]
+      },
+      "import_config": {
+        "module": "agents.GitHub_repo_agent.agent",
+        "instance_name": "github_repo_agent",
+        "type": "instance"
+      },
+      "routing": {
+        "keywords": [
+          "clone repo",
+          "clone repository",
+          "github.com/",
+          "tech stack",
+          "reverse engineer",
+          "architecture diagram",
+          "architecture/flow",
+          "flow diagram",
+          "extract features",
+          "push to github",
+          "push code",
+          "push changes",
+          "push tests",
+          "push test",
+          "repository analysis",
+          "repo analysis",
+          "generate documentation",
+          "modify code",
+          "github"
+        ],
+        "confidence": 0.95
+      },
+      "invocation": {
+        "method": "process_query",
+        "params": {
+          "query": "query",
+          "session_id": "session_id",
+          "github_token": "github_token"
+        },
+        "is_async": false,
+        "result_path": [
+          "success",
+          "response",
+          "requires_token",
+          "thinking_steps"
+        ]
+      },
+      "dispatch": {
+        "getter_key": "github_repo_agent",
+        "call_style": "qs",
+        "async_native": false
+      },
+      "progress_phases": [
+        "Cloning repository...",
+        "Analyzing codebase and tech stack...",
+        "Extracting architecture patterns...",
+        "Generating documentation..."
+      ]
+    },
+    {
+      "id": "unit_test_agent",
+      "name": "Unit Test Generator Agent",
+      "type": "Testing & Quality Agent",
+      "category": "qa_testing",
+      "status": "active",
+      "admin_only": false,
+      "autonomy_quotient": 85,
+      "description": "An intelligent agent that analyzes GitHub repositories, reverse engineers the codebase to understand its structure, then generates comprehensive unit tests for each module. Works with the GitHub Agent for cloning repos and pushing tests.",
+      "logo": "/images/unit-test-agent-logo.svg",
+      "version": "1.0.0",
+      "path": "agents/Unit_test_agent",
+      "capabilities": [
+        "Codebase Reverse Engineering",
+        "Language & Framework Detection",
+        "Testable Module Identification",
+        "AI-Powered Unit Test Generation"
+      ],
+      "tools": [
+        {
+          "name": "analyze_codebase",
+          "description": "Reverse engineer and understand the codebase structure"
+        },
+        {
+          "name": "identify_modules",
+          "description": "Identify testable modules and prioritize them"
+        },
+        {
+          "name": "generate_tests",
+          "description": "Generate comprehensive unit tests for each module"
+        }
+      ],
+      "configuration": {
+        "environment_variables": [],
+        "optional_settings": [
+          {
+            "key": "GITHUB_TOKEN",
+            "description": "GitHub Personal Access Token with `repo` scope. Required for PR-link workflows so the agent can fetch PR changes and push generated unit tests back to the same branch."
+          },
+          {
+            "key": "USE_LOCAL_LLM",
+            "description": "Run this agent on your local LLM server (http://127.0.0.1:4099) instead of PwC GenAI",
+            "default": "false",
+            "control": "boolean"
+          }
+        ]
+      },
+      "usage": {
+        "entry_point": "agent.py",
+        "class_name": "UnitTestAgent",
+        "api_endpoint": "POST /api/unit-test",
+        "example_prompts": [
+          "Generate tests for this repository",
+          "Generate unit tests",
+          "What tests have been generated so far?"
+        ]
+      },
+      "import_config": {
+        "module": "agents.Unit_test_agent.agent",
+        "instance_name": "unit_test_agent",
+        "type": "instance"
+      },
+      "routing": {
+        "keywords": [
+          "unit test",
+          "generate unit test",
+          "write unit test",
+          "create unit test",
+          "unit test generation",
+          "test suite for code",
+          "code testing",
+          "generate tests for repository",
+          "generate tests for code",
+          "write tests for module",
+          "test coverage for code",
+          "test module",
+          "analyse code for test",
+          "analyze code for test"
+        ],
+        "confidence": 0.95,
+        "special_rules": "For code/repository unit testing only. If query contains URL or 'web', route to web_test_agent instead."
+      },
+      "invocation": {
+        "method": "process_query",
+        "params": {
+          "query": "query",
+          "session_id": "session_id",
+          "github_token": "github_token"
+        },
+        "is_async": false,
+        "result_path": [
+          "success",
+          "response",
+          "task_id",
+          "thinking_steps"
+        ],
+        "requires_github_session": true
+      },
+      "dispatch": {
+        "getter_key": "unit_test_agent",
+        "call_style": "qs",
+        "async_native": false
+      },
+      "progress_phases": [
+        "Scanning source files and test patterns...",
+        "Analyzing coding style and conventions...",
+        "Generating comprehensive unit tests...",
+        "Validating test correctness..."
+      ]
+    },
+    {
+      "id": "code_sandbox",
+      "name": "Code Sandbox Agent",
+      "type": "Sandbox Runtime Agent",
+      "category": "sdlc",
+      "status": "active",
+      "admin_only": true,
+      "autonomy_quotient": 90,
+      "description": "An intelligent agent that clones GitHub repositories into a sandbox environment, automatically detects the project type, installs all dependencies, and runs the application. Supports Node.js, Python, Go, and Rust projects with framework-specific handling.",
+      "logo": "/images/code-sandbox-logo.svg",
+      "version": "1.0.0",
+      "path": "agents/Code_sandbox_agent",
+      "capabilities": [
+        "Clone GitHub Repositories",
+        "Auto-detect Project Type",
+        "Install Dependencies",
+        "Run Applications",
+        "Framework-specific Handling",
+        "Live App Management"
+      ],
+      "tools": [
+        {
+          "name": "clone_repo",
+          "description": "Clone a GitHub repository into the sandbox"
+        },
+        {
+          "name": "detect_project_type",
+          "description": "Auto-detect framework and project type (Node.js, Python, Go, Rust)"
+        },
+        {
+          "name": "install_dependencies",
+          "description": "Install project dependencies using the appropriate package manager"
+        },
+        {
+          "name": "start_app",
+          "description": "Start the application on an available port"
+        },
+        {
+          "name": "stop_app",
+          "description": "Stop the running application"
+        },
+        {
+          "name": "get_logs",
+          "description": "Retrieve application console logs"
+        }
+      ],
+      "configuration": {
+        "environment_variables": [],
+        "optional_settings": [
+          {
+            "key": "USE_LOCAL_LLM",
+            "description": "Run this agent on your local LLM server (http://127.0.0.1:4099) instead of PwC GenAI",
+            "default": "false",
+            "control": "boolean"
+          }
+        ]
+      },
+      "usage": {
+        "entry_point": "agent.py",
+        "class_name": "CodeSandboxAgent",
+        "api_endpoint": "POST /api/code-sandbox",
+        "example_prompts": [
+          "Run this repo in sandbox: https://github.com/user/repo",
+          "Set up a sandbox for this GitHub project",
+          "Show sandbox status",
+          "Stop the running app",
+          "Show me the app logs"
+        ]
+      },
+      "import_config": {
+        "module": "agents.Code_sandbox_agent.agent",
+        "instance_name": "code_sandbox_agent",
+        "type": "instance"
+      },
+      "routing": {
+        "keywords": [
+          "sandbox",
+          "code sandbox",
+          "run in sandbox",
+          "run repo",
+          "run this repo",
+          "run the repo",
+          "run application",
+          "run the app",
+          "run this app",
+          "launch app",
+          "set up sandbox",
+          "setup sandbox",
+          "start sandbox",
+          "sandbox status",
+          "stop sandbox"
+        ],
+        "confidence": 0.95
+      },
+      "invocation": {
+        "method": "process_query",
+        "params": {
+          "query": "query",
+          "session_id": "session_id"
+        },
+        "is_async": false,
+        "result_path": [
+          "success",
+          "response",
+          "thinking_steps",
+          "stackblitz_repo"
+        ]
+      },
+      "dispatch": {
+        "getter_key": "code_sandbox_agent",
+        "call_style": "qs",
+        "async_native": false
+      }
+    },
+    {
+      "id": "web_test_agent",
+      "name": "Web Test Agent",
+      "type": "QA & Test Generation Agent",
+      "category": "qa_testing",
+      "status": "active",
+      "admin_only": false,
+      "autonomy_quotient": 85,
+      "description": "An intelligent QA agent that analyzes any webpage by URL — extracting all features, UI elements, forms, and interactions. Automatically generates comprehensive manual test cases, automated test cases, and ready-to-run test scripts (Selenium & Playwright).",
+      "logo": "/images/web-test-agent-logo.svg",
+      "version": "1.0.0",
+      "path": "agents/Web_test_agent",
+      "capabilities": [
+        "Webpage Feature Extraction",
+        "Manual Test Case Generation",
+        "Automated Test Case Generation",
+        "Selenium Test Script Generation",
+        "Playwright Test Script Generation",
+        "Form & Input Analysis",
+        "Navigation Analysis",
+        "Accessibility Element Detection",
+        "Multi-turn Follow-up Conversations"
+      ],
+      "tools": [
+        {
+          "name": "web_scraper",
+          "description": "Scrapes and analyzes webpage structure — forms, buttons, links, inputs, navigation, and interactive elements",
+          "module": "tools.web_scraper"
+        },
+        {
+          "name": "feature_extractor",
+          "description": "AI-powered extraction of user-facing features from page structure",
+          "module": "agent"
+        },
+        {
+          "name": "test_generator",
+          "description": "Generates manual test cases, automated test cases, and test scripts",
+          "module": "agent"
+        }
+      ],
+      "llm_providers": [
+        {
+          "name": "PwC GenAI (Gemini 2.5 Flash Image)",
+          "type": "cloud",
+          "default": true,
+          "cost": "API-based",
+          "description": "PWC GenAI service for feature analysis and test generation",
+          "models": [
+            ""
+          ]
+        }
+      ],
+      "configuration": {
+        "required_settings": [
+          {
+            "key": "PWC_GENAI_API_KEY",
+            "description": "API key for PwC GenAI service"
+          },
+          {
+            "key": "PWC_GENAI_BEARER_TOKEN",
+            "description": "Bearer token for PwC GenAI authentication"
+          }
+        ],
+        "optional_settings": [
+          {
+            "key": "USE_LOCAL_LLM",
+            "description": "Run this agent on your local LLM server (http://127.0.0.1:4099) instead of PwC GenAI",
+            "default": "false",
+            "control": "boolean"
+          }
+        ]
+      },
+      "usage": {
+        "entry_point": "agent.py",
+        "class_name": "WebTestAgent",
+        "api_endpoint": "POST /api/web-test",
+        "example_prompts": [
+          "Generate test cases for https://example.com/login",
+          "Analyze this page and create Selenium tests: https://myapp.com/dashboard",
+          "Write Playwright tests for https://shop.example.com/checkout",
+          "Create manual and automated test cases for https://signup.example.com"
+        ]
+      },
+      "import_config": {
+        "module": "agents.Web_test_agent.agent",
+        "instance_name": "web_test_agent",
+        "type": "instance"
+      },
+      "routing": {
+        "keywords": [
+          "test case",
+          "test cases",
+          "test script",
+          "manual test",
+          "automated test",
+          "selenium test",
+          "playwright test",
+          "qa test",
+          "generate test",
+          "web test",
+          "webpage test",
+          "test for this page",
+          "test for this url",
+          "create tests",
+          "write tests for"
+        ],
+        "confidence": 0.95
+      },
+      "invocation": {
+        "method": "process_query",
+        "params": {
+          "query": "query",
+          "session_id": "session_id"
+        },
+        "is_async": false,
+        "result_path": [
+          "success",
+          "response",
+          "thinking_steps"
+        ]
+      },
+      "dispatch": {
+        "getter_key": "web_test_agent",
+        "call_style": "qs",
+        "async_native": false
+      },
+      "progress_phases": [
+        "Scraping page structure and elements...",
+        "Identifying user-facing features...",
+        "Generating manual test cases...",
+        "Creating automated test scripts..."
+      ]
+    },
+    {
+      "id": "mongodb_rag",
+      "name": "MongoDB Atlas KB Agent",
+      "type": "RAG Pipeline Agent",
+      "category": "general",
+      "status": "active",
+      "admin_only": false,
+      "autonomy_quotient": 85,
+      "description": "An intelligent Retrieval-Augmented Generation (RAG) agent that connects to your MongoDB Atlas cluster, ingests documents (PDF, Word, Excel, PowerPoint, TXT), creates vector embeddings, and enables semantic search-powered Q&A over your knowledge base.",
+      "logo": "/images/mongodb-logo.png",
+      "version": "1.0.0",
+      "path": "agents/MongoDB_RAG_agent",
+      "capabilities": [
+        "MongoDB Atlas Connection",
+        "Multi-format Document Ingestion",
+        "Intelligent Text Chunking",
+        "Vector Embedding Generation (BGE-small)",
+        "MongoDB Atlas Vector Search",
+        "Context-Aware Q&A with RAG",
+        "Conversation Memory",
+        "Multi-file Knowledge Base"
+      ],
+      "tools": [
+        {
+          "name": "mongo_connect",
+          "description": "Connect to MongoDB Atlas using a connection URI"
+        },
+        {
+          "name": "text_extractor",
+          "description": "Extract text from PDF, Word, Excel, PowerPoint, and text files"
+        },
+        {
+          "name": "chunker",
+          "description": "Intelligently chunk text with section awareness and overlap"
+        },
+        {
+          "name": "embedding_service",
+          "description": "Generate vector embeddings using BGE-small-en-v1.5 model"
+        },
+        {
+          "name": "vector_search",
+          "description": "Semantic search over MongoDB Atlas vector index"
+        }
+      ],
+      "llm_providers": [
+        {
+          "name": "Gemini 2.5 Flash Image",
+          "type": "cloud",
+          "default": true,
+          "cost": "API-based",
+          "description": "PWC GenAI service for answer generation"
+        }
+      ],
+      "usage": {
+        "api_endpoint": "POST /api/mongodb-rag",
+        "request_format": {
+          "query": "string (user message)",
+          "session_id": "string (optional)",
+          "mongodb_uri": "string (for connection)",
+          "file_content": "string (base64, for file upload)",
+          "file_type": "string (file extension)",
+          "file_name": "string",
+          "raw_text": "string (for text input)",
+          "collection_name": "string (default: rag_documents)"
+        },
+        "example_prompts": [
+          "Connect to my MongoDB Atlas cluster",
+          "Upload a PDF document for analysis",
+          "What are the key findings in the uploaded document?",
+          "Summarize the main topics across all ingested files",
+          "Find information about specific topic from my documents"
+        ]
+      },
+      "loading": {
+        "module": "agents.MongoDB_RAG_agent.agent",
+        "instance_name": "mongodb_rag_agent",
+        "type": "instance"
+      },
+      "routing": {
+        "keywords": [
+          "mongodb",
+          "mongo db",
+          "rag",
+          "document search",
+          "knowledge base",
+          "vector search",
+          "document ingestion",
+          "embed documents",
+          "search my documents",
+          "atlas",
+          "semantic search"
+        ],
+        "confidence": 0.9
+      },
+      "invocation": {
+        "method": "process_chat",
+        "params": {
+          "query": "query",
+          "session_id": "session_id"
+        },
+        "is_async": false,
+        "result_path": [
+          "success",
+          "response",
+          "thinking_steps",
+          "requires_uri"
+        ]
+      },
+      "dispatch": {
+        "getter_key": "mongodb_rag_agent",
+        "call_style": "chat",
+        "async_native": false
+      },
+      "configuration": {
+        "optional_settings": [
+          {
+            "key": "USE_LOCAL_LLM",
+            "description": "Run this agent on your local LLM server (http://127.0.0.1:4099) instead of PwC GenAI",
+            "default": "false",
+            "control": "boolean"
+          }
+        ]
+      }
+    },
+    {
+      "id": "sql_db",
+      "name": "SQL DB Agent",
+      "type": "Data & Analytics Agent",
+      "category": "general",
+      "status": "active",
+      "admin_only": false,
+      "autonomy_quotient": 92,
+      "description": "Enterprise-grade SQL assistant built for extra-large datasets and complex queries. Schema-grounded NL-to-SQL with EXPLAIN plan analysis, query-timeout protection, table-size and index awareness, two-pass schema selection for 150+ table databases, parallel step execution, paginated results, 5-min result caching, and optimisation-aware prompt engineering. Supports ERD generation, governed CRUD (SELECT/INSERT/UPDATE/DELETE), RBAC, audit logging, and CREATE TEMP TABLE for analytical workflows.",
+      "logo": "/images/sql-db-logo.svg",
+      "version": "2.0.0",
+      "path": "agents/SQL_DB_agent",
+      "capabilities": [
+        "ERD / Mermaid schema diagrams",
+        "Natural language to schema-aware, performance-optimised SQL",
+        "SELECT / INSERT / UPDATE / DELETE with validation",
+        "Multi-step query planning with parallel execution of independent steps",
+        "EXPLAIN plan analysis with cost, row-estimate, and sequential-scan warnings",
+        "Query timeout protection (30 s per statement, per-dialect)",
+        "Table row-count and index awareness in schema context",
+        "Two-pass schema selection for databases with 150+ tables",
+        "Paginated result delivery with page/page_size controls",
+        "Short-TTL result caching (5 min per session) for repeated queries",
+        "Memory-safe chunked fetching for wide/large result sets",
+        "CREATE TEMP TABLE support for complex analytical workflows",
+        "Conversation history summarisation for long sessions",
+        "Result formatting, summaries, and LLM-powered insights",
+        "RBAC (reader / writer / admin)",
+        "Dangerous DDL blocked unless explicitly authorized",
+        "Audit logging of all SQL actions"
+      ],
+      "tools": [
+        {
+          "name": "schema_introspection",
+          "description": "Reflect tables, columns, PKs, FKs, indexes, and approximate row counts from the live database. Two-pass mode for large schemas (150+ tables): lightweight summary first, then full detail for relevant tables only."
+        },
+        {
+          "name": "sql_guard",
+          "description": "Parse, classify, RBAC-check, schema-validate, and audit-log every statement. Blocks destructive DDL unless admin-authorised. Allows CREATE TEMP TABLE for writer+ roles."
+        },
+        {
+          "name": "sql_executor",
+          "description": "Execute validated statements with per-dialect statement timeouts, chunked result fetching (5 K row batches), and structured row-set return."
+        },
+        {
+          "name": "explain_analyzer",
+          "description": "Run EXPLAIN (PostgreSQL JSON, MySQL, SQLite QUERY PLAN) before execution. Warns on estimated cost > 50 K, row scan > 500 K, or sequential scans on large tables."
+        },
+        {
+          "name": "llm_plan",
+          "description": "PwC GenAI for NL-to-SQL orchestration with optimisation rules (no SELECT * on large tables, push filters early, prefer indexed columns, use CTEs), plan completeness review, and narrative formatting."
+        },
+        {
+          "name": "result_cache",
+          "description": "Short-TTL (5 min) per-session cache. Identical SQL plans return instantly without re-execution."
+        }
+      ],
+      "llm_providers": [
+        {
+          "name": "PwC GenAI (Gemini 2.5 Flash Image)",
+          "type": "cloud",
+          "default": true,
+          "cost": "API-based",
+          "description": "Planning, SQL synthesis, and answer formatting"
+        }
+      ],
+      "configuration": {
+        "required_settings": [
+          {
+            "key": "DATABASE_CONNECTION_STRING",
+            "description": "SQLAlchemy database URL (e.g. postgresql+psycopg2://user:pass@host:5432/db or sqlite:///path.db)"
+          },
+          {
+            "key": "PWC_GENAI_API_KEY",
+            "description": "PwC GenAI API key for completions"
+          },
+          {
+            "key": "PWC_GENAI_BEARER_TOKEN",
+            "description": "PwC authentication token (Bearer) for GenAI"
+          }
+        ],
+        "optional_settings": [
+          {
+            "key": "SQL_DB_ROLE",
+            "description": "Access tier: reader (SELECT only), writer (default: DML+SELECT), admin (DDL only if destructive flag set)",
+            "default": "writer"
+          },
+          {
+            "key": "SQL_DB_ALLOW_DESTRUCTIVE",
+            "description": "Set to true only with SQL_DB_ROLE=admin to allow DROP/TRUNCATE/ALTER/CREATE",
+            "default": "false"
+          },
+          {
+            "key": "USE_LOCAL_LLM",
+            "description": "Run this agent on your local LLM server (http://127.0.0.1:4099) instead of PwC GenAI",
+            "default": "false",
+            "control": "boolean"
+          }
+        ]
+      },
+      "usage": {
+        "entry_point": "agent.py",
+        "class_name": "SqlDbAgent",
+        "api_endpoint": "POST /api/sql-db",
+        "example_prompts": [
+          "Show an entity-relationship diagram of my database",
+          "List the ten newest orders with customer names",
+          "How many active users signed up last month?",
+          "Update the status to shipped for order_id 10025 where still pending",
+          "Aggregate total revenue by region for the last 3 years, sorted descending",
+          "Extract all NPA loans with outstanding > principal, include PAN and days since disbursement",
+          "Find dormant accounts with no transactions in the past 180 days across all branches"
+        ]
+      },
+      "import_config": {
+        "module": "agents.SQL_DB_agent.agent",
+        "instance_name": "sql_db_agent",
+        "type": "instance"
+      },
+      "routing": {
+        "keywords": [
+          "sql",
+          "database",
+          "postgres",
+          "postgresql",
+          "mysql",
+          "sqlite",
+          "select from",
+          "join tables",
+          "schema",
+          "erd",
+          "entity relationship",
+          "run query",
+          "jdbc",
+          "odbc"
+        ],
+        "confidence": 0.88
+      },
+      "invocation": {
+        "method": "process_chat",
+        "params": {
+          "query": "query",
+          "session_id": "session_id",
+          "page": "page",
+          "page_size": "page_size"
+        },
+        "is_async": false,
+        "result_path": [
+          "success",
+          "response",
+          "thinking_steps",
+          "generated_sql",
+          "page_info",
+          "explain_warnings",
+          "cached"
+        ]
+      },
+      "dispatch": {
+        "getter_key": "sql_db_agent",
+        "call_style": "chat",
+        "async_native": false
+      }
+    },
+    {
+      "id": "company_research",
+      "name": "Company Research Agent",
+      "type": "Company Intelligence Agent",
+      "category": "finance",
+      "status": "active",
+      "admin_only": false,
+      "autonomy_quotient": 90,
+      "description": "An intelligent AI agent that performs comprehensive company research. Provide a company name and get a full business profile, detailed financial analysis (QoQ & YoY), balance sheet review, strategic focus areas with leadership quotes, latest news, and tailored sales pitch recommendations for consultants.",
+      "logo": "/images/company-research-logo.png",
+      "version": "1.0.0",
+      "path": "agents/Company_research_agent",
+      "capabilities": [
+        "Company Overview & Business Profile",
+        "QoQ and YoY Growth Analysis",
+        "Financial Performance (Last 3 Quarters & 3 Years)",
+        "Balance Sheet Analysis",
+        "Strategic Focus Areas & Leadership Quotes",
+        "Relevant Industry News",
+        "Latest Company News",
+        "Sales Pitch Recommendations",
+        "Email Report Delivery"
+      ],
+      "tools": [
+        {
+          "name": "perplexity_search",
+          "description": "Multi-query Perplexity web search for gathering company data across 6 categories",
+          "module": "tools.perplexity_search"
+        },
+        {
+          "name": "ai_report_generator",
+          "description": "AI-powered comprehensive report generation from gathered data",
+          "module": "ai_service"
+        },
+        {
+          "name": "email_sender",
+          "description": "Sends professional company research reports via email using Resend",
+          "module": "tools.email_sender"
+        }
+      ],
+      "llm_providers": [
+        {
+          "name": "PwC GenAI (Gemini 2.5 Flash Image)",
+          "type": "cloud",
+          "default": true,
+          "cost": "API-based",
+          "description": "PWC GenAI service for research analysis and report generation",
+          "models": [
+            ""
+          ]
+        }
+      ],
+      "configuration": {
+        "required_settings": [
+          {
+            "key": "PERPLEXITY_API_KEY",
+            "description": "API key for Perplexity web search"
+          },
+          {
+            "key": "PWC_GENAI_API_KEY",
+            "description": "API key for PwC GenAI service"
+          }
+        ],
+        "optional_settings": [
+          {
+            "key": "RESEND_API_KEY",
+            "description": "Resend API key for email delivery"
+          },
+          {
+            "key": "RESEND_FROM_EMAIL",
+            "description": "Verified sender email address for Resend"
+          },
+          {
+            "key": "USE_LOCAL_LLM",
+            "description": "Run this agent on your local LLM server (http://127.0.0.1:4099) instead of PwC GenAI",
+            "default": "false",
+            "control": "boolean"
+          }
+        ]
+      },
+      "usage": {
+        "entry_point": "agent.py",
+        "class_name": "CompanyResearchAgent",
+        "api_endpoint": "POST /api/company-research",
+        "example_prompts": [
+          "Research on Infosys",
+          "Company research about TCS",
+          "Analyze Reliance Industries",
+          "Give me a full research report on Wipro and send to john@example.com",
+          "Research Microsoft financials and strategy"
+        ]
+      },
+      "import_config": {
+        "module": "agents.Company_research_agent.agent",
+        "instance_name": "company_research_agent",
+        "type": "instance"
+      },
+      "routing": {
+        "keywords": [
+          "company research",
+          "company analysis",
+          "company profile",
+          "company financials",
+          "financial analysis",
+          "business profile",
+          "research on company",
+          "analyze company",
+          "company overview",
+          "quarterly results",
+          "annual report",
+          "sales pitch",
+          "company news",
+          "balance sheet",
+          "QoQ growth",
+          "YoY growth",
+          "revenue analysis"
+        ],
+        "confidence": 0.9
+      },
+      "invocation": {
+        "method": "research",
+        "params": {
+          "query": "query",
+          "session_id": "session_id"
+        },
+        "is_async": true,
+        "has_model_dump": true,
+        "result_path": [
+          "success",
+          "response",
+          "thinking_steps",
+          "latest_news_cards"
+        ]
+      },
+      "dispatch": {
+        "getter_key": "company_research_agent",
+        "call_style": "qsk",
+        "async_native": false
+      },
+      "progress_phases": [
+        "Searching company overview and background...",
+        "Analyzing financial statements and revenue data...",
+        "Reviewing balance sheet and capital structure...",
+        "Researching strategic focus areas and initiatives...",
+        "Gathering latest news and market developments...",
+        "Synthesizing research into executive report..."
+      ]
+    },
+    {
+      "id": "meeting_prep",
+      "name": "Meeting Prep Agent",
+      "type": "Meeting Intelligence Agent",
+      "category": "general",
+      "status": "active",
+      "admin_only": false,
+      "autonomy_quotient": 88,
+      "description": "An intelligent AI agent that helps you prepare for meetings through a 3-phase approach: context clarification, multi-dimensional research (person profile, company overview, topic deep-dive, company+topic specifics, and future forecasts), and strategic talking-points generation with warm openers, data-backed insights, and actionable recommendations.",
+      "logo": "/images/meeting-prep-logo.png",
+      "version": "1.0.0",
+      "path": "agents/Meeting_prep_agent",
+      "capabilities": [
+        "Meeting Context Clarification",
+        "Person Profile Research",
+        "Company Background Analysis",
+        "Topic & Market Research",
+        "Company-Topic Cross-Analysis",
+        "Forecast & Growth Strategy Research",
+        "Intelligent Warm Openers",
+        "Data-Backed Talking Points",
+        "Strategy & Growth Discussion Points",
+        "Value Proposition Alignment",
+        "Risk & Challenge Discussion Points",
+        "Innovation & Future-Focused Points",
+        "Client Challenges Analysis",
+        "Current Status Assessment",
+        "Technology Landscape Analysis",
+        "Best Available Technology Recommendations",
+        "Indian & Global Reference Cases",
+        "Reference-Based Discussion Points",
+        "Quick Reference Card",
+        "Topics-to-Avoid Advisory",
+        "Multi-Turn Conversation Support"
+      ],
+      "tools": [
+        {
+          "name": "context_analyzer",
+          "description": "AI-powered meeting context extraction and clarification",
+          "module": "ai_service"
+        },
+        {
+          "name": "perplexity_search",
+          "description": "10-dimensional parallel Perplexity web search for comprehensive meeting research including challenges, status, technology, and references",
+          "module": "tools.perplexity_search"
+        },
+        {
+          "name": "talking_points_builder",
+          "description": "AI-powered strategic talking points synthesis from research data",
+          "module": "ai_service"
+        }
+      ],
+      "llm_providers": [
+        {
+          "name": "PwC GenAI (Gemini 2.5 Flash Image)",
+          "type": "cloud",
+          "default": true,
+          "cost": "API-based",
+          "description": "PWC GenAI service for context analysis and talking points generation",
+          "models": [
+            ""
+          ]
+        }
+      ],
+      "configuration": {
+        "required_settings": [
+          {
+            "key": "PERPLEXITY_API_KEY",
+            "description": "API key for Perplexity web search"
+          },
+          {
+            "key": "PWC_GENAI_API_KEY",
+            "description": "API key for PwC GenAI service"
+          }
+        ],
+        "optional_settings": [
+          {
+            "key": "USE_LOCAL_LLM",
+            "description": "Run this agent on your local LLM server (http://127.0.0.1:4099) instead of PwC GenAI",
+            "default": "false",
+            "control": "boolean"
+          }
+        ]
+      },
+      "usage": {
+        "entry_point": "agent.py",
+        "class_name": "MeetingPrepAgent",
+        "api_endpoint": "POST /api/meeting-prep",
+        "example_prompts": [
+          "I have a meeting with the CFO of Bandhan Bank to discuss rural banking strategy",
+          "Prepare me for a meeting with Sundar Pichai at Google about AI strategy",
+          "Meeting with VP Engineering at Infosys about cloud migration",
+          "I'm meeting the CEO of HDFC Bank tomorrow to pitch our consulting services",
+          "Help me prepare for a client meeting with TCS about digital transformation"
+        ]
+      },
+      "import_config": {
+        "module": "agents.Meeting_prep_agent.agent",
+        "instance_name": "meeting_prep_agent",
+        "type": "instance"
+      },
+      "routing": {
+        "keywords": [
+          "meeting preparation",
+          "prepare for meeting",
+          "meeting with",
+          "talking points",
+          "meeting prep",
+          "prepare me for",
+          "meeting brief",
+          "meeting notes",
+          "conversation starters",
+          "client meeting",
+          "prepare for call",
+          "discussion points",
+          "meeting strategy",
+          "pitch preparation",
+          "warm opening",
+          "meeting agenda"
+        ],
+        "confidence": 0.9
+      },
+      "invocation": {
+        "method": "prepare",
+        "params": {
+          "query": "query",
+          "session_id": "session_id"
+        },
+        "is_async": true,
+        "has_model_dump": true,
+        "result_path": [
+          "success",
+          "response",
+          "thinking_steps"
+        ]
+      },
+      "dispatch": {
+        "getter_key": "meeting_prep_agent",
+        "call_style": "qs",
+        "async_native": false
+      },
+      "progress_phases": [
+        "Analyzing meeting context and participants...",
+        "Researching person profile and background...",
+        "Gathering company intelligence...",
+        "Researching discussion topics in depth...",
+        "Identifying peer companies and competitors...",
+        "Gathering peer financial benchmarking data...",
+        "Generating strategic talking points...",
+        "Building peer benchmarking analysis..."
+      ]
+    },
+    {
+      "id": "document_formatter",
+      "name": "Document Formatter Agent",
+      "type": "Document Processing Agent",
+      "category": "general",
+      "status": "active",
+      "admin_only": false,
+      "autonomy_quotient": 82,
+      "description": "An intelligent AI agent that extracts text, tables, and images from uploaded documents (PDF, Word, PowerPoint, Excel, HTML, images) and reformats them using LLM. Upload any document and get clean, structured output in Markdown, HTML, JSON, or plain text — with support for summarization, restructuring, and professional formatting.",
+      "logo": "/images/document-formatter-logo.png",
+      "version": "1.0.0",
+      "path": "agents/Document_formatter_agent",
+      "capabilities": [
+        "PDF Text & Table Extraction",
+        "Word Document Processing",
+        "PowerPoint Slide Extraction",
+        "Excel Spreadsheet Parsing",
+        "HTML Content Extraction",
+        "Image Detection & Metadata",
+        "Markdown Output Formatting",
+        "HTML Output Formatting",
+        "JSON Structured Output",
+        "Document Summarization",
+        "Content Restructuring",
+        "Table Preservation & Formatting",
+        "Multi-Format File Support",
+        "Session-Based Conversation",
+        "Professional Report Formatting"
+      ],
+      "tools": [
+        {
+          "name": "File Extractor",
+          "description": "Extracts text, tables, and images from uploaded documents using pdfplumber, python-docx, python-pptx, openpyxl, and BeautifulSoup"
+        },
+        {
+          "name": "LLM Formatter",
+          "description": "Uses Gemini 2.5 Flash Image to intelligently reformat extracted content based on user instructions"
+        }
+      ],
+      "api_endpoint": "/api/document-formatter",
+      "accepts_file_upload": true,
+      "supported_file_types": [
+        "pdf",
+        "docx",
+        "doc",
+        "pptx",
+        "ppt",
+        "xlsx",
+        "xls",
+        "txt",
+        "md",
+        "html",
+        "htm",
+        "csv",
+        "json",
+        "xml",
+        "png",
+        "jpg",
+        "jpeg",
+        "gif",
+        "bmp",
+        "webp"
+      ],
+      "api": {
+        "method": "process",
+        "params": {
+          "query": "query",
+          "file_content": "file_content",
+          "file_type": "file_type",
+          "file_name": "file_name",
+          "session_id": "session_id",
+          "output_format": "output_format"
+        },
+        "is_async": true,
+        "has_model_dump": true,
+        "result_path": [
+          "success",
+          "response",
+          "formatted_content",
+          "extracted_text",
+          "extracted_images",
+          "thinking_steps"
+        ]
+      },
+      "import_config": {
+        "module": "agents.Document_formatter_agent.agent",
+        "instance_name": "document_formatter_agent",
+        "type": "instance"
+      },
+      "invocation": {
+        "method": "process",
+        "params": {
+          "query": "query",
+          "session_id": "session_id",
+          "file_content": "file_content",
+          "file_type": "file_type",
+          "file_name": "file_name"
+        },
+        "is_async": true,
+        "has_model_dump": true,
+        "result_path": [
+          "success",
+          "response",
+          "formatted_content",
+          "thinking_steps"
+        ]
+      },
+      "routing": {
+        "keywords": [
+          "format document",
+          "reformat",
+          "extract text",
+          "convert document",
+          "document formatting",
+          "parse document",
+          "extract from pdf",
+          "extract from word",
+          "extract from excel",
+          "extract from powerpoint",
+          "restructure document",
+          "clean up document",
+          "document to markdown",
+          "format this file",
+          "extract tables",
+          "parse file",
+          "convert to markdown",
+          "convert to html",
+          "document extraction"
+        ],
+        "confidence": 0.85
+      },
+      "usage": {
+        "entry_point": "agent.py",
+        "class_name": "DocumentFormatterAgent",
+        "api_endpoint": "POST /api/document-formatter",
+        "example_prompts": [
+          "Extract and format the content from this PDF",
+          "Convert this Word document to clean markdown",
+          "Extract all tables from this spreadsheet and format them nicely",
+          "Summarize the key points from this uploaded document",
+          "Reformat this PowerPoint into a structured report"
+        ]
+      },
+      "dispatch": {
+        "getter_key": "document_formatter_agent",
+        "call_style": "doc",
+        "async_native": false
+      },
+      "configuration": {
+        "optional_settings": [
+          {
+            "key": "USE_LOCAL_LLM",
+            "description": "Run this agent on your local LLM server (http://127.0.0.1:4099) instead of PwC GenAI",
+            "default": "false",
+            "control": "boolean"
+          }
+        ]
+      }
+    },
+    {
+      "id": "threegpp_agent",
+      "name": "3GPP Specs Agent",
+      "type": "Telecom Standards Agent",
+      "category": "telecom",
+      "status": "active",
+      "admin_only": false,
+      "autonomy_quotient": 80,
+      "description": "An intelligent agent that indexes and searches 3GPP TSG RAN specification files. It crawls the 3GPP FTP repository, finds relevant specification documents based on your query, downloads and extracts their content, and generates comprehensive answers with source references.",
+      "logo": "/images/threegpp-agent-logo.svg",
+      "version": "1.0.0",
+      "path": "agents/ThreeGPP_agent",
+      "capabilities": [
+        "3GPP FTP Repository Crawling",
+        "Specification File Search",
+        "Document Download & Extraction",
+        "ZIP Archive Processing",
+        "PDF/Word/Text Parsing",
+        "Standards-Aware Q&A",
+        "Source Citation & Linking"
+      ],
+      "tools": [
+        {
+          "name": "inventory_builder",
+          "description": "Crawls the 3GPP FTP repository and builds a searchable file index",
+          "module": "tools.inventory_builder"
+        },
+        {
+          "name": "inventory_search",
+          "description": "Searches the indexed file inventory using keyword and fuzzy matching",
+          "module": "tools.inventory_search"
+        },
+        {
+          "name": "file_downloader",
+          "description": "Downloads and extracts content from 3GPP specification files (ZIP, PDF, DOC, TXT)",
+          "module": "tools.file_downloader"
+        }
+      ],
+      "llm_providers": [
+        {
+          "name": "PwC GenAI (Gemini 2.5 Flash Image)",
+          "type": "cloud",
+          "default": true,
+          "cost": "API-based",
+          "description": "PwC GenAI service for specification analysis and response generation",
+          "models": [
+            ""
+          ]
+        }
+      ],
+      "data_source": {
+        "name": "3GPP TSG RAN FTP",
+        "url": "https://www.3gpp.org/ftp/tsg_ran/",
+        "type": "ftp_directory"
+      },
+      "import_config": {
+        "module": "agents.ThreeGPP_agent.agent",
+        "class_name": "ThreeGPPAgent",
+        "type": "class"
+      },
+      "routing": {
+        "keywords": [
+          "3gpp",
+          "3gpp spec",
+          "3gpp specification",
+          "tsg ran",
+          "ran specification",
+          "nr specification",
+          "lte specification",
+          "5g specification",
+          "5g standard",
+          "nr beam management",
+          "3gpp release",
+          "ts 38",
+          "ts 36",
+          "tr 38",
+          "tr 36",
+          "ran working group",
+          "3gpp document",
+          "3gpp ftp",
+          "telecom standard",
+          "radio access network"
+        ],
+        "confidence": 0.9
+      },
+      "invocation": {
+        "method": "process_query",
+        "params": {
+          "query": "query",
+          "session_id": "session_id"
+        },
+        "is_async": true,
+        "result_path": [
+          "response",
+          "thinking_steps"
+        ]
+      },
+      "usage": {
+        "entry_point": "agent.py",
+        "class_name": "ThreeGPPAgent",
+        "api_endpoint": "POST /api/global-chat",
+        "example_prompts": [
+          "Find NR beam management specifications in Release 17",
+          "What are the latest 3GPP specs for 5G handover?",
+          "Search for TS 38.331 RRC specification documents",
+          "Find documents about LTE-NR dual connectivity",
+          "What 3GPP specs cover MIMO enhancements?"
+        ]
+      },
+      "configuration": {
+        "optional_settings": [
+          {
+            "key": "USE_LOCAL_LLM",
+            "description": "Run this agent on your local LLM server (http://127.0.0.1:4099) instead of PwC GenAI",
+            "default": "false",
+            "control": "boolean"
+          }
+        ]
+      }
+    },
+    {
+      "id": "shannon_security",
+      "name": "Website Security Agent (Shannon)",
+      "type": "Security Assessment Agent",
+      "category": "security",
+      "status": "active",
+      "admin_only": false,
+      "autonomy_quotient": 90,
+      "description": "An AI-driven security assessment agent inspired by the Shannon pentesting framework. Analyzes web applications for OWASP Top 10 vulnerabilities by examining security headers, cookies, forms, API endpoints, and technology stack. Generates comprehensive security reports with severity ratings and remediation guidance.",
+      "logo": "/images/shannon-security-logo.png",
+      "version": "1.0.0",
+      "path": "agents/Shannon_security_agent",
+      "capabilities": [
+        "OWASP Top 10 Vulnerability Assessment",
+        "Security Header Analysis",
+        "Cookie Security Audit",
+        "Form & Input Validation Check",
+        "API Endpoint Discovery",
+        "Technology Fingerprinting",
+        "Comprehensive Security Report Generation",
+        "CORS Configuration Analysis",
+        "Session Security Review"
+      ],
+      "tools": [
+        {
+          "name": "web_context_gathering",
+          "description": "Scrapes target URL to gather security-relevant data: headers, forms, cookies, scripts, API endpoints"
+        },
+        {
+          "name": "owasp_analysis",
+          "description": "Analyzes gathered data against OWASP Top 10 vulnerability categories"
+        },
+        {
+          "name": "report_generation",
+          "description": "Generates a comprehensive security assessment report with findings and remediation steps"
+        }
+      ],
+      "configuration": {
+        "environment_variables": [],
+        "optional_settings": [
+          {
+            "key": "USE_LOCAL_LLM",
+            "description": "Run this agent on your local LLM server (http://127.0.0.1:4099) instead of PwC GenAI",
+            "default": "false",
+            "control": "boolean"
+          }
+        ]
+      },
+      "usage": {
+        "entry_point": "agent.py",
+        "class_name": "ShannonSecurityAgent",
+        "api_endpoint": "POST /api/shannon-security",
+        "example_prompts": [
+          "Run a security assessment on https://example.com",
+          "Check https://myapp.com for OWASP vulnerabilities",
+          "Pentest https://staging.example.com",
+          "Scan https://api.example.com for security issues",
+          "Analyze the security of https://shop.example.com"
+        ]
+      },
+      "import_config": {
+        "module": "agents.Shannon_security_agent.agent",
+        "instance_name": "shannon_security_agent",
+        "type": "instance"
+      },
+      "routing": {
+        "keywords": [
+          "security assessment",
+          "security scan",
+          "security audit",
+          "security check",
+          "pentest",
+          "penetration test",
+          "vulnerability scan",
+          "vulnerability assessment",
+          "owasp",
+          "xss",
+          "sql injection",
+          "ssrf",
+          "injection attack",
+          "security headers",
+          "security review",
+          "exploit",
+          "attack surface",
+          "broken access",
+          "auth bypass",
+          "security vulnerability",
+          "hack",
+          "secure my app",
+          "is my site secure",
+          "security report",
+          "shannon"
+        ],
+        "confidence": 0.95
+      },
+      "invocation": {
+        "method": "process_query",
+        "params": {
+          "query": "query",
+          "session_id": "session_id"
+        },
+        "is_async": false,
+        "result_path": [
+          "success",
+          "response",
+          "thinking_steps"
+        ]
+      },
+      "dispatch": {
+        "getter_key": "shannon_security_agent",
+        "call_style": "qs",
+        "async_native": false
+      }
+    },
+    {
+      "id": "email_agent",
+      "name": "Email Agent",
+      "type": "Email Sending Agent",
+      "category": "general",
+      "status": "active",
+      "admin_only": false,
+      "autonomy_quotient": 70,
+      "description": "An interactive AI agent that helps compose and send professional emails. Collects recipient, subject, and body through natural conversation, composes polished email content, and sends via Resend with confirmation before delivery.",
+      "logo": "/images/email-agent-logo.svg",
+      "version": "1.0.0",
+      "path": "agents/Email_agent",
+      "capabilities": [
+        "Interactive email detail collection",
+        "Professional email composition",
+        "Multi-recipient support",
+        "Email preview before sending",
+        "Conversation-based email drafting"
+      ],
+      "tools": [
+        {
+          "name": "email_extractor",
+          "description": "Extracts recipient, subject, and body from natural language using LLM",
+          "module": "tools.email_sender"
+        },
+        {
+          "name": "email_sender",
+          "description": "Sends formatted HTML emails via Resend API",
+          "module": "tools.email_sender"
+        }
+      ],
+      "llm_providers": [
+        {
+          "name": "Gemini 2.5 Flash Image",
+          "type": "cloud",
+          "default": true,
+          "cost": "API-based",
+          "description": "PWC GenAI service powered by Google Gemini",
+          "models": [
+            ""
+          ]
+        }
+      ],
+      "configuration": {
+        "required_settings": [
+          {
+            "key": "RESEND_API_KEY",
+            "description": "API key for Resend email service"
+          },
+          {
+            "key": "PWC_GENAI_API_KEY",
+            "description": "API key for PwC GenAI service"
+          }
+        ],
+        "optional_settings": [
+          {
+            "key": "RESEND_FROM_EMAIL",
+            "description": "Sender email address (default: onboarding@resend.dev)"
+          },
+          {
+            "key": "USE_LOCAL_LLM",
+            "description": "Run this agent on your local LLM server (http://127.0.0.1:4099) instead of PwC GenAI",
+            "default": "false",
+            "control": "boolean"
+          }
+        ]
+      },
+      "usage": {
+        "entry_point": "agent.py",
+        "class_name": "EmailAgent",
+        "api_endpoint": "POST /api/email-agent",
+        "example_prompts": [
+          "Send an email to john@example.com about the project update",
+          "Email sarah@company.com with the meeting notes",
+          "Compose an email to the team about the deadline extension",
+          "Send a thank-you email to client@business.com"
+        ]
+      },
+      "import_config": {
+        "module": "agents.Email_agent.agent",
+        "instance_name": "email_agent",
+        "type": "instance"
+      },
+      "routing": {
+        "keywords": [
+          "send email",
+          "email to",
+          "compose email",
+          "write email",
+          "mail to",
+          "send a mail",
+          "email someone",
+          "send message to",
+          "draft email",
+          "fire off an email"
+        ],
+        "is_fallback": false,
+        "confidence": 0.92
+      },
+      "invocation": {
+        "method": "process_query",
+        "params": {
+          "user_input": "query",
+          "session_id": "session_id"
+        },
+        "is_async": false,
+        "result_path": [
+          "response",
+          "thinking_steps"
+        ]
+      },
+      "dispatch": {
+        "getter_key": "email_agent",
+        "call_style": "qsk",
+        "async_native": false
+      },
+      "progress_phases": [
+        "Extracting email details from context...",
+        "Composing professional email content...",
+        "Formatting HTML email body..."
+      ]
+    },
+    {
+      "id": "claude_code",
+      "name": "Claude Code Agent",
+      "type": "Code Generation Agent",
+      "category": "sdlc",
+      "status": "active",
+      "admin_only": false,
+      "autonomy_quotient": 90,
+      "description": "An advanced AI coding agent powered by Claude that generates production-ready code, clones and modifies GitHub repositories, performs code reviews, and pushes changes. Supports all major programming languages with multi-turn conversation context.",
+      "logo": "/images/claude-code-logo.svg",
+      "version": "1.0.0",
+      "path": "agents/Claude_code_agent",
+      "capabilities": [
+        "Generate Code Files",
+        "Clone & Modify Repositories",
+        "Multi-Language Support",
+        "Code Review & Refactoring",
+        "Push to GitHub",
+        "Codebase Analysis"
+      ],
+      "tools": [
+        {
+          "name": "code_generator",
+          "description": "Generate complete, production-ready code files from natural language descriptions"
+        },
+        {
+          "name": "repo_analyzer",
+          "description": "Deep analysis of repository architecture, patterns, and code quality"
+        },
+        {
+          "name": "code_modifier",
+          "description": "AI-driven code modifications with full codebase context awareness"
+        },
+        {
+          "name": "clone_repo",
+          "description": "Clone any public GitHub repository for analysis and modification"
+        },
+        {
+          "name": "push_to_github",
+          "description": "Commit and push code changes to GitHub with auto-generated branch and PR link"
+        }
+      ],
+      "configuration": {
+        "environment_variables": [
+          {
+            "name": "ANTHROPIC_API_KEY",
+            "description": "Anthropic API key for Claude access",
+            "required": true
+          }
+        ],
+        "optional_settings": [
+          {
+            "key": "USE_LOCAL_LLM",
+            "description": "Run this agent on your local LLM server (http://127.0.0.1:4099) instead of PwC GenAI",
+            "default": "false",
+            "control": "boolean"
+          }
+        ]
+      },
+      "usage": {
+        "entry_point": "agent.py",
+        "class_name": "ClaudeCodeAgent",
+        "api_endpoint": "POST /api/claude-code",
+        "example_prompts": [
+          "Write a Python FastAPI server with JWT authentication",
+          "Create a React component for a data table with sorting and filtering",
+          "Clone https://github.com/owner/repo and add error handling",
+          "Generate a REST API with CRUD operations in Node.js",
+          "Build a CLI tool in Go that processes CSV files",
+          "Analyze the repository architecture and suggest improvements",
+          "Refactor the authentication module for better security"
+        ]
+      },
+      "import_config": {
+        "module": "agents.Claude_code_agent.agent",
+        "instance_name": "claude_code_agent",
+        "type": "instance"
+      },
+      "routing": {
+        "keywords": [
+          "generate code",
+          "write code",
+          "create code",
+          "build code",
+          "claude",
+          "code generation",
+          "create a file",
+          "write a function",
+          "write a class",
+          "write a script",
+          "write a program",
+          "build a",
+          "implement",
+          "refactor code",
+          "code review",
+          "write me",
+          "create me",
+          "build me",
+          "generate a",
+          "develop a",
+          "code a",
+          "program for",
+          "script for",
+          "write python",
+          "write javascript",
+          "write typescript",
+          "write java",
+          "write rust",
+          "write go"
+        ],
+        "is_fallback": false,
+        "confidence": 0.9
+      },
+      "invocation": {
+        "method": "process_query",
+        "params": {
+          "query": "query",
+          "session_id": "session_id",
+          "github_token": "github_token"
+        },
+        "is_async": true,
+        "result_path": [
+          "response",
+          "thinking_steps"
+        ]
+      },
+      "dispatch": {
+        "getter_key": "claude_code_agent",
+        "call_style": "qs",
+        "async_native": false
+      }
+    },
+    {
+      "id": "web_search_agent",
+      "name": "Web Search Agent",
+      "type": "Advanced Web Search Agent",
+      "category": "general",
+      "status": "active",
+      "admin_only": false,
+      "autonomy_quotient": 80,
+      "description": "An advanced AI-powered web search agent using the Perplexity API. Supports multiple search modes — general, news, academic, writing, math, and deep research. Uses LLM to intelligently classify queries, optimize search parameters, and present results with citations, images, and follow-up questions.",
+      "logo": "/images/web-search-agent-logo.svg",
+      "version": "1.0.0",
+      "path": "agents/Web_search_agent",
+      "capabilities": [
+        "General Web Search",
+        "News Search with Recency Filters",
+        "Academic & Scholarly Research",
+        "Math & Science Queries",
+        "Deep Multi-Source Research",
+        "LLM-Powered Query Optimization",
+        "Source Citations & References",
+        "Image Results",
+        "Follow-up Question Suggestions",
+        "Conversational Context Memory"
+      ],
+      "tools": [
+        {
+          "name": "perplexity_search",
+          "description": "Perplexity AI-powered web search with multiple search modes",
+          "module": "tools.perplexity_client"
+        },
+        {
+          "name": "llm_intent_classifier",
+          "description": "LLM-based query intent classification for optimal search parameters",
+          "module": "ai_service"
+        },
+        {
+          "name": "llm_formatter",
+          "description": "LLM-based response formatting for professional presentation",
+          "module": "ai_service"
+        },
+        {
+          "name": "og_image_fetcher",
+          "description": "Fetches Open Graph preview images from source URLs",
+          "module": "tools.perplexity_client"
+        }
+      ],
+      "llm_providers": [
+        {
+          "name": "Perplexity Sonar",
+          "type": "cloud",
+          "default": true,
+          "cost": "API-based",
+          "description": "Perplexity Sonar models for real-time web search with citations",
+          "models": [
+            "sonar",
+            "sonar-deep-research"
+          ]
+        },
+        {
+          "name": "PwC GenAI (Gemini 2.5 Flash Image)",
+          "type": "cloud",
+          "default": false,
+          "cost": "API-based",
+          "description": "Used for query optimization and response formatting",
+          "models": [
+            ""
+          ]
+        }
+      ],
+      "search_modes": [
+        {
+          "id": "general",
+          "name": "General Search",
+          "description": "Comprehensive web search for any topic",
+          "icon": "Globe"
+        },
+        {
+          "id": "news",
+          "name": "News Search",
+          "description": "Latest news and current events with recency filters",
+          "icon": "Newspaper"
+        },
+        {
+          "id": "academic",
+          "name": "Academic Research",
+          "description": "Scholarly papers, research studies, and authoritative sources",
+          "icon": "GraduationCap"
+        },
+        {
+          "id": "writing",
+          "name": "Writing Assistant",
+          "description": "Research and references for writing tasks",
+          "icon": "PenTool"
+        },
+        {
+          "id": "math",
+          "name": "Math & Science",
+          "description": "Mathematical calculations, formulas, and scientific queries",
+          "icon": "Calculator"
+        },
+        {
+          "id": "deep_research",
+          "name": "Deep Research",
+          "description": "Thorough multi-faceted analysis with extensive sources",
+          "icon": "Microscope"
+        }
+      ],
+      "configuration": {
+        "required_settings": [
+          {
+            "key": "PERPLEXITY_API_KEY",
+            "description": "API key for Perplexity AI web search service"
+          }
+        ],
+        "optional_settings": [
+          {
+            "key": "PWC_GENAI_API_KEY",
+            "description": "API key for PwC GenAI service (for query optimization and response formatting)"
+          },
+          {
+            "key": "USE_LOCAL_LLM",
+            "description": "Run this agent on your local LLM server (http://127.0.0.1:4099) instead of PwC GenAI",
+            "default": "false",
+            "control": "boolean"
+          }
+        ]
+      },
+      "usage": {
+        "entry_point": "agent.py",
+        "class_name": "WebSearchAgent",
+        "api_endpoint": "POST /api/web-search",
+        "example_prompts": [
+          "What are the latest developments in quantum computing?",
+          "Find recent news about the stock market crash",
+          "Search for academic papers on transformer architecture in NLP",
+          "What is the derivative of x^3 * sin(x)?",
+          "Deep research on the impact of AI on healthcare in 2025"
+        ]
+      },
+      "import_config": {
+        "module": "agents.Web_search_agent.agent",
+        "instance_name": "web_search_agent",
+        "type": "instance"
+      },
+      "routing": {
+        "keywords": [
+          "search",
+          "search for",
+          "look up",
+          "find information",
+          "what is",
+          "who is",
+          "latest news",
+          "recent news",
+          "current events",
+          "research about",
+          "find out about",
+          "web search",
+          "google",
+          "search the web",
+          "academic paper",
+          "scholarly article",
+          "perplexity"
+        ],
+        "confidence": 0.85
+      },
+      "invocation": {
+        "method": "search",
+        "params": {
+          "query": "query",
+          "search_focus": "search_focus",
+          "session_id": "session_id"
+        },
+        "is_async": true,
+        "result_path": [
+          "response",
+          "thinking_steps",
+          "sources",
+          "images",
+          "follow_up_questions"
+        ]
+      },
+      "dispatch": {
+        "getter_key": "web_search_agent",
+        "call_style": "qsk",
+        "async_native": true
+      },
+      "progress_phases": [
+        "Classifying search intent...",
+        "Searching the web for relevant information...",
+        "Analyzing search results and sources...",
+        "Formatting response with citations..."
+      ]
+    },
+    {
+      "id": "ppt_generator",
+      "name": "PPT Generator Agent",
+      "type": "Presentation Generation Agent",
+      "category": "general",
+      "status": "active",
+      "admin_only": false,
+      "autonomy_quotient": 88,
+      "description": "A professional AI agent that generates complete PowerPoint (.pptx) presentations from any topic or instruction. Automatically creates structured slides with relevant content, searches for and embeds matching images, and applies polished visual themes. Just describe what you need — business pitches, training decks, research reports, educational slides — and get a downloadable .pptx file.",
+      "logo": "/images/ppt-generator-logo.png",
+      "version": "1.0.0",
+      "path": "agents/PPT_generator_agent",
+      "capabilities": [
+        "AI-Powered Content Generation",
+        "Automatic Slide Structuring",
+        "Relevant Image Search & Embedding",
+        "Multiple Visual Themes (Professional, Modern, Dark, Vibrant)",
+        "Title, Content, Section & Closing Slides",
+        "Downloadable .pptx Output",
+        "Custom Slide Count",
+        "Data-Rich Bullet Points",
+        "Professional Formatting"
+      ],
+      "tools": [
+        {
+          "name": "Content Generator",
+          "description": "Uses Gemini LLM to generate structured presentation content with slide outlines, bullet points, and image queries"
+        },
+        {
+          "name": "Image Search",
+          "description": "Searches DuckDuckGo Images for relevant visuals matching each slide topic"
+        },
+        {
+          "name": "PPT Builder",
+          "description": "Builds professional .pptx files using python-pptx with themed layouts, accent bars, and embedded images"
+        }
+      ],
+      "api_endpoint": "/api/ppt-generator",
+      "accepts_file_upload": false,
+      "api": {
+        "method": "process",
+        "params": {
+          "query": "query",
+          "session_id": "session_id",
+          "slide_count": "slide_count",
+          "theme": "theme"
+        },
+        "is_async": true,
+        "has_model_dump": true,
+        "result_path": [
+          "success",
+          "response",
+          "download_url",
+          "file_name",
+          "slide_count",
+          "thinking_steps"
+        ]
+      },
+      "import_config": {
+        "module": "agents.PPT_generator_agent.agent",
+        "instance_name": "ppt_generator_agent",
+        "type": "instance"
+      },
+      "invocation": {
+        "method": "process",
+        "params": {
+          "query": "query",
+          "session_id": "session_id"
+        },
+        "is_async": true,
+        "has_model_dump": true,
+        "result_path": [
+          "success",
+          "response",
+          "download_url",
+          "file_name",
+          "thinking_steps"
+        ]
+      },
+      "routing": {
+        "keywords": [
+          "create presentation",
+          "make ppt",
+          "make powerpoint",
+          "generate slides",
+          "create slides",
+          "presentation about",
+          "ppt about",
+          "powerpoint about",
+          "slide deck",
+          "pitch deck",
+          "make a pptx",
+          "generate presentation",
+          "build presentation",
+          "create a deck",
+          "presentation on",
+          "slides about",
+          "pptx",
+          "powerpoint presentation"
+        ],
+        "confidence": 0.85
+      },
+      "usage": {
+        "entry_point": "agent.py",
+        "class_name": "PPTGeneratorAgent",
+        "api_endpoint": "POST /api/ppt-generator",
+        "example_prompts": [
+          "Create a presentation about artificial intelligence in healthcare",
+          "Make a pitch deck for a SaaS startup",
+          "Generate slides about climate change with 10 slides",
+          "Build a training presentation on cybersecurity best practices",
+          "Create a dark-themed presentation about space exploration"
+        ]
+      },
+      "dispatch": {
+        "getter_key": "ppt_generator_agent",
+        "call_style": "qs",
+        "async_native": true
+      },
+      "progress_phases": [
+        "Generating slide structure and content...",
+        "Creating AI-generated images for each slide...",
+        "Building PowerPoint presentation...",
+        "Finalizing .pptx file for download..."
+      ],
+      "configuration": {
+        "optional_settings": [
+          {
+            "key": "USE_LOCAL_LLM",
+            "description": "Run this agent on your local LLM server (http://127.0.0.1:4099) instead of PwC GenAI",
+            "default": "false",
+            "control": "boolean"
+          }
+        ]
+      }
+    },
+    {
+      "id": "etl_agent",
+      "name": "AI ETL Agent",
+      "type": "Data Transformation Agent",
+      "category": "data",
+      "status": "active",
+      "admin_only": false,
+      "autonomy_quotient": 92,
+      "description": "An intelligent AI ETL agent: connect a mandatory source database (SQLAlchemy URL) and an optional destination database. It introspects both schemas (ERD) into session memory, extracts read-only data from the source (or accepts pasted CSV/JSON), plans and generates Pandas code, runs it in a sandbox, shows results, and can load transformed rows to the destination when you ask.",
+      "logo": "/images/etl-agent-logo.svg",
+      "version": "1.0.0",
+      "path": "agents/ETL_agent",
+      "capabilities": [
+        "Schema extraction & data profiling",
+        "LLM-powered transformation planning",
+        "Smart tool routing (Pandas / SQL / Direct LLM)",
+        "Safe Pandas code generation with static analysis",
+        "Sandboxed execution with timeout & memory limits",
+        "Self-healing critic loop (auto-fix failed code)",
+        "Output schema validation & enforcement",
+        "Session memory & step traceability",
+        "Multi-format input (CSV, JSON, TSV)",
+        "Natural language result explanation",
+        "Source/destination SQL databases with ERD introspection (SQLAlchemy)",
+        "Read-only SQL extract from source and optional write to destination"
+      ],
+      "tools": [
+        {
+          "name": "db_introspection",
+          "description": "Connect to source/destination DBs, build ERD text for LLM context, run validated read-only SELECTs, and load transformed DataFrames",
+          "module": "tools.db_introspection"
+        },
+        {
+          "name": "schema_extractor",
+          "description": "Extract column names, types, nullability, and sample rows from data — never sends full data to LLM",
+          "module": "tools.schema_extractor"
+        },
+        {
+          "name": "code_generator",
+          "description": "Generate safe, optimized Pandas code with static validation (blocked imports, required result variable)",
+          "module": "tools.code_generator"
+        },
+        {
+          "name": "sandbox_executor",
+          "description": "Execute generated code in a restricted sandbox with timeout, memory limits, and whitelisted builtins",
+          "module": "tools.sandbox_executor"
+        },
+        {
+          "name": "validator",
+          "description": "Validate output schema, data quality, null ratios, and logical correctness with self-healing prompts",
+          "module": "tools.validator"
+        }
+      ],
+      "llm_providers": [
+        {
+          "name": "PwC GenAI (Gemini 2.5 Flash Image)",
+          "type": "cloud",
+          "default": true,
+          "cost": "API-based",
+          "description": "Powers planning, code generation, critic/self-healing, and result formatting"
+        }
+      ],
+      "configuration": {
+        "required_settings": [
+          {
+            "key": "PWC_GENAI_API_KEY",
+            "description": "PwC GenAI API key for ETL planning and code generation"
+          },
+          {
+            "key": "PWC_GENAI_BEARER_TOKEN",
+            "description": "PwC authentication token (Bearer) for GenAI"
+          },
+          {
+            "key": "SOURCE_DATABASE_CONNECTION_STRING",
+            "description": "SQLAlchemy database URL for the source (e.g. postgresql+psycopg2://user:pass@host:5432/dbname, sqlite:///path/file.db). Required for schema (ERD) and extract."
+          }
+        ],
+        "optional_settings": [
+          {
+            "key": "DESTINATION_DATABASE_CONNECTION_STRING",
+            "description": "SQLAlchemy URL for load target. When set, the agent can write transformed data to a table when your prompt requests a load."
+          },
+          {
+            "key": "ETL_SANDBOX_TIMEOUT",
+            "description": "Max execution time in seconds for sandboxed code (default: 30)",
+            "default": "30"
+          },
+          {
+            "key": "ETL_MAX_OUTPUT_ROWS",
+            "description": "Maximum rows in output DataFrame (default: 50000)",
+            "default": "50000"
+          },
+          {
+            "key": "ETL_MAX_EXTRACT_ROWS",
+            "description": "Maximum rows pulled from the source DB per extract (default: 50000)",
+            "default": "50000"
+          },
+          {
+            "key": "USE_LOCAL_LLM",
+            "description": "Run this agent on your local LLM server (http://127.0.0.1:4099) instead of PwC GenAI",
+            "default": "false",
+            "control": "boolean"
+          }
+        ]
+      },
+      "usage": {
+        "entry_point": "agent.py",
+        "class_name": "ETLAgent",
+        "api_endpoint": "POST /api/etl-agent",
+        "example_prompts": [
+          "Group this sales data by region and calculate total revenue",
+          "Remove duplicates and fill missing values in this CSV",
+          "Pivot this table so each product becomes a column with monthly totals",
+          "Filter rows where amount > 1000 and sort by date descending",
+          "Add a new column calculating profit margin from cost and revenue"
+        ]
+      },
+      "import_config": {
+        "module": "agents.ETL_agent.agent",
+        "instance_name": "etl_agent",
+        "type": "instance"
+      },
+      "routing": {
+        "keywords": [
+          "etl",
+          "transform data",
+          "data transformation",
+          "pandas",
+          "dataframe",
+          "csv",
+          "group by",
+          "aggregate",
+          "pivot",
+          "unpivot",
+          "melt",
+          "merge data",
+          "clean data",
+          "data cleaning",
+          "filter rows",
+          "sort data",
+          "remove duplicates",
+          "fill missing",
+          "fillna",
+          "data pipeline",
+          "data wrangling",
+          "reshape data",
+          "normalize data",
+          "calculate column"
+        ],
+        "confidence": 0.9
+      },
+      "invocation": {
+        "method": "process_chat",
+        "params": {
+          "query": "query",
+          "session_id": "session_id"
+        },
+        "is_async": false,
+        "result_path": [
+          "success",
+          "response",
+          "thinking_steps",
+          "generated_code"
+        ]
+      },
+      "dispatch": {
+        "getter_key": "etl_agent",
+        "call_style": "chat",
+        "async_native": false
+      },
+      "progress_phases": [
+        "Extracting schema and profiling data...",
+        "Planning transformation steps...",
+        "Generating optimized code...",
+        "Executing in sandbox...",
+        "Validating results...",
+        "Formatting output..."
+      ]
+    },
+    {
+      "id": "browser_agent",
+      "name": "Browser Automation Agent",
+      "type": "Browser Automation Agent",
+      "category": "qa_testing",
+      "status": "active",
+      "admin_only": true,
+      "autonomy_quotient": 95,
+      "description": "An AI agent that converts natural language instructions into real browser automation. Describe what you want to do (visit sites, search products, add to cart, fill forms) and the agent plans steps, launches a visible Chrome browser, executes each action with Playwright, captures screenshots, and generates a re-runnable Python script — all with full step-by-step logging.",
+      "logo": "/images/browser-agent-logo.svg",
+      "version": "1.0.0",
+      "path": "agents/Browser_agent",
+      "capabilities": [
+        "Natural language to browser actions",
+        "LLM-powered step planning",
+        "Real (headed) Playwright browser execution",
+        "Per-step screenshot capture",
+        "Self-healing: LLM retries failed steps with corrected code",
+        "Price / condition verification before actions",
+        "Standalone Playwright script generation",
+        "Detailed step-by-step execution log",
+        "Session memory for follow-up queries",
+        "Cookie / consent banner handling"
+      ],
+      "architecture_diagram_mermaid": "flowchart TB\n    subgraph L0[\"L0 · Ingress / session\"]\n        START([NL goal + URL anchors])\n        START --> SESS{Warm session?}\n        SESS -->|yes| HYDR[Rehydrate chat + memory]\n        SESS -->|no| NEWID[Allocate session scope]\n        HYDR --> NORM\n        NEWID --> NORM[Normalize intent + caps]\n    end\n    subgraph L1[\"L1 · Planning and guardrails\"]\n        NORM --> PLAN[LLM step decomposition]\n        PLAN --> VAL{Schema + policy OK?}\n        VAL -->|no| REFINE[Trim or regenerate plan]\n        REFINE --> PLAN\n        VAL -->|yes| CHK[Ordered checklist JSON]\n    end\n    subgraph L2[\"L2 · Browser runtime\"]\n        CHK --> POOL[Acquire Chromium from pool]\n        POOL --> MODE{Headed profile?}\n        MODE -->|yes| VISIBLE[Visible Playwright]\n        MODE -->|no| HEADL[Headless worker]\n        VISIBLE --> RDY\n        HEADL --> RDY[Session bound to run ID]\n    end\n    subgraph L3[\"L3 · Execution loop\"]\n        RDY --> SNAP[DOM + a11y snapshot]\n        SNAP --> PROP[Structured action proposal]\n        PROP --> EXEC[Deterministic executor]\n        EXEC --> EVID[Logs + PNG evidence]\n        EVID --> STEPOK{Step OK?}\n        STEPOK -->|no| HEAL[LLM self-heal slice]\n        HEAL --> PROP\n        STEPOK -->|yes| MORE{More steps?}\n        MORE -->|yes| SNAP\n        MORE -->|no| FIN\n    end\n    subgraph L4[\"L4 · Egress / artifacts\"]\n        FIN([Run complete])\n        FIN --> SUM[Streaming chat summary]\n        FIN --> RPT[(HTML report bundle)]\n        FIN --> PY[/export_playwright.py/]\n        PY --> MEMSV[Persist session for follow-up]\n    end\n    classDef decision fill:#422006,stroke:#fbbf24,stroke-width:2px,color:#fef9c3\n    classDef terminal fill:#0c4a6e,stroke:#38bdf8,stroke-width:2.5px,color:#e0f2fe\n    classDef datastore fill:#14532d,stroke:#4ade80,stroke-width:2px,color:#dcfce7\n    classDef ioshape fill:#1e3a5f,stroke:#60a5fa,stroke-width:2px,color:#dbeafe\n    class SESS,VAL,MODE,STEPOK,MORE decision\n    class START,FIN terminal\n    class RPT datastore\n    class PY ioshape",
+      "tools": [
+        {
+          "name": "step_planner",
+          "description": "Uses LLM to decompose natural language into structured, atomic browser steps",
+          "module": "tools.step_planner"
+        },
+        {
+          "name": "browser_executor",
+          "description": "Launches a real Playwright Chromium browser, generates and executes code per step, captures screenshots",
+          "module": "tools.browser_executor"
+        }
+      ],
+      "llm_providers": [
+        {
+          "name": "PwC GenAI (Gemini 2.5 Flash Image)",
+          "type": "cloud",
+          "default": true,
+          "cost": "API-based",
+          "description": "Powers step planning, per-step code generation, and self-healing retries"
+        }
+      ],
+      "configuration": {
+        "required_settings": [
+          {
+            "key": "PWC_GENAI_API_KEY",
+            "description": "PwC GenAI API key for step planning and code generation"
+          },
+          {
+            "key": "PWC_GENAI_BEARER_TOKEN",
+            "description": "PwC authentication token (Bearer) for GenAI"
+          }
+        ],
+        "optional_settings": [
+          {
+            "key": "BROWSER_HEADLESS",
+            "description": "Run Chromium in headless mode (no visible window). Turn off to open a real browser window and watch the automation.",
+            "default": "false",
+            "control": "boolean"
+          },
+          {
+            "key": "USE_LOCAL_LLM",
+            "description": "Run this agent on your local LLM server (http://127.0.0.1:4099) instead of PwC GenAI",
+            "default": "false",
+            "control": "boolean"
+          }
+        ]
+      },
+      "usage": {
+        "entry_point": "agent.py",
+        "class_name": "BrowserAgent",
+        "api_endpoint": "POST /api/browser-agent",
+        "example_prompts": [
+          "Go to amazon.in, search for iPhone 17, if available add to cart",
+          "Open flipkart.com, search for a mattress under 10000, add the cheapest one to cart",
+          "Go to google.com, search for 'best laptops 2026', click the first result",
+          "Visit myntra.com, search for 'men running shoes', filter by price under 3000, add the top result to cart",
+          "Go to wikipedia.org, search for 'Artificial Intelligence', take a screenshot of the page"
+        ]
+      },
+      "import_config": {
+        "module": "agents.Browser_agent.agent",
+        "instance_name": "browser_agent",
+        "type": "instance"
+      },
+      "routing": {
+        "keywords": [
+          "browser",
+          "automate browser",
+          "open website",
+          "go to",
+          "visit site",
+          "add to cart",
+          "search on website",
+          "click button",
+          "fill form",
+          "web automation",
+          "selenium",
+          "playwright",
+          "browse",
+          "shop online",
+          "buy online",
+          "navigate to",
+          "open page"
+        ],
+        "confidence": 0.85
+      },
+      "invocation": {
+        "method": "process_chat",
+        "params": {
+          "query": "query",
+          "session_id": "session_id"
+        },
+        "is_async": false,
+        "result_path": [
+          "success",
+          "response",
+          "thinking_steps",
+          "generated_script",
+          "steps_executed",
+          "execution_log"
+        ]
+      },
+      "dispatch": {
+        "getter_key": "browser_agent",
+        "call_style": "chat",
+        "async_native": false
+      },
+      "progress_phases": [
+        "Analyzing your browser task...",
+        "Planning browser steps...",
+        "Launching real browser...",
+        "Executing steps with screenshots...",
+        "Generating standalone script...",
+        "Building execution report..."
+      ]
+    }
+  ]
+}

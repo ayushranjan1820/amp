@@ -1,0 +1,121 @@
+Clone https://github.com/Biswanathdas1996/card-onboarding-sample
+
+
+Thinking (7 steps)
+GitHub Repo Agent
+(95%)
+Successfully cloned Biswanathdas1996/card-onboarding-sample!
+
+Repository Structure:
+
+├── api/
+│   ├── APIService.js
+│   ├── APIService_DB.js
+│   └── KYCModel.js
+├── db/
+│   ├── models/
+│   │   ├── CustomerModel.js
+│   │   └── KYCModel.js
+│   ├── config.js
+│   └── init.sql
+├── public/
+│   ├── images/
+│   └── index.html
+├── src/
+│   ├── api/
+│   │   ├── CustomerDataSubmission.js
+│   │   └── CustomerDataSubmission_DB.js
+│   ├── pages/
+│   │   ├── CustomerForm.js
+│   │   ├── KYCPage.css
+│   │   ├── KYCPage.js
+│   │   └── LandingPage.js
+│   ├── services/
+│   │   ├── FormValidator.js
+│   │   └── KYCEncryption.js
+│   ├── App.css
+│   ├── App.js
+│   └── index.js
+├── tests/
+│   ├── APIService.test.js
+│   ├── CustomerDataSubmission.test.js
+│   ├── Encryption.test.js
+│   ├── FormValidator.test.js
+│   ├── PANValidation.test.js
+│   └── Performance.test.js
+├── .gitignore
+├── .replit
+├── init-db.js
+├── package-lock.json
+├── package.json
+├── README.md
+├── server-debug.js
+└── server.js
+You can now ask me to:
+
+📝 Generate technical documentation (reverse engineering)
+🛠️ Extract the tech stack
+🏗️ Generate architecture/flow diagrams
+✨ Extract features
+✏️ Make code changes
+🚀 Push changes (requires GitHub token)
+generate 1 unit tests for kyc page
+
+
+Thinking (11 steps)
+Unit Test Generator
+(95%)
+Successfully cloned Biswanathdas1996/card-onboarding-sample!
+
+Language detected: Javascript Test framework: jest
+
+Repository structure:
+
+├── api/
+│   ├── APIService.js
+│   ├── APIService_DB.js
+│   └── KYCModel.js
+├── db/
+│   ├── models/
+│   │   ├── CustomerModel.js
+│   │   └── KYCModel.js
+│   ├── config.js
+│   └── init.sql
+├── public/
+│   ├── images/
+│   └── index.html
+├── src/
+│   ├── api/
+│   │   ├── CustomerDataSubmission.js
+│   │   └── CustomerDataSubmission_DB.js
+│   ├── pages/
+│   │   ├── CustomerForm.js
+│   │   ├── KYCPage.css
+│   │   ├── KYCPage.js
+│   │   └── LandingPage.js
+│   ├── services/
+│   │   ├── FormValidator.js
+│   │   └── KYCEncryption.js
+│   ├── App.css
+│   ├── App.js
+│   └── index.js
+├── tests/
+│   ├── APIService.test.js
+│   ├── CustomerDataSubmission.test.js
+│   ├── Encryption.test.js
+│   ├── FormValidator.test.js
+│   ├── PANValidation.test.js
+│   └── Performance.test.js
+├── .gitignore
+├── .replit
+├── init-db.js
+├── package-lock.json
+├── package.json
+├── README.md
+├── server-debug.js
+└── server.js
+I'm ready to analyze the codebase and generate unit tests. You can:
+
+Say "generate tests" to analyze all modules and create unit tests
+Say "push to GitHub" after tests are generated (requires your GitHub token)
+Ask about specific files or modules you want tested

@@ -1,0 +1,84 @@
+Core Processing Pipeline
+Docling is the foundation—it's an MIT-licensed Python library that converts PDFs, DOCX, images, PPTX, XLSX, and more into structured JSON/Markdown with layout, tables, formulas, reading order, and OCR. It's backed by IBM Research and designed as a drop-in alternative to Azure.
+
+Install:
+
+text
+pip install docling
+Basic extraction:
+
+python
+from docling.document_converter import DocumentConverter
+
+converter = DocumentConverter()
+result = converter.convert("your_file.pdf")  # or URL/path
+doc = result.document
+markdown = doc.export_to_markdown()  # Structured output ready for RAG
+json_out = doc.export_to_dict()  # Full hierarchy with bbox, tables
+Layout & Table Detection
+Docling uses DocLayNet (transformer for layout) and TableFormer (table structure)—SOTA models outperforming Tesseract baselines. For custom needs:
+​
+
+LayoutLMv3 or LiLT (Hugging Face) for document understanding.
+
+Table Transformer for advanced tables.
+
+Enhance with:
+
+text
+pip install transformers torch
+OCR Enhancement
+Docling has built-in OCR; boost with:
+
+EasyOCR or PaddleOCR (multilingual, GPU-optional).
+
+Surya (layout-aware OCR).
+​
+
+Entity Extraction & Custom Models
+Post-Docling, pipe structured output to:
+
+spaCy + transformers for NER (e.g., invoice dates, amounts).
+
+LayoutLMv3 fine-tuned on your docs via Hugging Face for custom fields (like Azure custom models).
+​
+
+LlamaIndex or LangChain integration for RAG/QA over extracted data.
+​
+
+Fine-tuning example:
+
+python
+from transformers import LayoutLMv3ForTokenClassification, Trainer
+# Load Docling JSON → train on labeled spans
+App Framework
+Build the UI/backend:
+
+FastAPI or Streamlit for API/web app (upload → process → visualize).
+​
+
+Gradio for quick demo with table previews.
+
+PostgreSQL + pgvector or ChromaDB for storing embeddings of chunks.
+
+Full stack example:
+
+text
+pip install docling streamlit llama-index chromadb
+Streamlit app skeleton:
+
+python
+import streamlit as st
+from docling.document_converter import DocumentConverter
+from llama_index.core import VectorStoreIndex, SimpleDirectoryReader  # For RAG
+
+uploaded_file = st.file_uploader("Upload document")
+if uploaded_file:
+    converter = DocumentConverter()
+    result = converter.convert(uploaded_file)
+    st.markdown(result.document.export_to_markdown())
+    # Index for QA
+    index = VectorStoreIndex.from_documents([result.document])
+    query_engine = index.as_query_engine()
+    response = query_engine.query(st.text_input("Ask about doc:"))
+    st.write(response)
