@@ -7,6 +7,7 @@ async def chat_with_agent(agent_id: str, user_id: str, user_message: str, agent_
     available_agent = await collection.get_agent_config(agent_id)
     if available_agent is None:
         raise AgentMartException("Agent not found", 404)
+        
     agent_config = AgentConfig(
         _id=str(available_agent["_id"]),
         name=available_agent["name"],

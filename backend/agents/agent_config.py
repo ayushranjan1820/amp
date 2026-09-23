@@ -20,7 +20,7 @@ class Status(str, Enum):
 
 class ModelProvider(str, Enum):
     OPENAI = "openai"
-    GOOGLE = "google"
+    GOOGLE = "google_genai"
     ANTHROPIC = "anthropic"
     GROK = "grok"
     GROQ = "groq"

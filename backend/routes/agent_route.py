@@ -14,6 +14,8 @@ from services.agent_service import register_new_agent, edit_available_agent
 from services.chat_service import chat_with_agent
 from models.api_res import ServerResponseWrapper
 from models.api_req import NewAgentReq, ChatReq
+from tools.api import ApiValidator, ApiToolExecutor, ApiInputSchemaFactory
+from tools.tool_provider import ApiToolProvider
 
 load_dotenv()
 
@@ -30,18 +32,29 @@ async def lifespan(app: FastAPI):
     app.state.agent_catalog_collection = AgentCatalogConnection(
         collection_name="agent_catalog"
     )
+
+    # ----- Preconfigured Tools -----
     preconfigured_registry = (
         create_preconfigured_registry()
     )
 
+    # ----- API Tools -----
+    api_validator = ApiValidator()
+    api_executor = ApiToolExecutor(api_validator)
+    api_schema_factory = ApiInputSchemaFactory()
+    api_tool_provider = ApiToolProvider(api_executor, api_schema_factory)
+
+    # ----- Common ToolFactory -----
     tool_factory = ToolFactory(
         preconfigured_registry=preconfigured_registry,
+        api_provider=api_tool_provider
     )
 
     agent_factory = AgentFactory(
         tool_factory=tool_factory,
     )
 
+    # ----- Application State -----
     app.state.tool_factory = tool_factory
     app.state.agent_factory = agent_factory
 

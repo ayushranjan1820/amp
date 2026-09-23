@@ -1,6 +1,7 @@
 import logging
 import sys
 from typing import Optional
+import os
 
 # Custom log template
 CUSTOM_LOG_TEMPLATE = (
@@ -52,6 +53,7 @@ def setup_logger(
     Configures and returns a logger instance formatted with the custom template.
     """
     logger = logging.getLogger(name)
+    level = logging.INFO if os.getenv("LOG_LEVEL") == "INFO" else logging.DEBUG
     logger.setLevel(level)
 
     if not logger.handlers:

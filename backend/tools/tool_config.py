@@ -1,4 +1,4 @@
-from enum import Enum
+from enum import StrEnum
 from pydantic import BaseModel, Field
 from typing import Literal, Any, Optional, Union, Annotated
 from tools.tool_type import ToolType
@@ -12,7 +12,7 @@ class BaseToolConfig(BaseModel):
     enabled: bool
     version: str
 
-class HTTPMethod(str, Enum):
+class HTTPMethod(StrEnum):
     GET = "GET"
     POST = "POST"
     PUT = "PUT"
@@ -27,7 +27,7 @@ class ApiAuthenticationConfig(BaseModel):
     password: str
 
 
-class MCPTransport(str, Enum):
+class MCPTransport(StrEnum):
     STDIO = "stdio"
     SSE = "sse"
     HTTP = "http"
@@ -37,6 +37,28 @@ class MCPAuthenticationConfig(BaseModel):
     auth_type: Optional[str] = None
     token: Optional[str] = None
     headers: dict[str, str] = {}
+
+
+class ApiParamLocation(StrEnum):
+    PATH = "path"
+    QUERY = "query"
+    BODY = "body"
+
+
+class ApiParamDataType(StrEnum):
+    STRING = "string"
+    INTEGER = "integer"
+    DECIMAL = "decimal"
+    BOOLEAN = "boolean"
+
+
+class ApiParamConfig(BaseModel):
+    name: str
+    description: str
+    location: ApiParamLocation
+    data_type: ApiParamDataType = ApiParamDataType.STRING
+    required: bool = False
+    default: Any = None
 
 
 # --------------------------------------------
@@ -51,12 +73,14 @@ class PreConfiguredToolConfig(BaseToolConfig):
 class ApiToolConfig(BaseToolConfig):
     tool_type: Literal[ToolType.API] = ToolType.API
 
-    base_url: str
+    url: str
     method: HTTPMethod
-    endpoint: str
 
-    headers: dict[str, str] = {}
-    query_params: dict[str, str] = {}
+    headers: dict[str, str] = Field(default_factory=dict)
+    query_params: dict[str, str] = Field(default_factory=dict)
+    parameters: list[ApiParamConfig] = Field(default_factory=list)
+
+    timeout_seconds: int
 
     authentication: ApiAuthenticationConfig | None = None
 

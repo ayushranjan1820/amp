@@ -10,6 +10,7 @@ dependencies = [
     "deepagents>=0.7.13",
     "duckduckgo-search>=8.1.1",
     "fastapi>=0.141.1",
+    "httpx>=0.28.1",
     "langchain-community>=0.4.2",
     "langchain-tavily>=0.2.18",
     "pyjwt>=2.13.0",
