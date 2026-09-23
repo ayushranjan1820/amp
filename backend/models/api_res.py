@@ -16,6 +16,8 @@ class RegisterUserRes(BaseModel):
     user_email: str
 
 class LoginUserRes(BaseModel):
+    name: str
+    email: str
     token: str
 
 class NewAgentRes(BaseModel):

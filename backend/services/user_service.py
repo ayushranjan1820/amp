@@ -97,6 +97,8 @@ async def login_user(
 
     token = await _generate_token(claim)
     return LoginUserRes(
+        name=existing_user.get("name"),
+        email=existing_user.get("email"),
         token=token
     )
 
