@@ -10,7 +10,7 @@ from agents.agent_config import AgentConfig
 from dotenv import load_dotenv
 from decorator.token_validation import validate_token
 from database.mongo_connection import AgentCatalogConnection
-from services.agent_service import register_new_agent, edit_available_agent
+from services.agent_service import register_new_agent, edit_available_agent, get_agents, add_new_tools_to_agent
 from services.chat_service import chat_with_agent
 from models.api_res import ServerResponseWrapper
 from models.api_req import NewAgentReq, ChatReq
@@ -69,7 +69,7 @@ def get_agent_catalog_collection(request: Request) -> AgentCatalogConnection:
     return request.app.state.agent_catalog_collection
 
 
-router = APIRouter(lifespan=lifespan)
+router = APIRouter(tags=["agents"], lifespan=lifespan)
 security = HTTPBearer()
 
 
@@ -141,6 +141,28 @@ async def edit_agent(
     )
 
 
+@router.patch("/add-tools/{agent_id}")
+@validate_token
+async def add_tools(
+    request: Request,
+    agent_id: str,
+    tool_config: dict,
+    collection: AgentCatalogConnection = Depends(get_agent_catalog_collection),
+    credentials: HTTPAuthorizationCredentials = Depends(security),
+):
+    user_id = getattr(request.app.state, "id", None)
+    updated_agent = await add_new_tools_to_agent(agent_id, tool_config, user_id, collection)
+    response_data = ServerResponseWrapper(
+        data=updated_agent.model_dump(),
+        message="Tools added successfully",
+        status_code=status.HTTP_200_OK,
+    )
+    return JSONResponse(
+        status_code=status.HTTP_200_OK,
+        content=response_data.model_dump(mode="json"),
+    )
+
+
 @router.post("/chat/{agent_id}")
 @validate_token
 async def chat(
@@ -153,7 +175,6 @@ async def chat(
     user_id = getattr(request.app.state, "id", None)
     agent_factory: AgentFactory = request.app.state.agent_factory
     agent_response = await chat_with_agent(agent_id, user_id, req.message, agent_factory, collection)
-    print(f"\n\nAgent Response : {agent_response}")
     response_data = ServerResponseWrapper(
         data=agent_response,
         message="Chat response",
@@ -164,4 +185,25 @@ async def chat(
         status_code=status.HTTP_200_OK
     )
 
+@router.get("/fetch")
+@validate_token
+async def fetch_all_agents(
+    request: Request,
+    credentials: HTTPAuthorizationCredentials = Depends(security),
+    collection: AgentCatalogConnection = Depends(get_agent_catalog_collection)
+):
+    user_id = getattr(request.app.state, "id", None)
+    available_agents = await get_agents(user_id, collection)
+    response_data = ServerResponseWrapper(
+        data = available_agents,
+        message = "Available agents fetched successfully",
+        status_code = status.HTTP_200_OK,
+    )
+    logger.info(
+        "%s agents found for user: %s", len(available_agents), user_id,
+    )
+    return JSONResponse(
+        status_code=status.HTTP_200_OK,
+        content=response_data.model_dump(mode="json"),
+    )
     

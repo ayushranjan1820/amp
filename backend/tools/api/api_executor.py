@@ -75,17 +75,16 @@ class ApiToolExecutor:
         allowed_names = {
             param.name for param in config.parameters if param.location == location
         }
-
-        return {key: value for key in arguments.items() if key in allowed_names}
+        return {key: value for key, value in arguments.items() if key in allowed_names}
 
     @staticmethod
     def _replace_path_parameters(url: str, path_params: dict[str, Any]):
         for name, value in path_params.items():
-            placeholder = f"{{name}}"
+            placeholder = f"{name}"
 
             if placeholder not in url:
                 continue
-            url = url.replace(placeholder, str(value))
+            url = url.replace(placeholder, str(value)).replace("{", "").replace("}", "")
         return url
 
     @staticmethod

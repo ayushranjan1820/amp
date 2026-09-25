@@ -15,7 +15,7 @@ class AgentCatalog(BaseModel):
     name: str
     description: str
     system_prompt: str
-    tools: list[ToolConfig] = []
+    tools: list[ToolConfig | dict] = []
     model: ModelConfig
     capabilities: list[str] = []
     enabled: bool = True

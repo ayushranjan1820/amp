@@ -20,13 +20,6 @@ class HTTPMethod(StrEnum):
     PATCH = "PATCH"
 
 
-class ApiAuthenticationConfig(BaseModel):
-    base_url: str
-    method: HTTPMethod
-    username: str
-    password: str
-
-
 class MCPTransport(StrEnum):
     STDIO = "stdio"
     SSE = "sse"
@@ -81,8 +74,6 @@ class ApiToolConfig(BaseToolConfig):
     parameters: list[ApiParamConfig] = Field(default_factory=list)
 
     timeout_seconds: int
-
-    authentication: ApiAuthenticationConfig | None = None
 
     request_schema: dict[str, Any] | None = None
     response_schema: dict[str, Any] | None = None

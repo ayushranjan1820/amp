@@ -3,14 +3,32 @@ from models.api_req import NewAgentReq
 from database.mongo_connection import AgentCatalogConnection
 from database.schema import AgentCatalog
 from models.api_res import NewAgentRes
+from utils.logger import get_logger
+
+logger = get_logger(__name__)
 
 
 async def register_new_agent(
-    id: str, req: NewAgentReq, collection: AgentCatalogConnection
+    user_id: str, req: NewAgentReq, collection: AgentCatalogConnection
 ) -> NewAgentRes:
-    agent_catalog = AgentCatalog(**req.model_dump(), created_by=id, updated_by=id)
+    agent_catalog = AgentCatalog(
+        **req.model_dump(), created_by=user_id, updated_by=user_id
+    )
     result = await collection.register_new_agent(agent_catalog)
     return NewAgentRes(**agent_catalog.model_dump(), agent_id=str(result.inserted_id))
+
+
+async def add_new_tools_to_agent(
+    agent_id: str, tool_config: dict, user_id: str, collection: AgentCatalogConnection
+) -> NewAgentRes:
+    agent_config = await collection.get_agent_config(agent_id)
+    agent_catalog = AgentCatalog(**agent_config)
+    agent_catalog.tools.append(tool_config)
+    agent_catalog.updated_at = datetime.now()
+    agent_catalog.updated_by = user_id
+
+    updated_agent_config = await collection.update_agent_config(agent_id, agent_catalog)
+    return NewAgentRes(**updated_agent_config, agent_id=agent_id)
 
 
 async def edit_available_agent(
@@ -30,5 +48,13 @@ async def edit_available_agent(
         updated_at=datetime.now(),
     )
 
-    await collection.edit_agent_config(agent_id, updated_agent_catalog)
+    await collection.update_agent_config(agent_id, updated_agent_catalog)
     return NewAgentRes(**updated_agent_catalog.model_dump(), agent_id=agent_id)
+
+
+async def get_agents(
+    user_id: str, collection: AgentCatalogConnection
+) -> list[NewAgentRes]:
+    logger.debug("User ID : %s", user_id)
+    agents = await collection.get_all_agents(user_id)
+    return [NewAgentRes(**agent, agent_id=str(agent["_id"])) for agent in agents]

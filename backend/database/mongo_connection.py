@@ -145,12 +145,16 @@ class AgentCatalogConnection(MongoConnection):
     async def get_agent_config(self, agent_id: str):
         return await self.collection.find_one({"_id": ObjectId(agent_id)})
 
-    async def edit_agent_config(
+    async def update_agent_config(
         self, agent_id: str, available_agent_catalog: AgentCatalog
     ):
-        return await self.collection.update_one(
+        await self.collection.update_one(
             {"_id": ObjectId(agent_id)}, {"$set": available_agent_catalog.model_dump()}
         )
+        return await self.collection.find_one({"_id": ObjectId(agent_id)})
+
+    async def get_all_agents(self, user_id: str):
+        return await self.collection.find({"created_by": user_id}).to_list(length=None)
 
 
 async def get_db_connection() -> MongoConnection:
