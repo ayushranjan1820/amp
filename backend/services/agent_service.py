@@ -1,6 +1,6 @@
 from datetime import datetime
 from models.api_req import NewAgentReq
-from database.mongo_connection import AgentCatalogConnection
+from database.mongo_connection import AgentCatalogConnection, ToolCatalogConnection
 from database.schema import AgentCatalog
 from models.api_res import NewAgentRes
 from utils.logger import get_logger
@@ -19,15 +19,21 @@ async def register_new_agent(
 
 
 async def add_new_tools_to_agent(
-    agent_id: str, tool_config: dict, user_id: str, collection: AgentCatalogConnection
+    agent_id: str, tool_config: list[dict], user_id: str, agent_catalog_collection: AgentCatalogConnection, tool_catalog_collection: ToolCatalogConnection
 ) -> NewAgentRes:
-    agent_config = await collection.get_agent_config(agent_id)
+    agent_config = await agent_catalog_collection.get_agent_config(agent_id)
     agent_catalog = AgentCatalog(**agent_config)
-    agent_catalog.tools.append(tool_config)
     agent_catalog.updated_at = datetime.now()
     agent_catalog.updated_by = user_id
 
-    updated_agent_config = await collection.update_agent_config(agent_id, agent_catalog)
+    # Add tool config 
+    new_tools = await tool_catalog_collection.add_new_tool(tool_config)
+    new_tool_ids = [str(tool_id) for tool_id in new_tools.inserted_ids]
+
+    # Add new tool ids into agent catalog
+    agent_catalog.tools.extend(new_tool_ids)
+    updated_agent_config = await agent_catalog_collection.update_agent_config(agent_id, agent_catalog)
+    
     return NewAgentRes(**updated_agent_config, agent_id=agent_id)
 
 

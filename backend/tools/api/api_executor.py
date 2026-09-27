@@ -39,7 +39,7 @@ class ApiToolExecutor:
             "method": config.method.value,
             "url": url,
             "headers": config.headers,
-            "params": {**config.query_params, **query_params},
+            "params": {**query_params},
             "timeout": config.timeout_seconds,
         }
         logger.debug(f"Request kwargs: {request_kwargs}")

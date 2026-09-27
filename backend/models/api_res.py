@@ -25,7 +25,7 @@ class NewAgentRes(BaseModel):
     name: str
     description: str
     system_prompt: str
-    tools: list[ToolConfig | dict] = []
+    tools: list[str] = []
     model: ModelConfig
     capabilities: list[str] = []
     enabled: bool = True

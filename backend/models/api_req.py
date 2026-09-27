@@ -2,7 +2,8 @@ from pydantic import BaseModel, field_validator, model_validator, Field
 from typing import Self
 import re
 from datetime import datetime
-from agents.agent_config import ToolConfig, ModelConfig, Visibility, Status
+from agents.agent_config import ModelConfig, Visibility, Status
+from tools.tool_config import ToolType
 
 
 def _validate_email_format(val: str):
@@ -116,7 +117,7 @@ class NewAgentReq(BaseModel):
     name: str
     description: str
     system_prompt: str
-    tools: list[ToolConfig] = []
+    tools: list[str] = []
     model: ModelConfig
     capabilities: list[str] = []
     enabled: bool = True
@@ -127,3 +128,11 @@ class NewAgentReq(BaseModel):
 
 class ChatReq(BaseModel):
     message: str
+
+class CommonToolReq(BaseModel):
+    name: str
+    description: str
+    tool_type: ToolType
+    enabled: bool
+    version: str
+    tool_config: dict

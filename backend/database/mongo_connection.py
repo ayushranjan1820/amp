@@ -157,6 +157,25 @@ class AgentCatalogConnection(MongoConnection):
         return await self.collection.find({"created_by": user_id}).to_list(length=None)
 
 
+class ToolCatalogConnection(MongoConnection):
+
+    def __init__(self, collection_name: str="tool_catalog", **kwargs):
+        super().__init__(collection_name=collection_name, **kwargs)
+
+    async def get_tool_config(self, tool_id: str):
+        return await self.collection.find_one({"_id": ObjectId(tool_id)})
+
+    async def update_tool_config(
+        self, tool_id: str, available_tool_config: ToolConfig
+    ):
+        await self.collection.update_one(
+            {"_id": ObjectId(tool_id)}, {"$set": available_tool_config.model_dump()}
+        )
+        return await self.collection.find_one({"_id": ObjectId(tool_id)})
+    
+    async def add_new_tool(self, tool_config: list[dict]):
+        return await self.collection.insert_many(tool_config)
+
 async def get_db_connection() -> MongoConnection:
     """Helper for MongoConnection."""
     return MongoConnection(collection_name="user_profile")

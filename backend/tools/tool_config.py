@@ -5,7 +5,7 @@ from tools.tool_type import ToolType
 
 
 class BaseToolConfig(BaseModel):
-    _id: str
+    tool_id: str
     name: str
     description: str
     tool_type: ToolType
@@ -70,13 +70,9 @@ class ApiToolConfig(BaseToolConfig):
     method: HTTPMethod
 
     headers: dict[str, str] = Field(default_factory=dict)
-    query_params: dict[str, str] = Field(default_factory=dict)
     parameters: list[ApiParamConfig] = Field(default_factory=list)
 
     timeout_seconds: int
-
-    request_schema: dict[str, Any] | None = None
-    response_schema: dict[str, Any] | None = None
 
 
 class PythonToolConfig(BaseToolConfig):

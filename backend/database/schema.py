@@ -1,8 +1,8 @@
 from pydantic import BaseModel, Field
-from typing import List, Dict, Any
+from typing import List, Dict, Any, Annotated
 from datetime import datetime
 from agents.agent_config import Status, ModelConfig, ToolConfig, Visibility
-
+from tools.tool_config import ToolType, PreConfiguredToolConfig, ApiToolConfig, PythonToolConfig, MCPToolConfig
 class UserProfile(BaseModel):
     name: str
     email: str
@@ -15,7 +15,7 @@ class AgentCatalog(BaseModel):
     name: str
     description: str
     system_prompt: str
-    tools: list[ToolConfig | dict] = []
+    tools: list[str] = []
     model: ModelConfig
     capabilities: list[str] = []
     enabled: bool = True
