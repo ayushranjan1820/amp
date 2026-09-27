@@ -2,6 +2,7 @@ from pydantic import BaseModel, Field
 from typing import Optional, Any
 from datetime import datetime
 from agents.agent_config import ToolConfig, ModelConfig, Visibility, Status
+from tools.tool_config import TokenType
 
 class ServerResponseWrapper(BaseModel):
     data: Optional[Any] = None
@@ -32,5 +33,12 @@ class NewAgentRes(BaseModel):
     version: str
     visibility: Visibility = Field(default_factory=lambda: Visibility.PRIVATE)
     status: Status = Field(default_factory=lambda: Status.DRAFT)
+
+
+class NewTokenRes(BaseModel):
+    token_id: str
+    name: str
+    owner_id: str
+    token_type: TokenType
     
 

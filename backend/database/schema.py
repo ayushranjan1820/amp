@@ -2,7 +2,7 @@ from pydantic import BaseModel, Field
 from typing import List, Dict, Any, Annotated
 from datetime import datetime
 from agents.agent_config import Status, ModelConfig, ToolConfig, Visibility
-from tools.tool_config import ToolType, PreConfiguredToolConfig, ApiToolConfig, PythonToolConfig, MCPToolConfig
+from tools.tool_config import ToolType, PreConfiguredToolConfig, ApiToolConfig, PythonToolConfig, MCPToolConfig, TokenType
 class UserProfile(BaseModel):
     name: str
     email: str
@@ -26,4 +26,15 @@ class AgentCatalog(BaseModel):
     created_by: str
     created_at: datetime = Field(default_factory=datetime.now)
     updated_by: str
+    updated_at: datetime = Field(default_factory=datetime.now)
+
+
+class TokenCatalog(BaseModel):
+    name: str
+    owner_id: str
+    token_type: TokenType
+    header_key: str
+    token: str
+
+    created_at: datetime = Field(default_factory=datetime.now)
     updated_at: datetime = Field(default_factory=datetime.now)

@@ -4,7 +4,7 @@ from dotenv import load_dotenv
 from pymongo import AsyncMongoClient
 from pymongo.asynchronous.database import AsyncDatabase
 from pymongo.asynchronous.collection import AsyncCollection
-from database.schema import UserProfile, AgentCatalog
+from database.schema import UserProfile, AgentCatalog, TokenCatalog
 from utils.logger import get_logger
 from bson import ObjectId
 
@@ -159,22 +159,33 @@ class AgentCatalogConnection(MongoConnection):
 
 class ToolCatalogConnection(MongoConnection):
 
-    def __init__(self, collection_name: str="tool_catalog", **kwargs):
+    def __init__(self, collection_name: str = "tool_catalog", **kwargs):
         super().__init__(collection_name=collection_name, **kwargs)
 
     async def get_tool_config(self, tool_id: str):
         return await self.collection.find_one({"_id": ObjectId(tool_id)})
 
-    async def update_tool_config(
-        self, tool_id: str, available_tool_config: ToolConfig
-    ):
+    async def update_tool_config(self, tool_id: str, available_tool_config: ToolConfig):
         await self.collection.update_one(
             {"_id": ObjectId(tool_id)}, {"$set": available_tool_config.model_dump()}
         )
         return await self.collection.find_one({"_id": ObjectId(tool_id)})
-    
+
     async def add_new_tool(self, tool_config: list[dict]):
         return await self.collection.insert_many(tool_config)
+
+
+class TokenCatalogConnection(MongoConnection):
+
+    def __init__(self, collection_name="tokenl_catalog", **kwargs):
+        super().__init__(collection_name=collection_name, **kwargs)
+
+    async def add_token(self, token: TokenCatalog):
+        return await self.collection.insert_one(token.model_dump())
+
+    async def get_tokens_by_user_id(self, user_id: str):
+        return await self.collection.find({"owner_id": user_id}).to_list(length=None)
+
 
 async def get_db_connection() -> MongoConnection:
     """Helper for MongoConnection."""

@@ -3,7 +3,7 @@ from typing import Self
 import re
 from datetime import datetime
 from agents.agent_config import ModelConfig, Visibility, Status
-from tools.tool_config import ToolType
+from tools.tool_config import ToolType, TokenType
 
 
 def _validate_email_format(val: str):
@@ -136,3 +136,9 @@ class CommonToolReq(BaseModel):
     enabled: bool
     version: str
     tool_config: dict
+
+class TokenReq(BaseModel):
+    name: str
+    token_type: TokenType
+    header_key: str
+    token: str

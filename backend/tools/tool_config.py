@@ -54,6 +54,18 @@ class ApiParamConfig(BaseModel):
     default: Any = None
 
 
+class TokenType(StrEnum):
+    BEARER = "Bearer"
+    BASIC = "Basic"
+
+
+class TokenConfig(BaseModel):
+    name: str
+    owner_id: str
+    token_type: TokenType
+    token: str
+
+
 # --------------------------------------------
 #        Tool Config Implementations
 # --------------------------------------------

@@ -9,16 +9,22 @@ from agents.agent_factory import AgentFactory
 from agents.agent_config import AgentConfig
 from dotenv import load_dotenv
 from decorator.token_validation import validate_token
-from database.mongo_connection import AgentCatalogConnection, ToolCatalogConnection
+from database.mongo_connection import (
+    AgentCatalogConnection,
+    ToolCatalogConnection,
+    TokenCatalogConnection,
+)
 from services.agent_service import (
     register_new_agent,
     edit_available_agent,
     get_agents,
     add_new_tools_to_agent,
+    add_new_tokens,
+    get_tokens_by_user_id
 )
 from services.chat_service import chat_with_agent
-from models.api_res import ServerResponseWrapper
-from models.api_req import NewAgentReq, ChatReq
+from models.api_res import ServerResponseWrapper, NewTokenRes
+from models.api_req import NewAgentReq, ChatReq, TokenReq
 from tools.api import ApiValidator, ApiToolExecutor, ApiInputSchemaFactory
 from tools.tool_provider import ApiToolProvider
 
@@ -39,6 +45,9 @@ async def lifespan(app: FastAPI):
     )
     app.state.tool_catalog_collection = ToolCatalogConnection(
         collection_name="tool_catalog"
+    )
+    app.state.token_catalog_connection = TokenCatalogConnection(
+        collection_name="token_catalog"
     )
 
     # ----- Preconfigured Tools -----
@@ -79,6 +88,13 @@ def get_tool_catalog_collection(request: Request) -> ToolCatalogConnection:
     FastAPI Dependency Provider retrieving the initialized ToolCatalogConnection from request.app.state
     """
     return request.app.state.tool_catalog_collection
+
+
+def get_token_catalog_collection(request: Request) -> TokenCatalogConnection:
+    """
+    FastAPI Dependency Provider retrieving the initialized TokenCatalogConnection from request.app.state
+    """
+    return request.app.state.token_catalog_connection
 
 
 router = APIRouter(tags=["agents"], lifespan=lifespan)
@@ -186,6 +202,55 @@ async def add_tools(
     )
 
 
+@router.post("/token")
+@validate_token
+async def add_credentials(
+    request: Request,
+    token_config: TokenReq,
+    token_catalog_collection: TokenCatalogConnection = Depends(
+        get_token_catalog_collection
+    ),
+    credentials: HTTPAuthorizationCredentials = Depends(security),
+):
+    user_id = getattr(request.app.state, "id", None)
+    updated_agent = await add_new_tokens(
+        token_config,
+        user_id,
+        token_catalog_collection
+    )
+    response_data = ServerResponseWrapper(
+        data=updated_agent.model_dump(),
+        message="Credentials added successfully",
+        status_code=status.HTTP_200_OK,
+    )
+    return JSONResponse(
+        status_code=status.HTTP_200_OK,
+        content=response_data.model_dump(mode="json"),
+    )
+
+
+@router.get("/token")
+@validate_token
+async def fetch_tokens_by_user_id(
+    request: Request,
+    token_catalog_collection: TokenCatalogConnection = Depends(
+        get_token_catalog_collection
+    ),
+    credentials: HTTPAuthorizationCredentials = Depends(security),
+):
+    user_id = getattr(request.app.state, "id", None)
+    tokens = await get_tokens_by_user_id(user_id, token_catalog_collection)
+    response_data = ServerResponseWrapper(
+        data=tokens,
+        message="Tokens fetched successfully",
+        status_code=status.HTTP_200_OK,
+    )
+    return JSONResponse(
+        status_code=status.HTTP_200_OK,
+        content=response_data.model_dump(mode="json"),
+    )
+
+
 @router.post("/chat/{agent_id}")
 @validate_token
 async def chat(
@@ -198,6 +263,9 @@ async def chat(
     tool_catalog_collection: ToolCatalogConnection = Depends(
         get_tool_catalog_collection
     ),
+    token_catalog_collection: TokenCatalogConnection = Depends(
+        get_token_catalog_collection
+    ),
     credentials: HTTPAuthorizationCredentials = Depends(security),
 ):
     user_id = getattr(request.app.state, "id", None)
@@ -209,6 +277,7 @@ async def chat(
         agent_factory,
         agent_catalog_collection,
         tool_catalog_collection,
+        token_catalog_collection
     )
     response_data = ServerResponseWrapper(
         data=agent_response,
