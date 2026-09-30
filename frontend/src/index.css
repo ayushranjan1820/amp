@@ -1,3 +1,4 @@
+/* Global CSS Design System & Theme Variables */
 :root {
   --bg-dark: #0a0e17;
   --bg-dark-radial: radial-gradient(circle at 50% 20%, #131b2e 0%, #0a0e17 80%);
@@ -56,137 +57,7 @@ body {
   background: var(--pastel-cyan);
 }
 
-/* Navbar */
-.navbar-custom {
-  background: rgba(10, 14, 23, 0.85);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border-bottom: 1px solid rgba(125, 211, 252, 0.12);
-  z-index: 1040;
-}
-
-.brand-glow-icon-sm {
-  width: 36px;
-  height: 36px;
-  border-radius: 10px;
-  background: linear-gradient(135deg, rgba(125, 211, 252, 0.25) 0%, rgba(56, 189, 248, 0.05) 100%);
-  border: 1px solid rgba(125, 211, 252, 0.35);
-  color: var(--pastel-cyan);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0 0 15px var(--pastel-cyan-glow);
-}
-
-.nav-link-custom {
-  color: var(--text-secondary);
-  text-decoration: none;
-  font-weight: 500;
-  font-size: 0.95rem;
-  transition: color 0.2s ease;
-}
-
-.nav-link-custom:hover, .nav-link-custom.active {
-  color: var(--pastel-cyan);
-}
-
-/* User Profile Badge */
-.user-profile-btn {
-  cursor: pointer;
-  padding: 4px 8px !important;
-  border-radius: 20px;
-  transition: background-color 0.2s ease;
-}
-
-.user-profile-btn:hover {
-  background-color: rgba(125, 211, 252, 0.08) !important;
-}
-
-.avatar-circle {
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
-  background: linear-gradient(135deg, #7dd3fc 0%, #38bdf8 100%);
-  color: #0b0f19;
-  font-weight: 700;
-  font-size: 0.9rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0 0 12px var(--pastel-cyan-glow);
-}
-
-.avatar-circle-lg {
-  width: 44px;
-  height: 44px;
-  border-radius: 50%;
-  background: linear-gradient(135deg, #7dd3fc 0%, #38bdf8 100%);
-  color: #0b0f19;
-  font-weight: 700;
-  font-size: 1.1rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0 0 15px var(--pastel-cyan-glow);
-}
-
-/* User Dropdown Popup */
-.user-popup-menu {
-  position: absolute;
-  top: 120%;
-  right: 0;
-  left: auto;
-  min-width: 320px;
-  max-width: 420px;
-  width: max-content;
-  background: #121824;
-  border: 1px solid rgba(125, 211, 252, 0.25);
-  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.6), 0 0 20px rgba(125, 211, 252, 0.1);
-  z-index: 1050;
-  animation: fadeInDown 0.2s ease-out forwards;
-}
-
-
-@keyframes fadeInDown {
-  from {
-    opacity: 0;
-    transform: translateY(-8px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.rotate-180 {
-  transform: rotate(180deg);
-}
-
-.transition-transform {
-  transition: transform 0.2s ease;
-}
-
-.word-break {
-  word-break: break-all;
-}
-
-/* Glassmorphism Auth Card */
-.auth-card {
-  background: var(--card-dark);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border: 1px solid var(--card-border);
-  border-radius: 20px;
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5), 0 0 30px var(--pastel-cyan-subtle);
-  transition: border-color 0.3s ease, box-shadow 0.3s ease;
-}
-
-.auth-card:hover {
-  border-color: var(--card-border-hover);
-  box-shadow: 0 20px 45px rgba(0, 0, 0, 0.55), 0 0 35px rgba(125, 211, 252, 0.15);
-}
-
-/* Brand Accent Text */
+/* Shared Brand & Text Utilities */
 .text-cyan-accent {
   color: var(--pastel-cyan) !important;
 }
@@ -195,22 +66,7 @@ body {
   color: var(--pastel-cyan-secondary) !important;
 }
 
-/* Glowing Brand Badge / Logo Icon */
-.brand-glow-icon {
-  width: 54px;
-  height: 54px;
-  border-radius: 16px;
-  background: linear-gradient(135deg, rgba(125, 211, 252, 0.2) 0%, rgba(56, 189, 248, 0.05) 100%);
-  border: 1px solid rgba(125, 211, 252, 0.3);
-  color: var(--pastel-cyan);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin: 0 auto 16px auto;
-  box-shadow: 0 0 25px var(--pastel-cyan-glow);
-}
-
-/* Styled Inputs */
+/* Shared Form Control Utilities */
 .custom-input {
   background-color: var(--input-bg) !important;
   border: 1px solid var(--input-border) !important;
@@ -233,7 +89,6 @@ body {
   opacity: 0.7;
 }
 
-/* Custom Input Labels */
 .form-label-custom {
   color: var(--text-secondary);
   font-size: 0.875rem;
@@ -241,7 +96,6 @@ body {
   margin-bottom: 0.4rem;
 }
 
-/* Input Group Text (for icons/toggles) */
 .input-group-text-custom {
   background-color: var(--input-bg) !important;
   border: 1px solid var(--input-border) !important;
@@ -313,7 +167,7 @@ body {
   text-decoration: underline;
 }
 
-/* Custom Alert */
+/* Custom Alerts */
 .alert-custom-error {
   background-color: rgba(239, 68, 68, 0.15);
   border: 1px solid rgba(239, 68, 68, 0.3);

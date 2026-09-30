@@ -89,7 +89,6 @@ export const RegisterPage: React.FC = () => {
 
       await post(API_ENDPOINTS.AUTH.REGISTER, payload);
 
-      // On successful registration, navigate to login page
       navigate('/login');
     } catch (err) {
       const message = extractErrorMessage(err);
@@ -119,11 +118,6 @@ export const RegisterPage: React.FC = () => {
           error={errors.name}
           required
           autoComplete="name"
-          icon={
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
-              <path d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6m2-3a2 2 0 1 1-4 0 2 2 0 0 1 4 0m4 8c0 1-1 1-1 1H3s-1 0-1-1 1-4 6-4 6 3 6 4m-1-.004c-.001-.246-.154-.986-.832-1.664C11.516 10.68 10.289 10 8 10s-3.516.68-4.168 1.332c-.678.678-.83 1.418-.832 1.664z"/>
-            </svg>
-          }
         />
 
         <InputField
@@ -137,11 +131,6 @@ export const RegisterPage: React.FC = () => {
           error={errors.email}
           required
           autoComplete="email"
-          icon={
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
-              <path d="M0 4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2zm2-1a1 1 0 0 0-1 1v.217l7 4.2 7-4.2V4a1 1 0 0 0-1-1zm13 2.383-4.708 2.825L15 11.105zm-.034 6.876-5.64-3.471L8 9.583l-1.326-.795-5.64 3.47A1 1 0 0 0 2 13h12a1 1 0 0 0 .966-.741M1 11.105l4.708-2.897L1 5.383z"/>
-            </svg>
-          }
         />
 
         <InputField
@@ -156,11 +145,6 @@ export const RegisterPage: React.FC = () => {
           required
           showPasswordToggle
           autoComplete="new-password"
-          icon={
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
-              <path d="M8 1a2 2 0 0 1 2 2v4H6V3a2 2 0 0 1 2-2m3 6V3a3 3 0 0 0-6 0v4a2 2 0 0 0-2 2v5a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2M5 9a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v5a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1z"/>
-            </svg>
-          }
         />
 
         <InputField
@@ -175,33 +159,16 @@ export const RegisterPage: React.FC = () => {
           required
           showPasswordToggle
           autoComplete="new-password"
-          icon={
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
-              <path d="M10.854 7.146a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 1 1 .708-.708L7.5 9.793l2.646-2.647a.5.5 0 0 1 .708 0"/>
-              <path d="M8 1a2 2 0 0 1 2 2v4H6V3a2 2 0 0 1 2-2m3 6V3a3 3 0 0 0-6 0v4a2 2 0 0 0-2 2v5a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2"/>
-            </svg>
-          }
         />
 
         <Form.Group className="mb-4" controlId="register-terms">
           <Form.Check
             type="checkbox"
             name="agreeTerms"
+            label="I agree to the Terms of Service & Privacy Policy"
             checked={formData.agreeTerms}
             onChange={handleChange}
             className="text-secondary small form-check-input-custom"
-            label={
-              <span>
-                I agree to the{' '}
-                <a href="#terms" className="link-cyan" onClick={(e) => e.preventDefault()}>
-                  Terms of Service
-                </a>{' '}
-                and{' '}
-                <a href="#privacy" className="link-cyan" onClick={(e) => e.preventDefault()}>
-                  Privacy Policy
-                </a>
-              </span>
-            }
           />
           {errors.agreeTerms && <div className="text-danger mt-1 small">{errors.agreeTerms}</div>}
         </Form.Group>

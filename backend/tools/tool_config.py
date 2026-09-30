@@ -12,6 +12,7 @@ class BaseToolConfig(BaseModel):
     enabled: bool
     version: str
 
+
 class HTTPMethod(StrEnum):
     GET = "GET"
     POST = "POST"
@@ -99,10 +100,7 @@ class PythonToolConfig(BaseToolConfig):
 class MCPToolConfig(BaseToolConfig):
     tool_type: Literal[ToolType.MCP] = ToolType.MCP
 
-    server_url: str
-    transport: MCPTransport
-
-    authentication: MCPAuthenticationConfig | None = None
+    mcp_config: dict[str, Any] = Field(..., description="MCP server configuration")
 
 
 AnyToolConfig = Annotated[

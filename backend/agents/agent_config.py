@@ -22,17 +22,24 @@ class ModelProvider(str, Enum):
     OPENAI = "openai"
     GOOGLE = "google_genai"
     ANTHROPIC = "anthropic"
-    GROK = "grok"
+    XAI = "xai"
     GROQ = "groq"
-    AWS_BEDROCK = "aws bedrock"
-    AZURE_OPENAI = "azure openai"
-
+    AZURE_OPENAI = "azure_openai"
+    AZURE_AI = "azure_ai"
+    COHERE = "cohere"
+    DEEPSEEK = "deepseek"
+    OPENROUTER = "openrouter"
+    OLLAMA = "ollama"
+    MISTRAL = "mistralai"
+    HUGGINGFACE = "huggingface"
+    
 
 class ModelConfig(BaseModel):
     _id: str
     provider: ModelProvider
     name: str
     max_tokens: Optional[int] = None
+    api_key: str
 
 
 

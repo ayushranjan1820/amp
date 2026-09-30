@@ -8,10 +8,8 @@ logger = get_logger("main")
 
 app = FastAPI(title="Agent Mart API")
 
-# Register user router (router lifespan manages UserProfileCollection lifecycle)
 app.include_router(user_router, prefix="/api/v1/users")
 app.include_router(agent_router, prefix="/api/v1/agents")
-logger.info("User router registered at prefix /api/v1/users")
 
 
 @app.get("/")

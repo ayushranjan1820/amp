@@ -7,4 +7,7 @@ export const API_ENDPOINTS = {
     LOGIN: '/api/v1/users/login',
     REGISTER: '/api/v1/users/register',
   },
+  AGENTS: {
+    FETCH: '/api/v1/agents/fetch',
+  },
 } as const;

@@ -1,0 +1,28 @@
+/* Landing Page and Agent Card styles */
+.agent-desc-clamp {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  min-height: 4.2em;
+}
+
+.extra-small {
+  font-size: 0.75rem;
+}
+
+.btn-edit-agent {
+  color: var(--pastel-cyan);
+  border-color: rgba(125, 211, 252, 0.35);
+  background: rgba(125, 211, 252, 0.05);
+  transition: all 0.2s ease;
+}
+
+.btn-edit-agent:hover, .btn-edit-agent:focus {
+  background: rgba(125, 211, 252, 0.2);
+  border-color: var(--pastel-cyan);
+  color: #ffffff;
+  box-shadow: 0 0 12px var(--pastel-cyan-glow);
+}

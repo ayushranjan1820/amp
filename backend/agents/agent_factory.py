@@ -1,6 +1,7 @@
 from tools.tool_factory import ToolFactory
 from agents.agent_config import AgentConfig
 from deepagents import create_deep_agent
+from langchain.chat_models import init_chat_model
 
 
 class AgentFactory:
@@ -15,7 +16,11 @@ class AgentFactory:
             tools = await self._tool_factory.create_tools(tool_config)
             runtime_tools.extend(tools)
 
-        llm = config.model.provider + ":" + config.model.name
+        llm = init_chat_model(
+            model=config.model.name,
+            model_provider=config.model.provider,
+            api_key=config.model.api_key,
+        )
 
         agent = create_deep_agent(
             model=llm,

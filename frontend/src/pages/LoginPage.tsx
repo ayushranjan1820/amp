@@ -65,19 +65,16 @@ export const LoginPage: React.FC = () => {
 
       const response = await post<ApiResponse<UserSession> | UserSession>(API_ENDPOINTS.AUTH.LOGIN, payload);
 
-      // Extract user data from response envelope { data: { name, email, token } } or direct object
       const userData = (response && 'data' in response && response.data)
         ? response.data
         : (response as UserSession);
 
-      // Save user session (name, email, token) in AuthContext & sessionStorage
       loginUser({
         name: userData.name,
         email: userData.email,
         token: userData.token,
       });
 
-      // Navigate to landing page
       navigate('/');
     } catch (err) {
       const message = extractErrorMessage(err);
@@ -107,11 +104,6 @@ export const LoginPage: React.FC = () => {
           error={errors.email}
           required
           autoComplete="email"
-          icon={
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
-              <path d="M0 4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2zm2-1a1 1 0 0 0-1 1v.217l7 4.2 7-4.2V4a1 1 0 0 0-1-1zm13 2.383-4.708 2.825L15 11.105zm-.034 6.876-5.64-3.471L8 9.583l-1.326-.795-5.64 3.47A1 1 0 0 0 2 13h12a1 1 0 0 0 .966-.741M1 11.105l4.708-2.897L1 5.383z"/>
-            </svg>
-          }
         />
 
         <InputField
@@ -126,14 +118,9 @@ export const LoginPage: React.FC = () => {
           required
           showPasswordToggle
           autoComplete="current-password"
-          icon={
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
-              <path d="M8 1a2 2 0 0 1 2 2v4H6V3a2 2 0 0 1 2-2m3 6V3a3 3 0 0 0-6 0v4a2 2 0 0 0-2 2v5a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2M5 9a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v5a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1z"/>
-            </svg>
-          }
         />
 
-        <div className="d-flex justify-content-between align-items-center mb-4">
+        <div className="mb-4">
           <Form.Check
             type="checkbox"
             id="remember-me"
@@ -143,9 +130,6 @@ export const LoginPage: React.FC = () => {
             onChange={handleChange}
             className="text-secondary small form-check-input-custom"
           />
-          <a href="#forgot-password" className="link-cyan small" onClick={(e) => e.preventDefault()}>
-            Forgot password?
-          </a>
         </div>
 
         <Button

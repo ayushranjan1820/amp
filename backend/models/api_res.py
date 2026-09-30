@@ -4,6 +4,7 @@ from datetime import datetime
 from agents.agent_config import ToolConfig, ModelConfig, Visibility, Status
 from tools.tool_config import TokenType
 
+
 class ServerResponseWrapper(BaseModel):
     data: Optional[Any] = None
     message: Optional[str] = None
@@ -11,17 +12,20 @@ class ServerResponseWrapper(BaseModel):
     error: Optional[str] = None
     timestamp: datetime = Field(default_factory=datetime.now)
 
+
 class RegisterUserRes(BaseModel):
     user_id: str
     user_name: str
     user_email: str
+
 
 class LoginUserRes(BaseModel):
     name: str
     email: str
     token: str
 
-class NewAgentRes(BaseModel):
+
+class AgentRes(BaseModel):
     agent_id: str
     name: str
     description: str
@@ -35,10 +39,8 @@ class NewAgentRes(BaseModel):
     status: Status = Field(default_factory=lambda: Status.DRAFT)
 
 
-class NewTokenRes(BaseModel):
+class TokenRes(BaseModel):
     token_id: str
     name: str
     owner_id: str
     token_type: TokenType
-    
-

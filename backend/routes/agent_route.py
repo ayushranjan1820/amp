@@ -1,32 +1,32 @@
-from fastapi import APIRouter, Request, Depends, FastAPI, status
-from fastapi.responses import JSONResponse
-from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
-from utils.logger import get_logger
 from contextlib import asynccontextmanager
-from tools.preconfigured import create_preconfigured_registry
-from tools.tool_factory import ToolFactory
-from agents.agent_factory import AgentFactory
+
 from agents.agent_config import AgentConfig
-from dotenv import load_dotenv
-from decorator.token_validation import validate_token
+from agents.agent_factory import AgentFactory
 from database.mongo_connection import (
     AgentCatalogConnection,
-    ToolCatalogConnection,
     TokenCatalogConnection,
+    ToolCatalogConnection,
 )
-from services.agent_service import (
-    register_new_agent,
-    edit_available_agent,
-    get_agents,
-    add_new_tools_to_agent,
-    add_new_tokens,
-    get_tokens_by_user_id
-)
+from decorator.token_validation import validate_token
+from dotenv import load_dotenv
+from fastapi import APIRouter, Depends, FastAPI, Request, status
+from fastapi.responses import JSONResponse
+from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
+from models.api_req import ChatReq, NewAgentReq, TokenReq
+from models.api_res import ServerResponseWrapper, TokenRes
+from services.agent_service import edit_available_agent, get_agents, register_new_agent
 from services.chat_service import chat_with_agent
-from models.api_res import ServerResponseWrapper, NewTokenRes
-from models.api_req import NewAgentReq, ChatReq, TokenReq
-from tools.api import ApiValidator, ApiToolExecutor, ApiInputSchemaFactory
-from tools.tool_provider import ApiToolProvider
+from services.tool_service import (
+    add_new_token,
+    add_new_tools_to_agent,
+    fetch_tools_by_tool_ids,
+    get_tokens_by_user_id,
+)
+from tools.api import ApiInputSchemaFactory, ApiToolExecutor, ApiValidator
+from tools.preconfigured import create_preconfigured_registry
+from tools.tool_factory import ToolFactory
+from tools.tool_provider import ApiToolProvider, MCPToolProvider
+from utils.logger import get_logger
 
 load_dotenv()
 
@@ -46,6 +46,7 @@ async def lifespan(app: FastAPI):
     app.state.tool_catalog_collection = ToolCatalogConnection(
         collection_name="tool_catalog"
     )
+
     app.state.token_catalog_connection = TokenCatalogConnection(
         collection_name="token_catalog"
     )
@@ -59,9 +60,12 @@ async def lifespan(app: FastAPI):
     api_schema_factory = ApiInputSchemaFactory()
     api_tool_provider = ApiToolProvider(api_executor, api_schema_factory)
 
+    # ----- MCP Tools -----
+    mcp_tool_provider = MCPToolProvider()
+
     # ----- Common ToolFactory -----
     tool_factory = ToolFactory(
-        preconfigured_registry=preconfigured_registry, api_provider=api_tool_provider
+        preconfigured_registry=preconfigured_registry, api_provider=api_tool_provider, mcp_provider=mcp_tool_provider
     )
 
     agent_factory = AgentFactory(
@@ -97,11 +101,11 @@ def get_token_catalog_collection(request: Request) -> TokenCatalogConnection:
     return request.app.state.token_catalog_connection
 
 
-router = APIRouter(tags=["agents"], lifespan=lifespan)
+router = APIRouter(tags=["agents_tools_tokens"], lifespan=lifespan)
 security = HTTPBearer()
 
 
-@router.post("/create")
+@router.post("/")
 @validate_token
 async def create_agent(
     request: Request,
@@ -109,6 +113,9 @@ async def create_agent(
     collection: AgentCatalogConnection = Depends(get_agent_catalog_collection),
     credentials: HTTPAuthorizationCredentials = Depends(security),
 ):
+    """
+    Add a new agent configuration
+    """
     user_email = getattr(request.app.state, "email", None)
     user_id = getattr(request.app.state, "id", None)
 
@@ -139,6 +146,9 @@ async def edit_agent(
     collection: AgentCatalogConnection = Depends(get_agent_catalog_collection),
     credentials: HTTPAuthorizationCredentials = Depends(security),
 ):
+    """
+    Edit an existing agent config
+    """
     user_email = getattr(request.app.state, "email", None)
     user_id = getattr(request.app.state, "id", None)
 
@@ -169,9 +179,78 @@ async def edit_agent(
     )
 
 
-@router.post("/add-tools/{agent_id}")
+@router.post("/chat/{agent_id}")
 @validate_token
-async def add_tools(
+async def chat(
+    request: Request,
+    agent_id: str,
+    req: ChatReq,
+    agent_catalog_collection: AgentCatalogConnection = Depends(
+        get_agent_catalog_collection
+    ),
+    tool_catalog_collection: ToolCatalogConnection = Depends(
+        get_tool_catalog_collection
+    ),
+    token_catalog_collection: TokenCatalogConnection = Depends(
+        get_token_catalog_collection
+    ),
+    credentials: HTTPAuthorizationCredentials = Depends(security),
+):
+    """
+    Chat with an agent
+    """
+    user_id = getattr(request.app.state, "id", None)
+    agent_factory: AgentFactory = request.app.state.agent_factory
+    agent_response = await chat_with_agent(
+        agent_id,
+        user_id,
+        req.message,
+        agent_factory,
+        agent_catalog_collection,
+        tool_catalog_collection,
+        token_catalog_collection,
+    )
+    response_data = ServerResponseWrapper(
+        data=agent_response,
+        message="Chat response",
+        status_code=status.HTTP_200_OK,
+    )
+    return JSONResponse(
+        content=response_data.model_dump(mode="json"), status_code=status.HTTP_200_OK
+    )
+
+
+@router.get("/")
+@validate_token
+async def fetch_all_agents(
+    request: Request,
+    credentials: HTTPAuthorizationCredentials = Depends(security),
+    collection: AgentCatalogConnection = Depends(get_agent_catalog_collection),
+):
+    """
+    Fetch all available agents of an user
+    """
+    user_id = getattr(request.app.state, "id", None)
+    available_agents = await get_agents(user_id, collection)
+    response_data = ServerResponseWrapper(
+        data=available_agents,
+        message="Available agents fetched successfully",
+        status_code=status.HTTP_200_OK,
+    )
+    logger.info(
+        "%s agents found for user: %s",
+        len(available_agents),
+        user_id,
+    )
+    return JSONResponse(
+        status_code=status.HTTP_200_OK,
+        content=response_data.model_dump(mode="json"),
+    )
+
+
+@router.post("/tools/{agent_id}")
+@validate_token
+async def add_tools_to_an_agent(
     request: Request,
     agent_id: str,
     tool_config: list[dict],
@@ -183,6 +262,9 @@ async def add_tools(
     ),
     credentials: HTTPAuthorizationCredentials = Depends(security),
 ):
+    """
+    Add new tool(s) to an existing agent
+    """
     user_id = getattr(request.app.state, "id", None)
     updated_agent = await add_new_tools_to_agent(
         agent_id,
@@ -202,7 +284,33 @@ async def add_tools(
     )
 
 
-@router.post("/token")
+@router.post("/tools/fetch")
+@validate_token
+async def fetch_tool_configs_by_tool_ids(
+    request: Request,
+    tool_ids: list[str],
+    tool_catalog_collection: ToolCatalogConnection = Depends(
+        get_tool_catalog_collection
+    ),
+    credentials: HTTPAuthorizationCredentials = Depends(security),
+):
+    """
+    Fetch tools by tools_ids saved in a particular agent config
+    """
+    user_id = getattr(request.app.state, "id", None)
+    tools = await fetch_tools_by_tool_ids(tool_ids, tool_catalog_collection)
+    response_data = ServerResponseWrapper(
+        data=tools,
+        message="Tools fetched successfully",
+        status_code=status.HTTP_200_OK,
+    )
+    return JSONResponse(
+        status_code=status.HTTP_200_OK,
+        content=response_data.model_dump(mode="json"),
+    )
+
+
+@router.post("/tokens")
 @validate_token
 async def add_credentials(
     request: Request,
@@ -213,11 +321,7 @@ async def add_credentials(
     credentials: HTTPAuthorizationCredentials = Depends(security),
 ):
     user_id = getattr(request.app.state, "id", None)
-    updated_agent = await add_new_tokens(
-        token_config,
-        user_id,
-        token_catalog_collection
-    )
+    updated_agent = await add_new_token(token_config, user_id, token_catalog_collection)
     response_data = ServerResponseWrapper(
         data=updated_agent.model_dump(),
         message="Credentials added successfully",
@@ -229,9 +333,9 @@ async def add_credentials(
     )
 
 
-@router.get("/token")
+@router.get("/tokens")
 @validate_token
-async def fetch_tokens_by_user_id(
+async def fetch_tokens_of_user(
     request: Request,
     token_catalog_collection: TokenCatalogConnection = Depends(
         get_token_catalog_collection
@@ -242,71 +346,8 @@ async def fetch_tokens_by_user_id(
     tokens = await get_tokens_by_user_id(user_id, token_catalog_collection)
     response_data = ServerResponseWrapper(
         data=tokens,
-        message="Tokens fetched successfully",
+        message=f"Tokens fetched successfully for user id: {user_id}",
         status_code=status.HTTP_200_OK,
-    )
-    return JSONResponse(
-        status_code=status.HTTP_200_OK,
-        content=response_data.model_dump(mode="json"),
-    )
-
-
-@router.post("/chat/{agent_id}")
-@validate_token
-async def chat(
-    request: Request,
-    agent_id: str,
-    req: ChatReq,
-    agent_catalog_collection: AgentCatalogConnection = Depends(
-        get_agent_catalog_collection
-    ),
-    tool_catalog_collection: ToolCatalogConnection = Depends(
-        get_tool_catalog_collection
-    ),
-    token_catalog_collection: TokenCatalogConnection = Depends(
-        get_token_catalog_collection
-    ),
-    credentials: HTTPAuthorizationCredentials = Depends(security),
-):
-    user_id = getattr(request.app.state, "id", None)
-    agent_factory: AgentFactory = request.app.state.agent_factory
-    agent_response = await chat_with_agent(
-        agent_id,
-        user_id,
-        req.message,
-        agent_factory,
-        agent_catalog_collection,
-        tool_catalog_collection,
-        token_catalog_collection
-    )
-    response_data = ServerResponseWrapper(
-        data=agent_response,
-        message="Chat response",
-        status_code=status.HTTP_200_OK,
-    )
-    return JSONResponse(
-        content=response_data.model_dump(mode="json"), status_code=status.HTTP_200_OK
-    )
-
-
-@router.get("/fetch")
-@validate_token
-async def fetch_all_agents(
-    request: Request,
-    credentials: HTTPAuthorizationCredentials = Depends(security),
-    collection: AgentCatalogConnection = Depends(get_agent_catalog_collection),
-):
-    user_id = getattr(request.app.state, "id", None)
-    available_agents = await get_agents(user_id, collection)
-    response_data = ServerResponseWrapper(
-        data=available_agents,
-        message="Available agents fetched successfully",
-        status_code=status.HTTP_200_OK,
-    )
-    logger.info(
-        "%s agents found for user: %s",
-        len(available_agents),
-        user_id,
     )
     return JSONResponse(
         status_code=status.HTTP_200_OK,

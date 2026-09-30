@@ -1,0 +1,112 @@
+/* Navbar component styles */
+.navbar-custom {
+  background: rgba(10, 14, 23, 0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(125, 211, 252, 0.12);
+  z-index: 1040;
+}
+
+.brand-glow-icon-sm {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  background: linear-gradient(135deg, rgba(125, 211, 252, 0.25) 0%, rgba(56, 189, 248, 0.05) 100%);
+  border: 1px solid rgba(125, 211, 252, 0.35);
+  color: var(--pastel-cyan);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 0 15px var(--pastel-cyan-glow);
+}
+
+.nav-link-custom {
+  color: var(--text-secondary);
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 0.95rem;
+  transition: color 0.2s ease;
+}
+
+.nav-link-custom:hover, .nav-link-custom.active {
+  color: var(--pastel-cyan);
+}
+
+/* User Profile Badge */
+.user-profile-btn {
+  cursor: pointer;
+  padding: 4px 8px !important;
+  border-radius: 20px;
+  transition: background-color 0.2s ease;
+}
+
+.user-profile-btn:hover {
+  background-color: rgba(125, 211, 252, 0.08) !important;
+}
+
+.avatar-circle {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #7dd3fc 0%, #38bdf8 100%);
+  color: #0b0f19;
+  font-weight: 700;
+  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 0 12px var(--pastel-cyan-glow);
+}
+
+.avatar-circle-lg {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #7dd3fc 0%, #38bdf8 100%);
+  color: #0b0f19;
+  font-weight: 700;
+  font-size: 1.1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 0 15px var(--pastel-cyan-glow);
+}
+
+/* User Dropdown Popup */
+.user-popup-menu {
+  position: absolute;
+  top: 120%;
+  right: 0;
+  left: auto;
+  min-width: 320px;
+  max-width: 420px;
+  width: max-content;
+  background: #121824;
+  border: 1px solid rgba(125, 211, 252, 0.25);
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.6), 0 0 20px rgba(125, 211, 252, 0.1);
+  z-index: 1050;
+  animation: fadeInDown 0.2s ease-out forwards;
+}
+
+@keyframes fadeInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.rotate-180 {
+  transform: rotate(180deg);
+}
+
+.transition-transform {
+  transition: transform 0.2s ease;
+}
+
+.word-break {
+  word-break: break-all;
+}

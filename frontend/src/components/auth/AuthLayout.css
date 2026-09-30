@@ -1,0 +1,30 @@
+/* Auth Layout and Card styles */
+.auth-card {
+  background: var(--card-dark);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--card-border);
+  border-radius: 20px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5), 0 0 30px var(--pastel-cyan-subtle);
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.auth-card:hover {
+  border-color: var(--card-border-hover);
+  box-shadow: 0 20px 45px rgba(0, 0, 0, 0.55), 0 0 35px rgba(125, 211, 252, 0.15);
+}
+
+/* Glowing Brand Badge / Logo Icon */
+.brand-glow-icon {
+  width: 54px;
+  height: 54px;
+  border-radius: 16px;
+  background: linear-gradient(135deg, rgba(125, 211, 252, 0.2) 0%, rgba(56, 189, 248, 0.05) 100%);
+  border: 1px solid rgba(125, 211, 252, 0.3);
+  color: var(--pastel-cyan);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 16px auto;
+  box-shadow: 0 0 25px var(--pastel-cyan-glow);
+}

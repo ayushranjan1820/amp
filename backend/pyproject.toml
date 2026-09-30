@@ -12,6 +12,7 @@ dependencies = [
     "fastapi>=0.141.1",
     "httpx>=0.28.1",
     "langchain-community>=0.4.2",
+    "langchain-mcp-adapters>=0.3.2",
     "langchain-tavily>=0.2.18",
     "pyjwt>=2.13.0",
     "pymongo>=4.18.0",

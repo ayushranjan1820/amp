@@ -38,7 +38,7 @@ def get_user_profile_collection(request: Request) -> UserProfileCollection:
     return request.app.state.user_profile_collection
 
 
-router = APIRouter(tags=["user"], lifespan=lifespan)
+router = APIRouter(tags=["users"], lifespan=lifespan)
 
 
 @router.post("/register", response_class=JSONResponse)
