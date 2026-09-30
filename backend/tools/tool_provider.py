@@ -9,6 +9,7 @@ from tools.api.api_schema import ApiInputSchemaFactory
 from tools.tool_config import ApiToolConfig, ToolConfig, MCPToolConfig
 from utils.logger import get_logger
 from errors.global_exception_handler import AgentMartException
+from tools.mcp.mcp_tools_filter import MCPToolFilter
 
 logger = get_logger(__name__)
 
@@ -70,16 +71,20 @@ class ApiToolProvider(ToolProvider):
 
 
 class MCPToolProvider(ToolProvider):
-    """ """
+    """ 
+    Convert MCP config into Langchain tools
+    """
+    def __init__(self, tool_filter: MCPToolFilter):
+        self._tool_filter = tool_filter
 
     async def create_tools(self, config) -> list[BaseTool]:
         if not isinstance(config, MCPToolConfig):
             raise AgentMartException("MCPToolProvider needs MCPToolConfig")
-        print(f"Config {config}")
         client = MultiServerMCPClient(
             config.mcp_config
         )
 
         tools = await client.get_tools()
-        logger.info(f"Created MCP tools: {tools}")
+        tools = self._tool_filter.filter(tools, config)
+        logger.info(f"Fetched MCP tools: {[{tool.name: tool.description} for tool in tools]}")
         return tools

@@ -1,15 +1,18 @@
 from datetime import datetime
-from models.api_req import NewAgentReq, TokenReq
+
 from database.mongo_connection import (
     AgentCatalogConnection,
-    ToolCatalogConnection,
     TokenCatalogConnection,
+    ToolCatalogConnection,
 )
 from database.schema import AgentCatalog, TokenCatalog
-from models.api_res import AgentRes, TokenRes
-from utils.logger import get_logger
-from tools.tool_config import ToolConfig
+from langchain_core.tools import BaseTool
+from langchain_mcp_adapters.client import MultiServerMCPClient
+from models.api_req import NewAgentReq, TokenReq
+from models.api_res import AgentRes, MCPToolRes, TokenRes
 from pydantic import TypeAdapter
+from tools.tool_config import ToolConfig
+from utils.logger import get_logger
 
 logger = get_logger(__name__)
 
@@ -101,3 +104,19 @@ async def get_tokens_by_user_id(
     """
     tokens = await token_catalog_collection.get_tokens_by_user_id(user_id)
     return [TokenRes(**token, token_id=str(token["_id"])) for token in tokens]
+
+
+async def get_all_tools_from_mcp_config(mcp_config: dict) -> list[MCPToolRes]:
+    """
+    Fetch all tools from MCP config
+    Args:
+        mcp_config (dict): MCP config
+    Returns:
+        list[dict[str, str]]: List of tool names and descriptions
+    """
+    client = MultiServerMCPClient(mcp_config)
+    tools = await client.get_tools()
+    return [
+        MCPToolRes(tool_name=tool.name, tool_description=tool.description)
+        for tool in tools
+    ]

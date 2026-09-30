@@ -21,12 +21,14 @@ from services.tool_service import (
     add_new_tools_to_agent,
     fetch_tools_by_tool_ids,
     get_tokens_by_user_id,
+    get_all_tools_from_mcp_config
 )
 from tools.api import ApiInputSchemaFactory, ApiToolExecutor, ApiValidator
 from tools.preconfigured import create_preconfigured_registry
 from tools.tool_factory import ToolFactory
 from tools.tool_provider import ApiToolProvider, MCPToolProvider
 from utils.logger import get_logger
+from tools.mcp.mcp_tools_filter import MCPToolFilter
 
 load_dotenv()
 
@@ -61,7 +63,8 @@ async def lifespan(app: FastAPI):
     api_tool_provider = ApiToolProvider(api_executor, api_schema_factory)
 
     # ----- MCP Tools -----
-    mcp_tool_provider = MCPToolProvider()
+    tool_filter = MCPToolFilter()
+    mcp_tool_provider = MCPToolProvider(tool_filter)
 
     # ----- Common ToolFactory -----
     tool_factory = ToolFactory(
@@ -347,6 +350,28 @@ async def fetch_tokens_of_user(
     response_data = ServerResponseWrapper(
         data=tokens,
         message=f"Tokens fetched successfully for user id: {user_id}",
+        status_code=status.HTTP_200_OK,
+    )
+    return JSONResponse(
+        status_code=status.HTTP_200_OK,
+        content=response_data.model_dump(mode="json"),
+    )
+
+
+@router.post("/tools-from-mcp")
+@validate_token
+async def get_tools_from_config(
+    request: Request,
+    mcp_config: dict,
+    credentials: HTTPAuthorizationCredentials = Depends(security),
+):
+    """
+    Fetch tools from MCP config
+    """
+    tools = await get_all_tools_from_mcp_config(mcp_config)
+    response_data = ServerResponseWrapper(
+        data=tools,
+        message="All available tools from MCP config fetched successfully",
         status_code=status.HTTP_200_OK,
     )
     return JSONResponse(

@@ -101,6 +101,7 @@ class MCPToolConfig(BaseToolConfig):
     tool_type: Literal[ToolType.MCP] = ToolType.MCP
 
     mcp_config: dict[str, Any] = Field(..., description="MCP server configuration")
+    allowed_tools: list[str] = Field(default_factory=list, description="List of tool names to allow")
 
 
 AnyToolConfig = Annotated[

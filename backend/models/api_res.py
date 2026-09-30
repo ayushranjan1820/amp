@@ -44,3 +44,8 @@ class TokenRes(BaseModel):
     name: str
     owner_id: str
     token_type: TokenType
+
+
+class MCPToolRes(BaseModel):
+    tool_name: str
+    tool_description: str

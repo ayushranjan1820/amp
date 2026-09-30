@@ -11,3 +11,4 @@ wheels/
 
 .env
 test_server/
+test_server_mcp/
