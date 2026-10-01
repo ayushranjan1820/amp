@@ -5,10 +5,9 @@ import './AuthLayout.css';
 interface AuthLayoutProps {
   children: React.ReactNode;
   title: string;
-  subtitle: string;
 }
 
-export const AuthLayout: React.FC<AuthLayoutProps> = ({ children, title, subtitle }) => {
+export const AuthLayout: React.FC<AuthLayoutProps> = ({ children, title }) => {
   return (
     <div className="min-vh-100 d-flex flex-column justify-content-center py-5">
       <Container>
@@ -16,10 +15,9 @@ export const AuthLayout: React.FC<AuthLayoutProps> = ({ children, title, subtitl
           <Col xs={12} sm={10} md={8} lg={5} xl={4}>
             {/* Brand Header */}
             <div className="text-center mb-4">
-              <h2 className="fw-bold text-white mb-1">
-                Agent<span className="text-cyan-accent">Mart</span>
+              <h2 className="fw-bold text-white mb-0">
+                Agent<span className="text-cyan-accent">Space</span>
               </h2>
-              <p className="text-muted small">{subtitle}</p>
             </div>
 
             {/* Auth Card */}
@@ -30,7 +28,7 @@ export const AuthLayout: React.FC<AuthLayoutProps> = ({ children, title, subtitl
 
             {/* Sub-footer */}
             <div className="text-center mt-4 text-muted small">
-              &copy; {new Date().getFullYear()} AgentMart. All rights reserved.
+              &copy; {new Date().getFullYear()} AgentSpace. All rights reserved.
             </div>
           </Col>
         </Row>

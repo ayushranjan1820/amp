@@ -33,7 +33,7 @@ export const Navbar: React.FC = () => {
         {/* Brand Logo */}
         <Link to="/" className="d-flex align-items-center text-decoration-none gap-2">
           <span className="fw-bold text-white fs-5 tracking-wide">
-            Agent<span className="text-cyan-accent">Mart</span>
+            Agent<span className="text-cyan-accent">Space</span>
           </span>
         </Link>
 

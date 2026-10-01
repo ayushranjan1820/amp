@@ -71,7 +71,7 @@ export const AgentConfigModal: React.FC<AgentConfigModalProps> = ({
       <Modal.Header closeButton closeVariant="white" className="border-bottom border-secondary border-opacity-25 pb-3">
         <Modal.Title className="d-flex align-items-center gap-2 text-white fw-bold fs-4">
           <span>Agent Configuration</span>
-          <Badge bg="dark" className="text-cyan-accent border border-info border-opacity-25 ms-2 fs-6">
+          <Badge className="badge-custom ms-2 fs-6">
             v{formData.version}
           </Badge>
         </Modal.Title>
@@ -162,7 +162,7 @@ export const AgentConfigModal: React.FC<AgentConfigModalProps> = ({
             </Col>
           </Row>
 
-          <div className="d-flex align-items-center justify-content-between p-3 rounded-3 bg-dark border border-secondary border-opacity-25 mb-3">
+          <div className="d-flex align-items-center justify-content-between p-3 rounded-3 border border-secondary border-opacity-25 mb-3" style={{ background: 'var(--input-bg-dark)' }}>
             <div>
               <h6 className="fw-semibold text-white mb-1">Agent Status (Enabled)</h6>
               <small className="text-secondary">Toggle whether this agent is active for execution</small>
@@ -182,7 +182,7 @@ export const AgentConfigModal: React.FC<AgentConfigModalProps> = ({
               <Form.Label className="form-label-custom">Capabilities</Form.Label>
               <div className="d-flex flex-wrap gap-2">
                 {formData.capabilities.map((cap, idx) => (
-                  <Badge key={idx} bg="dark" className="text-cyan-secondary border border-info border-opacity-25 px-2 py-1">
+                  <Badge key={idx} className="badge-custom px-2 py-1">
                     {cap}
                   </Badge>
                 ))}
