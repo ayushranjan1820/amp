@@ -1,13 +1,13 @@
-# Agent Mart
+# Agent Space
 
-Agent Mart is an asynchronous FastAPI backend service for managing AI agent configurations, tool integrations, and user management powered by MongoDB and PyMongo `AsyncMongoClient`.
+Agent Space is an asynchronous FastAPI backend service for managing AI agent configurations, tool integrations, and user management powered by MongoDB and PyMongo `AsyncMongoClient`.
 
 ---
 
 ## 📁 Project Structure
 
 ```text
-agent-mart/
+agent-mart/ 
 └── backend/
     ├── agents/
     │   ├── __init__.py           # Package initializer for agents
