@@ -2,7 +2,6 @@ from pydantic import TypeAdapter
 from database.mongo_connection import (
     AgentCatalogConnection,
     ToolCatalogConnection,
-    TokenCatalogConnection,
 )
 from errors.global_exception_handler import AgentMartException
 from agents.agent_config import AgentConfig

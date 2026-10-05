@@ -6,7 +6,6 @@ from agents.agent_config import ModelConfig, Visibility, Status, ModelProvider
 from tools.tool_config import ToolType, TokenType
 
 
-
 def _validate_email_format(val: str):
     """
     Checks if a given email matches the following conditions to be valid
@@ -114,37 +113,27 @@ class LoginUserReq(BaseModel):
         return _validate_email_format(val)
 
 
-class NewAgentReq(BaseModel):
-    name: str
-    description: str
-    system_prompt: str
-    tools: list[str] = []
-    model: ModelConfig
-    capabilities: list[str] = []
-    enabled: bool = True
-    version: str
-    visibility: Visibility = Field(default_factory=lambda: Visibility.PRIVATE)
-    status: Status = Field(default_factory=lambda: Status.DRAFT)
-
-
-class ModelReq(BaseModel):
-    provider: ModelProvider
-    name: str
-    max_tokens: Optional[int] = None
-    api_key: str
-    temperature: float
+# class AgentReq(BaseModel):
+#     agent_id: Optional[str] = None
+#     name: str
+#     description: str
+#     system_prompt: str
+#     tools: list[str] = []
+#     model: Optional[ModelConfig] = None
+#     capabilities: list[str] = []
+#     enabled: bool = True
+#     version: str
+#     visibility: Visibility = Field(default_factory=lambda: Visibility.PRIVATE)
+#     status: Status = Field(default_factory=lambda: Status.DRAFT)
 
 
 class ChatReq(BaseModel):
     message: str
 
-class CommonToolReq(BaseModel):
-    name: str
-    description: str
-    tool_type: ToolType
-    enabled: bool
-    version: str
-    tool_config: dict
+
+class ToolIdsReq(BaseModel):
+    ids: list[str]
+
 
 class TokenReq(BaseModel):
     name: str

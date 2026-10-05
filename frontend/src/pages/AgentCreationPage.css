@@ -1,0 +1,247 @@
+/* Agent Creation Page Styles */
+
+.agent-creation-container {
+  min-height: calc(100vh - 80px);
+  padding-top: 2rem;
+  padding-bottom: 4rem;
+}
+
+.agent-creation-card {
+  background: var(--card-dark);
+  border: 1px solid var(--card-border);
+  border-radius: 20px;
+  backdrop-filter: blur(16px);
+  box-shadow: var(--shadow-soft);
+  overflow: hidden;
+}
+
+/* Sidebar Menu */
+.sidebar-menu {
+  background: rgba(15, 23, 42, 0.6);
+  border-right: 1px solid var(--card-border);
+  padding: 1.5rem 1rem;
+}
+
+.sidebar-step-item {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  padding: 0.85rem 1rem;
+  border-radius: 12px;
+  color: var(--text-secondary-dark);
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  margin-bottom: 0.5rem;
+  border: 1px solid transparent;
+}
+
+.sidebar-step-item:hover {
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--text-primary-dark);
+}
+
+.sidebar-step-item.active {
+  background: rgba(56, 189, 248, 0.12);
+  color: var(--primary-accent);
+  border-color: rgba(56, 189, 248, 0.3);
+}
+
+.sidebar-step-item.completed {
+  color: #4ade80;
+}
+
+.step-number-badge {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.85rem;
+  font-weight: 700;
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--text-secondary-dark);
+  transition: all 0.2s ease;
+}
+
+.sidebar-step-item.active .step-number-badge {
+  background: var(--primary-accent);
+  color: var(--bg-deep-dark);
+}
+
+.sidebar-step-item.completed .step-number-badge {
+  background: rgba(34, 197, 94, 0.2);
+  color: #4ade80;
+  border: 1px solid rgba(34, 197, 94, 0.3);
+}
+
+/* Content Area */
+.agent-step-content {
+  padding: 2.5rem;
+}
+
+.step-title {
+  color: var(--text-primary-dark);
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+}
+
+.step-description {
+  color: var(--text-secondary-dark);
+  font-size: 0.95rem;
+  margin-bottom: 2rem;
+}
+
+/* Toggles Pill Group */
+.toggle-group-pills {
+  display: flex;
+  gap: 0.5rem;
+  background: rgba(0, 0, 0, 0.25);
+  padding: 0.35rem;
+  border-radius: 12px;
+  border: 1px solid var(--input-border-dark);
+  width: fit-content;
+}
+
+.toggle-pill-btn {
+  padding: 0.5rem 1.25rem;
+  border-radius: 8px;
+  border: none;
+  background: transparent;
+  color: var(--text-secondary-dark);
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.toggle-pill-btn:hover {
+  color: var(--text-primary-dark);
+}
+
+.toggle-pill-btn.active {
+  background: var(--primary-accent);
+  color: var(--bg-deep-dark);
+  box-shadow: 0 2px 10px rgba(56, 189, 248, 0.3);
+}
+
+/* Add Option Dynamic Text/Button */
+.add-option-btn {
+  color: var(--primary-accent);
+  font-weight: 600;
+  font-size: 0.9rem;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  transition: all 0.2s ease;
+  user-select: none;
+}
+
+.add-option-btn:hover {
+  color: #ffffff;
+  text-shadow: var(--shadow-glow);
+}
+
+/* Custom Range Slider */
+.custom-range-slider {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 6px;
+  border-radius: 3px;
+  outline: none;
+  border: none;
+}
+
+/* Webkit Thumb */
+.custom-range-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: var(--primary-accent);
+  cursor: pointer;
+  box-shadow: 0 0 10px rgba(56, 189, 248, 0.6);
+  transition: transform 0.15s ease, background-color 0.15s ease;
+}
+
+.custom-range-slider::-webkit-slider-thumb:hover {
+  transform: scale(1.2);
+  background: #ffffff;
+}
+
+/* Firefox Thumb */
+.custom-range-slider::-moz-range-thumb {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: var(--primary-accent);
+  cursor: pointer;
+  border: none;
+  box-shadow: 0 0 10px rgba(56, 189, 248, 0.6);
+  transition: transform 0.15s ease, background-color 0.15s ease;
+}
+
+.custom-range-slider::-moz-range-thumb:hover {
+  transform: scale(1.2);
+  background: #ffffff;
+}
+
+/* Minimal Header Row */
+.header-input-row {
+  margin-bottom: 0.6rem;
+  transition: all 0.2s ease;
+}
+
+/* Structured Parameter Card */
+.parameter-card {
+  background: rgba(15, 23, 42, 0.4);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 14px;
+  padding: 1.25rem;
+  margin-bottom: 1rem;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.parameter-card:hover {
+  border-color: rgba(56, 189, 248, 0.3);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+}
+
+.parameter-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+/* Dynamic MCP Tool Item (Fit-content, green selection, subtle 8px rounded corners) */
+.mcp-tool-pill {
+  width: fit-content !important;
+  max-width: 100%;
+  border-radius: 8px !important;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  user-select: none;
+}
+
+.mcp-tool-pill:hover {
+  transform: translateY(-1px);
+}
+
+.mcp-tool-pill.selected {
+  background-color: rgba(34, 197, 94, 0.12) !important;
+  border-color: rgba(34, 197, 94, 0.4) !important;
+  color: #4ade80 !important;
+}
+
+.mcp-tool-pill.unselected {
+  background-color: rgba(0, 0, 0, 0.4) !important;
+  border-color: rgba(255, 255, 255, 0.15) !important;
+  color: var(--text-secondary-dark) !important;
+}

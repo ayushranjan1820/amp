@@ -35,7 +35,6 @@ class ModelProvider(str, Enum):
     
 
 class ModelConfig(BaseModel):
-    _id: str
     provider: ModelProvider
     name: str
     max_tokens: Optional[int] = None

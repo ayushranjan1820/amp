@@ -85,7 +85,7 @@ export const LoginPage: React.FC = () => {
   };
 
   return (
-    <AuthLayout title="Sign In to Your Account" subtitle="Access intelligent AI agents & marketplace">
+    <AuthLayout title="Sign In to Your Account">
       {serverError && (
         <Alert variant="danger" className="alert-custom-error mb-4">
           {serverError}

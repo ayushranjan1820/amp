@@ -1,7 +1,7 @@
 from pydantic import BaseModel, Field
 from typing import Optional, Any
 from datetime import datetime
-from agents.agent_config import ToolConfig, ModelConfig, Visibility, Status
+from agents.agent_config import ToolConfig, ModelConfig, Visibility, Status, ModelProvider
 from tools.tool_config import TokenType
 
 
@@ -26,12 +26,12 @@ class LoginUserRes(BaseModel):
 
 
 class AgentRes(BaseModel):
-    agent_id: str
+    agent_id: str = Field(alias="_id")
     name: str
     description: str
-    system_prompt: str
-    tools: list[dict] = []
-    model: ModelConfig
+    system_prompt: str = ""
+    tools: list[str] = []
+    model: ModelConfig = None
     capabilities: list[str] = []
     enabled: bool = True
     version: str

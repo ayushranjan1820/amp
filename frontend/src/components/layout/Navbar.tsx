@@ -37,25 +37,39 @@ export const Navbar: React.FC = () => {
           </span>
         </Link>
 
-        {/* Top Right User Section */}
-        <div className="position-relative ms-auto" ref={popupRef}>
-          {user ? (
-            <button
-              type="button"
-              className="user-profile-btn border-0 bg-transparent p-0 d-flex align-items-center gap-2"
-              onClick={() => setShowPopup(!showPopup)}
-              aria-expanded={showPopup}
-            >
-              <div className="avatar-circle">
-                {userInitials}
-              </div>
-              <span className="fw-medium text-light d-none d-sm-inline">{displayName}</span>
-            </button>
-          ) : (
-            <Link to="/login">
-              <Button className="btn-cyan-primary btn-sm px-3">Sign In</Button>
+        {/* Right Nav Actions */}
+        <div className="d-flex align-items-center gap-3 ms-auto">
+          {user && (
+            <Link to="/agent" className="text-decoration-none">
+              <Button className="btn-cyan-primary btn-sm px-3 d-flex align-items-center gap-1 fw-semibold">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                  <line x1="12" y1="5" x2="12" y2="19"></line>
+                  <line x1="5" y1="12" x2="19" y2="12"></line>
+                </svg>
+                <span>Create Agent</span>
+              </Button>
             </Link>
           )}
+
+          {/* Top Right User Section */}
+          <div className="position-relative" ref={popupRef}>
+            {user ? (
+              <button
+                type="button"
+                className="user-profile-btn border-0 bg-transparent p-0 d-flex align-items-center gap-2"
+                onClick={() => setShowPopup(!showPopup)}
+                aria-expanded={showPopup}
+              >
+                <div className="avatar-circle">
+                  {userInitials}
+                </div>
+                <span className="fw-medium text-light d-none d-sm-inline">{displayName}</span>
+              </button>
+            ) : (
+              <Link to="/login">
+                <Button className="btn-cyan-primary btn-sm px-3">Sign In</Button>
+              </Link>
+            )}
 
           {/* User Details Popup Modal / Popover */}
           {showPopup && user && (
@@ -82,6 +96,7 @@ export const Navbar: React.FC = () => {
             </div>
           )}
         </div>
+      </div>
       </Container>
     </nav>
   );

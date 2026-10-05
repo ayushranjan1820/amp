@@ -1,12 +1,10 @@
 from datetime import datetime
-from models.api_req import NewAgentReq, TokenReq
 from database.mongo_connection import (
     AgentCatalogConnection,
-    ToolCatalogConnection,
-    TokenCatalogConnection,
-)
-from database.schema import AgentCatalog, TokenCatalog
-from models.api_res import AgentRes, TokenRes
+    ToolCatalogConnection
+    )
+from database.schema import AgentCatalog
+from models.api_res import AgentRes
 from utils.logger import get_logger
 from tools.tool_config import ToolConfig
 from pydantic import TypeAdapter
@@ -15,34 +13,14 @@ logger = get_logger(__name__)
 
 
 async def register_new_agent(
-    user_id: str, req: NewAgentReq, collection: AgentCatalogConnection
+    user_id: str, agent_config: dict, collection: AgentCatalogConnection
 ) -> AgentRes:
-    agent_catalog = AgentCatalog(
-        **req.model_dump(), created_by=user_id, updated_by=user_id
-    )
-    result = await collection.register_new_agent(agent_catalog)
-    return AgentRes(**agent_catalog.model_dump(), agent_id=str(result.inserted_id))
-
-
-async def edit_available_agent(
-    id: str, agent_id: str, req: NewAgentReq, collection: AgentCatalogConnection
-) -> AgentRes | None:
-    available_agent_dict = await collection.get_agent_config(agent_id)
-    if available_agent_dict is None:
-        return None
-    created_by = available_agent_dict.get("created_by", id)
-    created_at = available_agent_dict.get("created_at", datetime.now())
-
-    updated_agent_catalog = AgentCatalog(
-        **req.model_dump(),
-        created_by=created_by,
-        created_at=created_at,
-        updated_by=id,
-        updated_at=datetime.now(),
-    )
-
-    await collection.update_agent_config(agent_id, updated_agent_catalog)
-    return AgentRes(**updated_agent_catalog.model_dump(), agent_id=agent_id)
+    agent_id = agent_config.get("_id", None)
+    agent_config.pop("_id", None)
+    
+    result = await collection.update_agent_config(agent_id, agent_config)
+    result["_id"] = str(result["_id"])
+    return AgentRes(**result)
 
 
 async def get_agents(
@@ -53,3 +31,28 @@ async def get_agents(
     return [AgentRes(**agent, agent_id=str(agent["_id"])) for agent in agents]
 
 
+async def add_model_config(
+    agent_id: str,
+    user_id: str,
+    req: ModelReq,
+    model_collection: ModelCatalogConnection,
+    agent_collection: AgentCatalogConnection,
+):
+    """
+    Adds model config to agent config
+    Args:
+        agent_id (str): unique id of the agent config
+        user_id: unique id of the user
+        req (ModelReq): model config request
+        collection (ModelCatalogConnection): Mongo connection for model_catalog collection
+    Returns:
+        ModelRes: Model response
+    """
+    model_catalog = ModelCatalog(
+        **req.model_dump(), created_by=user_id, updated_by=user_id
+    )
+    result = await model_collection.add_model(model_catalog)
+    model_id = result.inserted_id
+    # Update agent config with model id
+    await agent_collection.update_agent_config(agent_id, {"model": model_id})
+    return ModelRes(**model_catalog.model_dump(), model_id=str(result.inserted_id))

@@ -3,6 +3,9 @@ import { AuthProvider } from './context/AuthContext';
 import { LandingPage } from './pages/LandingPage';
 import { LoginPage } from './pages/LoginPage';
 import { RegisterPage } from './pages/RegisterPage';
+import { AgentCreationPage } from './pages/AgentCreationPage';
+import { ProtectedRoute } from './components/auth/ProtectedRoute';
+import { PublicOnlyRoute } from './components/auth/PublicOnlyRoute';
 import './App.css';
 
 function App() {
@@ -10,10 +13,20 @@ function App() {
     <AuthProvider>
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<LandingPage />} />
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="/register" element={<RegisterPage />} />
-          <Route path="*" element={<Navigate to="/" replace />} />
+          {/* Public Auth Routes (Accessible only when logged out) */}
+          <Route element={<PublicOnlyRoute />}>
+            <Route path="/login" element={<LoginPage />} />
+            <Route path="/register" element={<RegisterPage />} />
+          </Route>
+
+          {/* Secured Routes (Protected by token authentication) */}
+          <Route element={<ProtectedRoute />}>
+            <Route path="/" element={<LandingPage />} />
+            <Route path="/agent" element={<AgentCreationPage />} />
+          </Route>
+
+          {/* Catch-all fallback */}
+          <Route path="*" element={<Navigate to="/login" replace />} />
         </Routes>
       </BrowserRouter>
     </AuthProvider>

@@ -4,7 +4,6 @@ from agents.agent_config import AgentConfig
 from agents.agent_factory import AgentFactory
 from database.mongo_connection import (
     AgentCatalogConnection,
-    TokenCatalogConnection,
     ToolCatalogConnection,
 )
 from decorator.token_validation import validate_token
@@ -12,16 +11,14 @@ from dotenv import load_dotenv
 from fastapi import APIRouter, Depends, FastAPI, Request, status
 from fastapi.responses import JSONResponse
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
-from models.api_req import ChatReq, NewAgentReq, TokenReq, ModelReq
+from models.api_req import ChatReq, TokenReq, ToolIdsReq
 from models.api_res import ServerResponseWrapper, TokenRes
-from services.agent_service import edit_available_agent, get_agents, register_new_agent
+from services.agent_service import get_agents, register_new_agent
 from services.chat_service import chat_with_agent
 from services.tool_service import (
-    add_new_token,
     add_new_tools_to_agent,
     fetch_tools_by_tool_ids,
-    get_tokens_by_user_id,
-    get_all_tools_from_mcp_config
+    get_all_tools_from_mcp_config,
 )
 from tools.api import ApiInputSchemaFactory, ApiToolExecutor, ApiValidator
 from tools.preconfigured import create_preconfigured_registry
@@ -29,6 +26,7 @@ from tools.tool_factory import ToolFactory
 from tools.tool_provider import ApiToolProvider, MCPToolProvider
 from utils.logger import get_logger
 from tools.mcp.mcp_tools_filter import MCPToolFilter
+from typing import Optional, List
 
 load_dotenv()
 
@@ -49,10 +47,6 @@ async def lifespan(app: FastAPI):
         collection_name="tool_catalog"
     )
 
-    app.state.token_catalog_connection = TokenCatalogConnection(
-        collection_name="token_catalog"
-    )
-
     # ----- Preconfigured Tools -----
     preconfigured_registry = create_preconfigured_registry()
 
@@ -68,7 +62,9 @@ async def lifespan(app: FastAPI):
 
     # ----- Common ToolFactory -----
     tool_factory = ToolFactory(
-        preconfigured_registry=preconfigured_registry, api_provider=api_tool_provider, mcp_provider=mcp_tool_provider
+        preconfigured_registry=preconfigured_registry,
+        api_provider=api_tool_provider,
+        mcp_provider=mcp_tool_provider,
     )
 
     agent_factory = AgentFactory(
@@ -97,27 +93,36 @@ def get_tool_catalog_collection(request: Request) -> ToolCatalogConnection:
     return request.app.state.tool_catalog_collection
 
 
-def get_token_catalog_collection(request: Request) -> TokenCatalogConnection:
-    """
-    FastAPI Dependency Provider retrieving the initialized TokenCatalogConnection from request.app.state
-    """
-    return request.app.state.token_catalog_connection
 
-
-router = APIRouter(tags=["agents_tools_tokens"], lifespan=lifespan)
+router = APIRouter(tags=["agents_and_tools"], lifespan=lifespan)
 security = HTTPBearer()
 
 
-@router.post("/")
+@router.put("/")
 @validate_token
-async def create_agent(
+async def upsert_agent_config(
     request: Request,
-    req: NewAgentReq,
+    req: dict,
     collection: AgentCatalogConnection = Depends(get_agent_catalog_collection),
     credentials: HTTPAuthorizationCredentials = Depends(security),
 ):
     """
     Add a new agent configuration
+    payload schema
+    ```json
+        {
+            "_id": Optional[str]
+            "name": str
+            "description": str
+            "system_prompt": str
+            "tools": list[str] = []
+            "model": Optional[ModelConfig] = None
+            "capabilities": list[str] = []
+            "enabled": bool = True
+            "version": str
+            "visibility": Visibility = Field(default_factory=lambda: Visibility.PRIVATE)
+            "status": Status = Field(default_factory=lambda: Status.DRAFT)
+        }
     """
     user_email = getattr(request.app.state, "email", None)
     user_id = getattr(request.app.state, "id", None)
@@ -140,48 +145,6 @@ async def create_agent(
     )
 
 
-@router.put("/edit/{agent_id}")
-@validate_token
-async def edit_agent(
-    request: Request,
-    agent_id: str,
-    req: NewAgentReq,
-    collection: AgentCatalogConnection = Depends(get_agent_catalog_collection),
-    credentials: HTTPAuthorizationCredentials = Depends(security),
-):
-    """
-    Edit an existing agent config
-    """
-    user_email = getattr(request.app.state, "email", None)
-    user_id = getattr(request.app.state, "id", None)
-
-    updated_agent = await edit_available_agent(user_id, agent_id, req, collection)
-    if updated_agent is None:
-        return JSONResponse(
-            status_code=status.HTTP_404_NOT_FOUND,
-            content=ServerResponseWrapper(
-                status_code=status.HTTP_404_NOT_FOUND,
-                error="Agent not found",
-            ).model_dump(mode="json"),
-        )
-
-    response_data = ServerResponseWrapper(
-        data=updated_agent.model_dump(),
-        message="Available tools updated successfully",
-        status_code=status.HTTP_200_OK,
-    )
-    logger.info(
-        "Available tools updated for agent '%s' with id: %s for user: %s",
-        updated_agent.name,
-        updated_agent.agent_id,
-        user_email,
-    )
-    return JSONResponse(
-        status_code=status.HTTP_200_OK,
-        content=response_data.model_dump(mode="json"),
-    )
-
-
 @router.post("/chat/{agent_id}")
 @validate_token
 async def chat(
@@ -194,10 +157,7 @@ async def chat(
     tool_catalog_collection: ToolCatalogConnection = Depends(
         get_tool_catalog_collection
     ),
-    token_catalog_collection: TokenCatalogConnection = Depends(
-        get_token_catalog_collection
-    ),
-    credentials: HTTPAuthorizationCredentials = Depends(security),
+
 ):
     """
     Chat with an agent
@@ -251,31 +211,27 @@ async def fetch_all_agents(
     )
 
 
-@router.post("/model/{agent_id}")
+@router.post("/tools/fetch")
 @validate_token
-async def add_model_to_an_agent(
+async def fetch_tool_configs_by_tool_ids(
     request: Request,
-    agent_id: str,
-    model_req: ModelReq,
-    agent_catalog_collection: AgentCatalogConnection = Depends(
-        get_agent_catalog_collection
+    tool_ids_req: ToolIdsReq,
+    tool_catalog_collection: ToolCatalogConnection = Depends(
+        get_tool_catalog_collection
     ),
     credentials: HTTPAuthorizationCredentials = Depends(security),
 ):
     """
-    Add new tool(s) to an existing agent
+    Fetch tools by tools_ids saved in a particular agent config
     """
     user_id = getattr(request.app.state, "id", None)
-    updated_agent = await add_new_tools_to_agent(
-        agent_id,
-        tool_config,
-        user_id,
-        agent_catalog_collection,
-        tool_catalog_collection,
-    )
+    tool_ids = tool_ids_req.ids
+    logger.info("asdfghjkl")
+    tools = await fetch_tools_by_tool_ids(tool_ids, tool_catalog_collection)
+    logger.info("qwertyuiop")
     response_data = ServerResponseWrapper(
-        data=updated_agent.model_dump(),
-        message="Tools added successfully",
+        data=tools,
+        message="Tools fetched successfully",
         status_code=status.HTTP_200_OK,
     )
     return JSONResponse(
@@ -304,8 +260,8 @@ async def add_tools_to_an_agent(
     user_id = getattr(request.app.state, "id", None)
     updated_agent = await add_new_tools_to_agent(
         agent_id,
-        tool_config,
         user_id,
+        tool_config,
         agent_catalog_collection,
         tool_catalog_collection,
     )
@@ -319,76 +275,6 @@ async def add_tools_to_an_agent(
         content=response_data.model_dump(mode="json"),
     )
 
-
-@router.post("/tools/fetch")
-@validate_token
-async def fetch_tool_configs_by_tool_ids(
-    request: Request,
-    tool_ids: list[str],
-    tool_catalog_collection: ToolCatalogConnection = Depends(
-        get_tool_catalog_collection
-    ),
-    credentials: HTTPAuthorizationCredentials = Depends(security),
-):
-    """
-    Fetch tools by tools_ids saved in a particular agent config
-    """
-    user_id = getattr(request.app.state, "id", None)
-    tools = await fetch_tools_by_tool_ids(tool_ids, tool_catalog_collection)
-    response_data = ServerResponseWrapper(
-        data=tools,
-        message="Tools fetched successfully",
-        status_code=status.HTTP_200_OK,
-    )
-    return JSONResponse(
-        status_code=status.HTTP_200_OK,
-        content=response_data.model_dump(mode="json"),
-    )
-
-
-@router.post("/tokens")
-@validate_token
-async def add_credentials(
-    request: Request,
-    token_config: TokenReq,
-    token_catalog_collection: TokenCatalogConnection = Depends(
-        get_token_catalog_collection
-    ),
-    credentials: HTTPAuthorizationCredentials = Depends(security),
-):
-    user_id = getattr(request.app.state, "id", None)
-    updated_agent = await add_new_token(token_config, user_id, token_catalog_collection)
-    response_data = ServerResponseWrapper(
-        data=updated_agent.model_dump(),
-        message="Credentials added successfully",
-        status_code=status.HTTP_200_OK,
-    )
-    return JSONResponse(
-        status_code=status.HTTP_200_OK,
-        content=response_data.model_dump(mode="json"),
-    )
-
-
-@router.get("/tokens")
-@validate_token
-async def fetch_tokens_of_user(
-    request: Request,
-    token_catalog_collection: TokenCatalogConnection = Depends(
-        get_token_catalog_collection
-    ),
-    credentials: HTTPAuthorizationCredentials = Depends(security),
-):
-    user_id = getattr(request.app.state, "id", None)
-    tokens = await get_tokens_by_user_id(user_id, token_catalog_collection)
-    response_data = ServerResponseWrapper(
-        data=tokens,
-        message=f"Tokens fetched successfully for user id: {user_id}",
-        status_code=status.HTTP_200_OK,
-    )
-    return JSONResponse(
-        status_code=status.HTTP_200_OK,
-        content=response_data.model_dump(mode="json"),
-    )
 
 
 @router.post("/tools-from-mcp")

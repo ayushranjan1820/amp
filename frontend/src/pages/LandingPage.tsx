@@ -60,7 +60,7 @@ export const LandingPage: React.FC = () => {
   };
 
   return (
-    <div className="min-vh-100 d-flex flex-column bg-dark text-light">
+    <div className="min-vh-100 d-flex flex-column">
       <Navbar />
 
       {/* Hero Section */}
@@ -68,26 +68,26 @@ export const LandingPage: React.FC = () => {
         <Container>
           <Row className="justify-content-center text-center my-4 py-3">
             <Col lg={9} xl={8}>
-              <h1 className="display-4 fw-bold text-white mb-3">
+              <h1 className="display-4 fw-bold text-white mb-3 fade-in-up stagger-1">
                 Discover & Orchestrate <span className="text-cyan-accent">AI Agents</span>
               </h1>
-              <p className="lead text-secondary mb-4 fs-5">
+              <p className="lead text-secondary mb-4 fs-5 fade-in-up stagger-2">
                 {user ? (
                   <>Welcome back, <strong className="text-cyan-accent">{user.name}</strong>! Explore and configure your active AI agent catalog below.</>
                 ) : (
-                  <>AgentMart empowers developers and enterprises to deploy, scale, and monitor specialized AI agents seamlessly.</>
+                  <>AgentSpace empowers developers and enterprises to deploy, scale, and monitor specialized AI agents seamlessly.</>
                 )}
               </p>
             </Col>
           </Row>
 
           {/* Section Header */}
-          <div className="d-flex align-items-center justify-content-between mb-4 border-bottom border-secondary border-opacity-25 pb-3">
+          <div className="d-flex align-items-center justify-content-between mb-4 border-bottom border-secondary border-opacity-25 pb-3 fade-in-up stagger-3">
             <div>
               <h3 className="fw-bold text-white mb-1">Available Agents</h3>
               <p className="text-secondary small mb-0">Manage agent configurations, capabilities, and system prompts</p>
             </div>
-            <Badge bg="dark" className="text-cyan-accent border border-info border-opacity-25 fs-6 px-3 py-2">
+            <Badge className="badge-custom fs-6 px-3 py-2">
               {agents.length} Agents Registered
             </Badge>
           </div>
@@ -103,7 +103,7 @@ export const LandingPage: React.FC = () => {
           {/* Error Message */}
           {!isLoading && error && (
             <Alert variant="danger" className="alert-custom-error mb-4 text-center">
-              Unable to load agents catalog: {error}
+              We couldn't load the agents right now. Please try again later.
             </Alert>
           )}
 
@@ -117,10 +117,10 @@ export const LandingPage: React.FC = () => {
 
           {/* Agent Card Grid */}
           {!isLoading && agents.length > 0 && (
-            <Row className="g-4">
+            <Row className="g-4 fade-in-up stagger-4">
               {agents.map((agent, index) => {
                 const isEnabled = agent.enabled !== undefined ? agent.enabled : true;
-                const statusBadgeBg = agent.status === 'PUBLISHED' ? 'success' : 'warning';
+                const statusBadgeClass = agent.status === 'PUBLISHED' ? 'badge-success-custom' : 'badge-warning-custom';
                 const modelName = getModelLabel(agent);
 
                 return (
@@ -135,7 +135,7 @@ export const LandingPage: React.FC = () => {
                           )}
                         </div>
 
-                        <Badge bg={statusBadgeBg} className="bg-opacity-20 text-light border border-secondary border-opacity-25 px-2 py-1 small">
+                        <Badge className={`${statusBadgeClass} px-2 py-1 small`}>
                           {agent.status || 'DRAFT'}
                         </Badge>
                       </div>
@@ -147,15 +147,15 @@ export const LandingPage: React.FC = () => {
 
                       {/* Model & Specs info */}
                       <div className="mb-3 d-flex flex-wrap align-items-center gap-2">
-                        <Badge bg="dark" className="text-cyan-accent border border-info border-opacity-25">
+                        <Badge className="badge-custom">
                           {modelName}
                         </Badge>
                         {isEnabled ? (
-                          <Badge bg="dark" className="text-success border border-success border-opacity-25">
+                          <Badge className="badge-success-custom">
                             ● Enabled
                           </Badge>
                         ) : (
-                          <Badge bg="dark" className="text-muted border border-secondary border-opacity-25">
+                          <Badge className="badge-custom text-muted">
                             ○ Disabled
                           </Badge>
                         )}
@@ -165,12 +165,12 @@ export const LandingPage: React.FC = () => {
                       {agent.capabilities && agent.capabilities.length > 0 && (
                         <div className="d-flex flex-wrap gap-1 mb-3">
                           {agent.capabilities.slice(0, 3).map((cap, i) => (
-                            <span key={i} className="badge bg-secondary bg-opacity-20 text-secondary extra-small">
+                            <span key={i} className="badge badge-custom extra-small">
                               {cap}
                             </span>
                           ))}
                           {agent.capabilities.length > 3 && (
-                            <span className="badge bg-secondary bg-opacity-20 text-secondary extra-small">
+                            <span className="badge badge-custom extra-small">
                               +{agent.capabilities.length - 3} more
                             </span>
                           )}
@@ -211,7 +211,7 @@ export const LandingPage: React.FC = () => {
       {/* Footer */}
       <footer className="py-4 border-top border-secondary border-opacity-25 text-center text-muted small">
         <Container>
-          &copy; {new Date().getFullYear()} AgentMart. All rights reserved.
+          &copy; {new Date().getFullYear()} AgentSpace. All rights reserved.
         </Container>
       </footer>
     </div>

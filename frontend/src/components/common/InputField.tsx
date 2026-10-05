@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Form, InputGroup } from 'react-bootstrap';
+import './InputField.css';
 
 interface InputFieldProps {
   id: string;

@@ -16,7 +16,7 @@ class AgentCatalog(BaseModel):
     description: str
     system_prompt: str
     tools: list[str] = []
-    model: ModelConfig
+    model: Optional[ModelConfig] = None
     capabilities: list[str] = []
     enabled: bool = True
     version: str
@@ -26,15 +26,4 @@ class AgentCatalog(BaseModel):
     created_by: str
     created_at: datetime = Field(default_factory=datetime.now)
     updated_by: str
-    updated_at: datetime = Field(default_factory=datetime.now)
-
-
-class TokenCatalog(BaseModel):
-    name: str
-    owner_id: str
-    token_type: TokenType
-    header_key: str
-    token: str
-
-    created_at: datetime = Field(default_factory=datetime.now)
     updated_at: datetime = Field(default_factory=datetime.now)

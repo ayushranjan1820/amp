@@ -33,10 +33,17 @@ apiClient.interceptors.request.use(
   }
 );
 
-// Response Interceptor for uniform response processing
+// Response Interceptor for uniform response processing and auth fallback
 apiClient.interceptors.response.use(
   (response: AxiosResponse) => response,
   (error: AxiosError) => {
+    if (error.response?.status === 401) {
+      sessionStorage.removeItem('agentmart_user_session');
+      sessionStorage.removeItem('token');
+      if (window.location.pathname !== '/login') {
+        window.location.href = '/login';
+      }
+    }
     return Promise.reject(error);
   }
 );
@@ -46,7 +53,8 @@ apiClient.interceptors.response.use(
  */
 export const extractErrorMessage = (error: unknown): string => {
   if (axios.isAxiosError(error)) {
-    const data = error.response?.data;
+    const err = error as any;
+    const data = err.response?.data;
     if (data) {
       if (typeof data.error === 'string' && data.error.trim().length > 0) {
         return data.error;
@@ -55,14 +63,14 @@ export const extractErrorMessage = (error: unknown): string => {
         return data.detail;
       }
       if (Array.isArray(data.detail) && data.detail.length > 0) {
-        return data.detail.map((err: { msg?: string }) => err.msg || JSON.stringify(err)).join(', ');
+        return data.detail.map((e: { msg?: string }) => e.msg || JSON.stringify(e)).join(', ');
       }
       if (typeof data.message === 'string' && data.message.trim().length > 0) {
         return data.message;
       }
     }
-    if (error.message) {
-      return error.message;
+    if (err.message) {
+      return err.message;
     }
   }
   if (error instanceof Error) {

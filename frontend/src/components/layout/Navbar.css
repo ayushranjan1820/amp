@@ -1,27 +1,27 @@
-/* Navbar component styles */
+/* Navbar component styles - LangChain Theme */
 .navbar-custom {
-  background: rgba(10, 14, 23, 0.85);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border-bottom: 1px solid rgba(125, 211, 252, 0.12);
+  background: rgba(7, 10, 16, 0.8) !important; /* Deep dark with opacity */
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
   z-index: 1040;
+  transition: all 0.3s ease;
 }
 
 .brand-glow-icon-sm {
   width: 36px;
   height: 36px;
-  border-radius: 10px;
-  background: linear-gradient(135deg, rgba(125, 211, 252, 0.25) 0%, rgba(56, 189, 248, 0.05) 100%);
-  border: 1px solid rgba(125, 211, 252, 0.35);
-  color: var(--pastel-cyan);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: var(--text-primary-dark);
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 0 15px var(--pastel-cyan-glow);
 }
 
 .nav-link-custom {
-  color: var(--text-secondary);
+  color: var(--text-secondary-dark);
   text-decoration: none;
   font-weight: 500;
   font-size: 0.95rem;
@@ -29,73 +29,75 @@
 }
 
 .nav-link-custom:hover, .nav-link-custom.active {
-  color: var(--pastel-cyan);
+  color: var(--text-primary-dark);
 }
 
 /* User Profile Badge */
 .user-profile-btn {
   cursor: pointer;
-  padding: 4px 8px !important;
-  border-radius: 20px;
-  transition: background-color 0.2s ease;
+  padding: 4px 12px 4px 4px !important;
+  border-radius: 9999px; /* Pill */
+  background: rgba(255, 255, 255, 0.05) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .user-profile-btn:hover {
-  background-color: rgba(125, 211, 252, 0.08) !important;
+  background: rgba(255, 255, 255, 0.1) !important;
+  transform: translateY(-1px);
 }
 
 .avatar-circle {
-  width: 36px;
-  height: 36px;
+  width: 32px;
+  height: 32px;
   border-radius: 50%;
-  background: linear-gradient(135deg, #7dd3fc 0%, #38bdf8 100%);
-  color: #0b0f19;
-  font-weight: 700;
-  font-size: 0.9rem;
+  background: var(--text-primary-dark);
+  color: var(--bg-deep-dark);
+  font-weight: 600;
+  font-size: 0.85rem;
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 0 12px var(--pastel-cyan-glow);
 }
 
 .avatar-circle-lg {
   width: 44px;
   height: 44px;
   border-radius: 50%;
-  background: linear-gradient(135deg, #7dd3fc 0%, #38bdf8 100%);
-  color: #0b0f19;
-  font-weight: 700;
+  background: var(--text-primary-dark);
+  color: var(--bg-deep-dark);
+  font-weight: 600;
   font-size: 1.1rem;
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 0 15px var(--pastel-cyan-glow);
 }
 
 /* User Dropdown Popup */
 .user-popup-menu {
   position: absolute;
-  top: 120%;
+  top: calc(100% + 10px);
   right: 0;
   left: auto;
-  min-width: 320px;
-  max-width: 420px;
-  width: max-content;
-  background: #121824;
-  border: 1px solid rgba(125, 211, 252, 0.25);
-  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.6), 0 0 20px rgba(125, 211, 252, 0.1);
+  min-width: 280px;
+  background: var(--card-dark);
+  border: 1px solid var(--card-border);
+  backdrop-filter: blur(24px);
+  border-radius: 16px;
+  box-shadow: var(--shadow-soft);
   z-index: 1050;
-  animation: fadeInDown 0.2s ease-out forwards;
+  animation: fadeInDown 0.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  padding: 1rem;
 }
 
 @keyframes fadeInDown {
   from {
     opacity: 0;
-    transform: translateY(-8px);
+    transform: translateY(-10px) scale(0.98);
   }
   to {
     opacity: 1;
-    transform: translateY(0);
+    transform: translateY(0) scale(1);
   }
 }
 

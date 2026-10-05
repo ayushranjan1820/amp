@@ -1,0 +1,61 @@
+/* InputField Component Styles */
+
+.custom-input {
+  background-color: var(--input-bg-dark) !important;
+  border: 1px solid var(--input-border-dark) !important;
+  color: var(--text-primary-dark) !important;
+  border-radius: 12px !important;
+  padding: 0.75rem 1rem !important;
+  font-size: 0.95rem;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  backdrop-filter: blur(8px);
+}
+
+.custom-input:focus {
+  background-color: rgba(255, 255, 255, 0.08) !important;
+  border-color: var(--primary-accent) !important;
+  box-shadow: 0 0 0 1px var(--primary-accent) !important;
+  outline: none;
+}
+
+.custom-input::placeholder {
+  color: var(--text-muted-dark) !important;
+}
+
+/* Select & Option Theme Consistency */
+select.custom-input,
+.form-select.custom-input {
+  background-color: #0f172a !important;
+  color: #ffffff !important;
+  border: 1px solid var(--input-border-dark) !important;
+  cursor: pointer;
+}
+
+select.custom-input option,
+.form-select.custom-input option {
+  background-color: #0f172a !important;
+  color: #ffffff !important;
+  padding: 0.75rem 1rem;
+}
+
+select.custom-input option:hover,
+select.custom-input option:focus,
+select.custom-input option:checked {
+  background-color: #1e293b !important;
+  color: var(--primary-accent) !important;
+}
+
+.form-label-custom {
+  color: var(--text-secondary-dark);
+  font-size: 0.875rem;
+  font-weight: 500;
+  margin-bottom: 0.5rem;
+}
+
+.input-group-text-custom {
+  background-color: var(--input-bg-dark) !important;
+  border: 1px solid var(--input-border-dark) !important;
+  color: var(--text-muted-dark) !important;
+  border-radius: 12px !important;
+  transition: all 0.2s ease !important;
+}

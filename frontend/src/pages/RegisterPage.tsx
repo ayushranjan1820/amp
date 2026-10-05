@@ -99,7 +99,7 @@ export const RegisterPage: React.FC = () => {
   };
 
   return (
-    <AuthLayout title="Create Your Account" subtitle="Join AgentMart to deploy & manage AI agents">
+    <AuthLayout title="Create Your Account">
       {serverError && (
         <Alert variant="danger" className="alert-custom-error mb-4">
           {serverError}
