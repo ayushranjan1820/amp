@@ -20,6 +20,8 @@ class AgentFactory:
             model=config.model.name,
             model_provider=config.model.provider,
             api_key=config.model.api_key,
+            temperature=config.model.temperature,
+            max_tokens=config.model.max_tokens,
         )
 
         agent = create_deep_agent(

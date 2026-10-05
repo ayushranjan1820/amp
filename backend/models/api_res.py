@@ -30,7 +30,7 @@ class AgentRes(BaseModel):
     name: str
     description: str
     system_prompt: str
-    tools: list[str] = []
+    tools: list[dict] = []
     model: ModelConfig
     capabilities: list[str] = []
     enabled: bool = True

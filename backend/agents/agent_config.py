@@ -39,6 +39,7 @@ class ModelConfig(BaseModel):
     provider: ModelProvider
     name: str
     max_tokens: Optional[int] = None
+    temperature: float
     api_key: str
 
 

@@ -2,8 +2,9 @@ from pydantic import BaseModel, field_validator, model_validator, Field
 from typing import Self
 import re
 from datetime import datetime
-from agents.agent_config import ModelConfig, Visibility, Status
+from agents.agent_config import ModelConfig, Visibility, Status, ModelProvider
 from tools.tool_config import ToolType, TokenType
+
 
 
 def _validate_email_format(val: str):
@@ -124,6 +125,14 @@ class NewAgentReq(BaseModel):
     version: str
     visibility: Visibility = Field(default_factory=lambda: Visibility.PRIVATE)
     status: Status = Field(default_factory=lambda: Status.DRAFT)
+
+
+class ModelReq(BaseModel):
+    provider: ModelProvider
+    name: str
+    max_tokens: Optional[int] = None
+    api_key: str
+    temperature: float
 
 
 class ChatReq(BaseModel):

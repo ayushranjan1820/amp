@@ -12,7 +12,7 @@ from dotenv import load_dotenv
 from fastapi import APIRouter, Depends, FastAPI, Request, status
 from fastapi.responses import JSONResponse
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
-from models.api_req import ChatReq, NewAgentReq, TokenReq
+from models.api_req import ChatReq, NewAgentReq, TokenReq, ModelReq
 from models.api_res import ServerResponseWrapper, TokenRes
 from services.agent_service import edit_available_agent, get_agents, register_new_agent
 from services.chat_service import chat_with_agent
@@ -244,6 +244,39 @@ async def fetch_all_agents(
         "%s agents found for user: %s",
         len(available_agents),
         user_id,
+    )
+    return JSONResponse(
+        status_code=status.HTTP_200_OK,
+        content=response_data.model_dump(mode="json"),
+    )
+
+
+@router.post("/model/{agent_id}")
+@validate_token
+async def add_model_to_an_agent(
+    request: Request,
+    agent_id: str,
+    model_req: ModelReq,
+    agent_catalog_collection: AgentCatalogConnection = Depends(
+        get_agent_catalog_collection
+    ),
+    credentials: HTTPAuthorizationCredentials = Depends(security),
+):
+    """
+    Add new tool(s) to an existing agent
+    """
+    user_id = getattr(request.app.state, "id", None)
+    updated_agent = await add_new_tools_to_agent(
+        agent_id,
+        tool_config,
+        user_id,
+        agent_catalog_collection,
+        tool_catalog_collection,
+    )
+    response_data = ServerResponseWrapper(
+        data=updated_agent.model_dump(),
+        message="Tools added successfully",
+        status_code=status.HTTP_200_OK,
     )
     return JSONResponse(
         status_code=status.HTTP_200_OK,
