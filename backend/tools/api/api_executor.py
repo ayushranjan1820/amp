@@ -35,11 +35,14 @@ class ApiToolExecutor:
 
         url = self._replace_path_parameters(url, path_params)
 
+        final_url = httpx.URL(url)
+        if query_params:
+            final_url = final_url.copy_merge_params(query_params)
+
         request_kwargs: dict[str, Any] = {
             "method": config.method.value,
-            "url": url,
+            "url": str(final_url),
             "headers": config.headers,
-            "params": {**query_params},
             "timeout": config.timeout_seconds,
         }
         logger.debug(f"Request kwargs: {request_kwargs}")
@@ -56,7 +59,7 @@ class ApiToolExecutor:
                 response = await client.request(**request_kwargs)
 
                 response.raise_for_status()
-                logger.debug(f"Response: {response.text}")
+                # logger.debug(f"Response: {response.text}")
             except httpx.TimeoutException as e:
                 logger.error(f"TimeoutException: {e}")
                 return self._format_http_error(e)

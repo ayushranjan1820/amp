@@ -4,10 +4,10 @@ from enum import StrEnum
 class ToolType(StrEnum):
     """ Top-level tool categories"""
     
-    PRECONFIGURED = "preconfigured"
-    API = "api"
-    CODE = "code"
-    MCP = "mcp"
+    PRECONFIGURED = "PRECONFIGURED"
+    API = "API"
+    CODE = "CODE"
+    MCP = "MCP"
 
 
 # class PreconfiguredTool(StrEnum):

@@ -1,9 +1,18 @@
 /* Agent Creation Page Styles */
 
 .agent-creation-container {
-  min-height: calc(100vh - 80px);
+  height: calc(100vh - 90px);
   padding-top: 2rem;
-  padding-bottom: 4rem;
+  padding-bottom: 2rem;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Bootstrap .container has 100% width by default but auto height.
+   Force it and the inner row to participate in flex layout. */
+.agent-creation-container > .row,
+.agent-creation-container .agent-creation-card .row {
+  min-height: 0;
 }
 
 .agent-creation-card {
@@ -13,13 +22,20 @@
   backdrop-filter: blur(16px);
   box-shadow: var(--shadow-soft);
   overflow: hidden;
+  /* Fixed height — fills the container without growing */
+  flex: 1;
+  min-height: 0;
 }
 
-/* Sidebar Menu */
+/* Sidebar Menu — fixed height, does NOT scroll */
 .sidebar-menu {
   background: rgba(15, 23, 42, 0.6);
   border-right: 1px solid var(--card-border);
   padding: 1.5rem 1rem;
+  /* Fill the full row height and stay put */
+  height: 100%;
+  overflow: hidden;
+  flex-shrink: 0;
 }
 
 .sidebar-step-item {
@@ -51,6 +67,16 @@
   color: #4ade80;
 }
 
+.sidebar-step-item.locked {
+  opacity: 0.38;
+  cursor: not-allowed;
+}
+
+.sidebar-step-item.locked:hover {
+  background: transparent;
+  color: var(--text-secondary-dark);
+}
+
 .step-number-badge {
   width: 28px;
   height: 28px;
@@ -76,9 +102,31 @@
   border: 1px solid rgba(34, 197, 94, 0.3);
 }
 
-/* Content Area */
+/* Content Area — scrolls independently, sidebar never moves */
 .agent-step-content {
   padding: 2.5rem;
+  height: 100%;
+  overflow-y: auto;
+  /* Custom scrollbar to match the dark theme */
+  scrollbar-width: thin;
+  scrollbar-color: rgba(56, 189, 248, 0.3) transparent;
+}
+
+.agent-step-content::-webkit-scrollbar {
+  width: 5px;
+}
+
+.agent-step-content::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.agent-step-content::-webkit-scrollbar-thumb {
+  background: rgba(56, 189, 248, 0.3);
+  border-radius: 10px;
+}
+
+.agent-step-content::-webkit-scrollbar-thumb:hover {
+  background: rgba(56, 189, 248, 0.55);
 }
 
 .step-title {
@@ -154,6 +202,21 @@
   border-radius: 3px;
   outline: none;
   border: none;
+  background: transparent; /* track painted via pseudo-elements below */
+}
+
+/* Webkit Track — blue left of thumb, muted white right.
+   'input' prefix beats Bootstrap's .form-range track specificity. */
+input.custom-range-slider::-webkit-slider-runnable-track {
+  height: 6px;
+  border-radius: 3px;
+  background: linear-gradient(
+    to right,
+    #38bdf8 0%,
+    #38bdf8 var(--slider-fill, 35%),
+    rgba(255, 255, 255, 0.2) var(--slider-fill, 35%),
+    rgba(255, 255, 255, 0.2) 100%
+  );
 }
 
 /* Webkit Thumb */
@@ -165,6 +228,7 @@
   border-radius: 50%;
   background: var(--primary-accent);
   cursor: pointer;
+  margin-top: -6px; /* vertically center thumb on the 6px track */
   box-shadow: 0 0 10px rgba(56, 189, 248, 0.6);
   transition: transform 0.15s ease, background-color 0.15s ease;
 }
@@ -172,6 +236,20 @@
 .custom-range-slider::-webkit-slider-thumb:hover {
   transform: scale(1.2);
   background: #ffffff;
+}
+
+/* Firefox Track */
+.custom-range-slider::-moz-range-track {
+  height: 6px;
+  border-radius: 3px;
+  background: rgba(255, 255, 255, 0.2);
+}
+
+/* Firefox filled portion (left of thumb) */
+.custom-range-slider::-moz-range-progress {
+  height: 6px;
+  border-radius: 3px 0 0 3px;
+  background: #38bdf8;
 }
 
 /* Firefox Thumb */

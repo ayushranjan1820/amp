@@ -2,7 +2,9 @@ from tools.tool_factory import ToolFactory
 from agents.agent_config import AgentConfig
 from deepagents import create_deep_agent
 from langchain.chat_models import init_chat_model
+from utils.logger import get_logger
 
+logger = get_logger(__name__)
 
 class AgentFactory:
 
@@ -15,6 +17,8 @@ class AgentFactory:
         for tool_config in config.tools:
             tools = await self._tool_factory.create_tools(tool_config)
             runtime_tools.extend(tools)
+        
+        logger.debug("{} tools added, {}".format(len(runtime_tools), [t.name for t in runtime_tools]))
 
         llm = init_chat_model(
             model=config.model.name,

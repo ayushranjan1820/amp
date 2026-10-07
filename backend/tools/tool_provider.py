@@ -67,7 +67,9 @@ class ApiToolProvider(ToolProvider):
 
         sanitized = "".join(char if char.isalnum() else "_" for char in name)
 
-        return sanitized.strip("_").lower()
+        final_tool_name = sanitized.strip("_").lower()
+        logger.debug("Sanitized Tool Name {}".format(final_tool_name))
+        return final_tool_name
 
 
 class MCPToolProvider(ToolProvider):

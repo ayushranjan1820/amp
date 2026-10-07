@@ -1,13 +1,15 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Container, Button } from 'react-bootstrap';
-import { Link } from 'react-router-dom';
+import { Container } from 'react-bootstrap';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import './Navbar.css';
 
 export const Navbar: React.FC = () => {
-  const { user } = useAuth();
+  const { user, logoutUser } = useAuth();
   const [showPopup, setShowPopup] = useState(false);
   const popupRef = useRef<HTMLDivElement>(null);
+  const location = useLocation();
+  const navigate = useNavigate();
 
   // Close popup when clicking outside
   useEffect(() => {
@@ -27,6 +29,16 @@ export const Navbar: React.FC = () => {
   const displayEmail = user?.email || 'guest@example.com';
   const userInitials = displayName.slice(0, 2).toUpperCase();
 
+  // Determine which tab is active for the capsule toggle
+  const isDeployed = location.pathname === '/deployed';
+  const isCreateAgent = location.pathname === '/agent';
+
+  const handleLogout = () => {
+    setShowPopup(false);
+    if (logoutUser) logoutUser();
+    navigate('/login');
+  };
+
   return (
     <nav className="navbar-custom py-3 sticky-top">
       <Container className="d-flex justify-content-between align-items-center">
@@ -37,20 +49,26 @@ export const Navbar: React.FC = () => {
           </span>
         </Link>
 
+        {/* Centre: Capsule toggle (only when logged in) */}
+        {user && (
+          <div className="nav-capsule-toggle">
+            <Link
+              to="/agent"
+              className={`nav-capsule-btn ${isCreateAgent ? 'active' : ''}`}
+            >
+              Create Agent
+            </Link>
+            <Link
+              to="/deployed"
+              className={`nav-capsule-btn ${isDeployed ? 'active' : ''}`}
+            >
+              Deployed Agents
+            </Link>
+          </div>
+        )}
+
         {/* Right Nav Actions */}
         <div className="d-flex align-items-center gap-3 ms-auto">
-          {user && (
-            <Link to="/agent" className="text-decoration-none">
-              <Button className="btn-cyan-primary btn-sm px-3 d-flex align-items-center gap-1 fw-semibold">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                  <line x1="12" y1="5" x2="12" y2="19"></line>
-                  <line x1="5" y1="12" x2="19" y2="12"></line>
-                </svg>
-                <span>Create Agent</span>
-              </Button>
-            </Link>
-          )}
-
           {/* Top Right User Section */}
           <div className="position-relative" ref={popupRef}>
             {user ? (
@@ -67,7 +85,7 @@ export const Navbar: React.FC = () => {
               </button>
             ) : (
               <Link to="/login">
-                <Button className="btn-cyan-primary btn-sm px-3">Sign In</Button>
+                <button className="btn-cyan-primary btn-sm px-3">Sign In</button>
               </Link>
             )}
 
@@ -88,7 +106,7 @@ export const Navbar: React.FC = () => {
                 <button
                   type="button"
                   className="btn btn-outline-danger w-100 btn-sm rounded-3"
-                  onClick={() => setShowPopup(false)}
+                  onClick={handleLogout}
                 >
                   Logout
                 </button>

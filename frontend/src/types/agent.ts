@@ -1,4 +1,5 @@
 export interface AgentModelConfig {
+  name?: string;
   model_name?: string;
   provider?: string;
   temperature?: number;
@@ -9,6 +10,7 @@ export interface AgentModelConfig {
 export interface AgentItem {
   id?: string;
   _id?: string;
+  agent_id?: string;
   name: string;
   description: string;
   system_prompt?: string;

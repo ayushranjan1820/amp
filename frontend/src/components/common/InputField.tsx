@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import { Form, InputGroup } from 'react-bootstrap';
+import Visibility from '@mui/icons-material/Visibility';
+import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import './InputField.css';
 
 interface InputFieldProps {
@@ -49,10 +51,11 @@ export const InputField: React.FC<InputFieldProps> = ({
         />
         {showPasswordToggle && (
           <InputGroup.Text
-            className="input-group-text-custom small fw-medium user-select-none"
+            className="input-group-text-custom user-select-none d-flex align-items-center"
             onClick={() => setShowPassword(!showPassword)}
             role="button"
             tabIndex={0}
+            style={{ cursor: 'pointer', padding: '0 12px' }}
             onKeyDown={(e) => {
               if (e.key === 'Enter' || e.key === ' ') {
                 e.preventDefault();
@@ -60,7 +63,10 @@ export const InputField: React.FC<InputFieldProps> = ({
               }
             }}
           >
-            {showPassword ? 'Hide' : 'Show'}
+            {showPassword
+              ? <VisibilityOff style={{ fontSize: 18, color: 'var(--text-muted, #9ca3af)' }} />
+              : <Visibility style={{ fontSize: 18, color: 'var(--text-muted, #9ca3af)' }} />
+            }
           </InputGroup.Text>
         )}
       </InputGroup>

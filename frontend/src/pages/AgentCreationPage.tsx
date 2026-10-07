@@ -1,5 +1,8 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Container, Row, Col, Form, Button, Alert, Spinner, Badge, OverlayTrigger, Tooltip } from 'react-bootstrap';
+import TaskAltIcon from '@mui/icons-material/TaskAlt';
+import DeleteIcon from '@mui/icons-material/Delete';
 import { Navbar } from '../components/layout/Navbar';
 import { InputField } from '../components/common/InputField';
 import { put, post, extractErrorMessage } from '../services/apiWrapper';
@@ -18,7 +21,7 @@ interface ParamRow {
   id: string;
   name: string;
   description: string;
-  location: 'query' | 'path' | 'header' | 'body';
+  location: 'query' | 'path' | 'body';
   data_type: 'string' | 'integer' | 'decimal' | 'boolean';
   required: boolean;
 }
@@ -29,9 +32,15 @@ interface DiscoveredMcpTool {
 }
 
 export const AgentCreationPage: React.FC = () => {
+  const navigate = useNavigate();
   // Navigation & Agent State
   const [activeStep, setActiveStep] = useState<StepKey>('identity');
   const [agentId, setAgentId] = useState<string | null>(null);
+  // Tracks which steps have been successfully saved — gates sidebar navigation
+  const [completedSteps, setCompletedSteps] = useState<Set<StepKey>>(new Set());
+
+  const markStepComplete = (step: StepKey) =>
+    setCompletedSteps((prev) => new Set(prev).add(step));
 
   // Status & Feedback
   const [isLoading, setIsLoading] = useState(false);
@@ -43,6 +52,7 @@ export const AgentCreationPage: React.FC = () => {
     name: '',
     description: '',
     visibility: 'PRIVATE',
+    status: 'DRAFT'
   });
 
   // Step 2: Model Form State
@@ -55,7 +65,7 @@ export const AgentCreationPage: React.FC = () => {
   });
 
   // Step 3: Tools Form State
-  const [toolToggle, setToolToggle] = useState<'preconfigured' | 'API' | 'MCP'>('API');
+  const [toolToggle, setToolToggle] = useState<'PRECONFIGURED' | 'API' | 'MCP'>('API');
   
   // API Tool State
   const [apiTool, setApiTool] = useState({
@@ -211,6 +221,7 @@ export const AgentCreationPage: React.FC = () => {
         name: identity.name,
         description: identity.description,
         visibility: identity.visibility,
+        status: identity.status,
         version: '1.0.0',
       };
 
@@ -227,6 +238,7 @@ export const AgentCreationPage: React.FC = () => {
       }
 
       setSuccessMessage('Agent identity saved successfully!');
+      markStepComplete('identity');
       setActiveStep('model');
     } catch (err) {
       setErrorMessage(extractErrorMessage(err));
@@ -261,6 +273,7 @@ export const AgentCreationPage: React.FC = () => {
       await put(API_ENDPOINTS.AGENTS.CREATE_OR_UPDATE, payload);
 
       setSuccessMessage('Model configuration saved successfully!');
+      markStepComplete('model');
       setActiveStep('tools');
     } catch (err) {
       setErrorMessage(extractErrorMessage(err));
@@ -345,6 +358,7 @@ export const AgentCreationPage: React.FC = () => {
       }
 
       setSuccessMessage('Tools configured successfully!');
+      markStepComplete('tools');
       setActiveStep('prompt');
     } catch (err) {
       setErrorMessage(extractErrorMessage(err));
@@ -373,6 +387,7 @@ export const AgentCreationPage: React.FC = () => {
       await put(API_ENDPOINTS.AGENTS.CREATE_OR_UPDATE, payload);
 
       setSuccessMessage('System prompt updated!');
+      markStepComplete('prompt');
       setActiveStep('publish');
     } catch (err) {
       setErrorMessage(extractErrorMessage(err));
@@ -382,8 +397,29 @@ export const AgentCreationPage: React.FC = () => {
   };
 
   // Step 5: Dummy Publish Button
-  const handlePublishClick = () => {
-    setSuccessMessage('Publish action triggered! (Dummy action)');
+  const handlePublishClick = async () => {
+    if (!agentId) {
+      setErrorMessage('No agent to publish. Please complete the previous steps first.');
+      return;
+    }
+
+    setIsLoading(true);
+    clearAlerts();
+
+    try {
+      await put(API_ENDPOINTS.AGENTS.CREATE_OR_UPDATE, {
+        _id: agentId,
+        status: 'DEPLOYED',
+      });
+      setSuccessMessage('Agent published and deployed successfully!');
+      markStepComplete('publish');
+      // Navigate to deployed agents page after a short delay for the user to see the success message
+      setTimeout(() => navigate('/deployed'), 800);
+    } catch (err) {
+      setErrorMessage(extractErrorMessage(err));
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   // Steps Registry
@@ -398,12 +434,12 @@ export const AgentCreationPage: React.FC = () => {
   const mcpPlaceholderText = `{\n  "mcpServers": {\n    "filesystem": {\n      "command": "npx",\n      "args": ["-y", "@modelcontextprotocol/server-filesystem", "/path"]\n    }\n  }\n}`;
 
   return (
-    <div className="bg-deep-dark min-vh-100">
+    <div className="bg-deep-dark">
       <Navbar />
 
       <Container className="agent-creation-container">
-        <div className="agent-creation-card">
-          <Row className="g-0">
+        <div className="agent-creation-card h-100">
+          <Row className="g-0 h-100">
             {/* Left Vertical Menu */}
             <Col md={3} className="sidebar-menu">
               <h6 className="text-uppercase text-muted fw-bold px-3 mb-3 small tracking-wider">
@@ -411,19 +447,28 @@ export const AgentCreationPage: React.FC = () => {
               </h6>
               {steps.map((step) => {
                 const isActive = activeStep === step.key;
-                const isCompleted =
-                  agentId !== null &&
-                  steps.findIndex((s) => s.key === activeStep) >
-                    steps.findIndex((s) => s.key === step.key);
+                const isCompleted = completedSteps.has(step.key);
+
+                // A step is navigable if it's identity, already completed, or
+                // is the immediate next step after the last completed one.
+                const stepIndex = steps.findIndex((s) => s.key === step.key);
+                const maxUnlockedIndex = steps.reduce((max, s, i) =>
+                  completedSteps.has(s.key) ? i + 1 : max, 0
+                );
+                const isClickable = stepIndex <= maxUnlockedIndex;
 
                 return (
                   <div
                     key={step.key}
-                    className={`sidebar-step-item ${isActive ? 'active' : ''} ${
+                    className={`sidebar-step-item ${
+                      isActive ? 'active' : ''
+                    } ${
                       isCompleted ? 'completed' : ''
+                    } ${
+                      !isClickable ? 'locked' : ''
                     }`}
                     onClick={() => {
-                      if (agentId || step.key === 'identity') {
+                      if (isClickable) {
                         setActiveStep(step.key);
                         clearAlerts();
                       }
@@ -431,6 +476,11 @@ export const AgentCreationPage: React.FC = () => {
                   >
                     <div className="step-number-badge">{step.number}</div>
                     <span>{step.label}</span>
+                    {isCompleted && (
+                      <TaskAltIcon
+                        style={{ fontSize: 18, color: '#22c55e', marginLeft: 'auto' }}
+                      />
+                    )}
                   </div>
                 );
               })}
@@ -488,8 +538,8 @@ export const AgentCreationPage: React.FC = () => {
                         value={identity.visibility}
                         onChange={(e) => setIdentity({ ...identity, visibility: e.target.value })}
                       >
-                        <option value="PRIVATE">PRIVATE (Default)</option>
-                        <option value="PUBLIC">PUBLIC</option>
+                        <option value="PRIVATE">PRIVATE -- Only you can see</option>
+                        <option value="PUBLIC">PUBLIC -- Everyone can see</option>
                       </Form.Select>
                     </Form.Group>
 
@@ -554,8 +604,9 @@ export const AgentCreationPage: React.FC = () => {
 
                     <Form.Group className="mb-4" controlId="model-temperature">
                       <div className="d-flex justify-content-between align-items-center mb-1">
-                        <Form.Label className="form-label-custom mb-0">Temperature: <span className="text-cyan-accent fw-bold ms-1">{model.temperature}</span></Form.Label>
-                        <span className="small text-muted">0.0 (Precise) – 2.0 (Creative)</span>
+                        <Form.Label className="form-label-custom mb-0">
+                          Temperature: <span className="text-cyan-accent fw-bold ms-1">{model.temperature}</span>
+                        </Form.Label>
                       </div>
                       <Form.Range
                         min={0.0}
@@ -563,11 +614,13 @@ export const AgentCreationPage: React.FC = () => {
                         step={0.1}
                         value={model.temperature}
                         onChange={(e) => setModel({ ...model, temperature: parseFloat(e.target.value) })}
-                        style={{
-                          background: `linear-gradient(to right, var(--primary-accent) 0%, var(--primary-accent) ${(model.temperature / 2.0) * 100}%, #ffffff ${(model.temperature / 2.0) * 100}%, #ffffff 100%)`
-                        }}
+                        style={{ '--slider-fill': `${(model.temperature / 2.0) * 100}%` } as React.CSSProperties}
                         className="custom-range-slider w-100"
                       />
+                      <div className="d-flex justify-content-between mt-1">
+                        <span className="small text-muted">Definitive</span>
+                        <span className="small text-muted">Creative</span>
+                      </div>
                     </Form.Group>
 
                     <Row className="g-3 mb-4">
@@ -625,8 +678,8 @@ export const AgentCreationPage: React.FC = () => {
                   <div className="toggle-group-pills mb-4">
                     <button
                       type="button"
-                      className={`toggle-pill-btn ${toolToggle === 'preconfigured' ? 'active' : ''}`}
-                      onClick={() => setToolToggle('preconfigured')}
+                      className={`toggle-pill-btn ${toolToggle === 'PRECONFIGURED' ? 'active' : ''}`}
+                      onClick={() => setToolToggle('PRECONFIGURED')}
                     >
                       Preconfigured
                     </button>
@@ -746,10 +799,10 @@ export const AgentCreationPage: React.FC = () => {
                                   variant="link"
                                   size="sm"
                                   onClick={() => handleRemoveHeader(h.id)}
-                                  className="text-danger p-0 text-decoration-none fs-5 opacity-75 opacity-100-hover"
+                                  className="text-danger p-0 text-decoration-none d-flex align-items-center justify-content-center"
                                   title="Remove Header"
                                 >
-                                  ✕
+                                  <DeleteIcon style={{ fontSize: 18 }} />
                                 </Button>
                               </Col>
                             </Row>
@@ -777,9 +830,10 @@ export const AgentCreationPage: React.FC = () => {
                                   variant="link"
                                   size="sm"
                                   onClick={() => handleRemoveParameter(p.id)}
-                                  className="text-danger p-0 text-decoration-none small"
+                                  className="text-danger p-0 text-decoration-none d-flex align-items-center gap-1"
+                                  title="Remove Parameter"
                                 >
-                                  Remove
+                                  <DeleteIcon style={{ fontSize: 16 }} />
                                 </Button>
                               </div>
 
@@ -944,7 +998,7 @@ export const AgentCreationPage: React.FC = () => {
                     )}
 
                     {/* PRECONFIGURED TOOL TOGGLE */}
-                    {toolToggle === 'preconfigured' && (
+                    {toolToggle === 'PRECONFIGURED' && (
                       <div className="p-4 rounded-3 border border-secondary border-opacity-25 text-center text-muted my-4">
                         <p className="mb-0">Selected tool mode: <strong className="text-white">Preconfigured Tools</strong>. Standard platform tools will be included.</p>
                       </div>
@@ -1047,8 +1101,15 @@ export const AgentCreationPage: React.FC = () => {
                     <Button variant="outline-secondary" onClick={() => setActiveStep('prompt')} className="px-4 rounded-pill">
                       Back
                     </Button>
-                    <Button type="button" className="btn-cyan-primary px-5 rounded-pill fw-bold" onClick={handlePublishClick}>
-                      Publish Agent
+                    <Button type="button" className="btn-cyan-primary px-5 rounded-pill fw-bold" onClick={handlePublishClick} disabled={isLoading}>
+                      {isLoading ? (
+                        <>
+                          <Spinner animation="border" size="sm" className="me-2" />
+                          Publishing...
+                        </>
+                      ) : (
+                        'Publish Agent'
+                      )}
                     </Button>
                   </div>
                 </div>

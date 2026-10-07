@@ -14,7 +14,7 @@ class Visibility(str, Enum):
 
 class Status(str, Enum):
     DRAFT = "DRAFT"
-    ARCHIVED = "ARCHIVED"
+    DEPLOYED = "DEPLOYED"
     PUBLISHED = "PUBLISHED"
 
 
@@ -38,7 +38,7 @@ class ModelConfig(BaseModel):
     provider: ModelProvider
     name: str
     max_tokens: Optional[int] = None
-    temperature: float
+    temperature: Optional[float] = 0.7
     api_key: str
 
 

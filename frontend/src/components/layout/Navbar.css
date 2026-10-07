@@ -32,6 +32,43 @@
   color: var(--text-primary-dark);
 }
 
+/* ─── Capsule Toggle ─────────────────────────────────────────── */
+.nav-capsule-toggle {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 9999px;
+  padding: 4px;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.nav-capsule-btn {
+  padding: 6px 18px;
+  border-radius: 9999px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-secondary-dark);
+  text-decoration: none;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  white-space: nowrap;
+}
+
+.nav-capsule-btn:hover {
+  color: var(--text-primary-dark);
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.nav-capsule-btn.active {
+  background: var(--primary-accent);
+  color: #0a0f1a;
+  box-shadow: 0 2px 12px rgba(56, 189, 248, 0.35);
+}
+/* ─────────────────────────────────────────────────────────────── */
+
 /* User Profile Badge */
 .user-profile-btn {
   cursor: pointer;

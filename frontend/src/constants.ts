@@ -8,9 +8,10 @@ export const API_ENDPOINTS = {
     REGISTER: '/api/v1/users/register',
   },
   AGENTS: {
-    FETCH: '/api/v1/agents/fetch',
+    FETCH: '/api/v1/agents/',
     CREATE_OR_UPDATE: '/api/v1/agents/',
     ADD_TOOLS: (agentId: string) => `/api/v1/agents/tools/${agentId}`,
     TOOLS_FROM_MCP: '/api/v1/agents/tools-from-mcp',
+    FETCH_TOOLS_BY_IDS: '/api/v1/agents/tools/fetch',
   },
 } as const;

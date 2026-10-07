@@ -150,8 +150,11 @@ class AgentCatalogConnection(MongoConnection):
             {"_id": ObjectId(agent_id)}, {"$set": agent_catalog}, upsert=True, return_document=ReturnDocument.AFTER
         )
 
-    async def get_all_agents(self, user_id: str):
-        return await self.collection.find({"created_by": user_id}).to_list(length=None)
+    async def get_all_agents(self, user_id: str, status: str | None = None):
+        if status:
+            return await self.collection.find({"created_by": user_id, "status": status}).to_list(length=None)
+        else:
+            return await self.collection.find({"created_by": user_id}).to_list(length=None)
 
 
 class ToolCatalogConnection(MongoConnection):

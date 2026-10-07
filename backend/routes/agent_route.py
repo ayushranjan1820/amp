@@ -9,12 +9,12 @@ from database.mongo_connection import (
 from decorator.token_validation import validate_token
 from dotenv import load_dotenv
 from fastapi import APIRouter, Depends, FastAPI, Request, status
-from fastapi.responses import JSONResponse
+from fastapi.responses import JSONResponse, StreamingResponse
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from models.api_req import ChatReq, TokenReq, ToolIdsReq
 from models.api_res import ServerResponseWrapper, TokenRes
 from services.agent_service import get_agents, register_new_agent
-from services.chat_service import chat_with_agent
+from services.chat_service import chat_with_agent, chat_with_agent_stream
 from services.tool_service import (
     add_new_tools_to_agent,
     fetch_tools_by_tool_ids,
@@ -93,7 +93,6 @@ def get_tool_catalog_collection(request: Request) -> ToolCatalogConnection:
     return request.app.state.tool_catalog_collection
 
 
-
 router = APIRouter(tags=["agents_and_tools"], lifespan=lifespan)
 security = HTTPBearer()
 
@@ -157,29 +156,29 @@ async def chat(
     tool_catalog_collection: ToolCatalogConnection = Depends(
         get_tool_catalog_collection
     ),
-
+    credentials: HTTPAuthorizationCredentials = Depends(security),
 ):
     """
     Chat with an agent
     """
     user_id = getattr(request.app.state, "id", None)
     agent_factory: AgentFactory = request.app.state.agent_factory
-    agent_response = await chat_with_agent(
+    event_generator = chat_with_agent_stream(
         agent_id,
         user_id,
         req.message,
         agent_factory,
         agent_catalog_collection,
         tool_catalog_collection,
-        token_catalog_collection,
     )
-    response_data = ServerResponseWrapper(
-        data=agent_response,
-        message="Chat response",
-        status_code=status.HTTP_200_OK,
-    )
-    return JSONResponse(
-        content=response_data.model_dump(mode="json"), status_code=status.HTTP_200_OK
+    return StreamingResponse(
+        event_generator,
+        media_type="text/event-stream",
+        headers={
+            "Cache-Control": "no-cache",
+            "Connection": "keep-alive",
+            "X-Accel-Buffering": "no",
+        },
     )
 
 
@@ -187,6 +186,7 @@ async def chat(
 @validate_token
 async def fetch_all_agents(
     request: Request,
+    agent_status: Optional[str] = None,
     credentials: HTTPAuthorizationCredentials = Depends(security),
     collection: AgentCatalogConnection = Depends(get_agent_catalog_collection),
 ):
@@ -194,7 +194,7 @@ async def fetch_all_agents(
     Fetch all available agents of an user
     """
     user_id = getattr(request.app.state, "id", None)
-    available_agents = await get_agents(user_id, collection)
+    available_agents = await get_agents(user_id, collection, agent_status)
     response_data = ServerResponseWrapper(
         data=available_agents,
         message="Available agents fetched successfully",
@@ -226,9 +226,7 @@ async def fetch_tool_configs_by_tool_ids(
     """
     user_id = getattr(request.app.state, "id", None)
     tool_ids = tool_ids_req.ids
-    logger.info("asdfghjkl")
     tools = await fetch_tools_by_tool_ids(tool_ids, tool_catalog_collection)
-    logger.info("qwertyuiop")
     response_data = ServerResponseWrapper(
         data=tools,
         message="Tools fetched successfully",
@@ -274,7 +272,6 @@ async def add_tools_to_an_agent(
         status_code=status.HTTP_200_OK,
         content=response_data.model_dump(mode="json"),
     )
-
 
 
 @router.post("/tools-from-mcp")
