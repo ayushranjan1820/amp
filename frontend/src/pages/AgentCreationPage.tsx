@@ -3,6 +3,12 @@ import { useNavigate } from 'react-router-dom';
 import { Container, Row, Col, Form, Button, Alert, Spinner, Badge, OverlayTrigger, Tooltip } from 'react-bootstrap';
 import TaskAltIcon from '@mui/icons-material/TaskAlt';
 import DeleteIcon from '@mui/icons-material/Delete';
+import PermIdentityIcon from '@mui/icons-material/PermIdentity';
+import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome';
+import HandymanIcon from '@mui/icons-material/Handyman';
+import NotesIcon from '@mui/icons-material/Notes';
+import RocketLaunchIcon from '@mui/icons-material/RocketLaunch';
+import SaveIcon from '@mui/icons-material/Save';
 import { Navbar } from '../components/layout/Navbar';
 import { InputField } from '../components/common/InputField';
 import { put, post, extractErrorMessage } from '../services/apiWrapper';
@@ -81,11 +87,16 @@ export const AgentCreationPage: React.FC = () => {
   const [showParametersSection, setShowParametersSection] = useState(false);
   const [parameters, setParameters] = useState<ParamRow[]>([]);
 
-  // MCP Tool State - Empty default text with sample placeholder
+  // MCP Tool State - Name, description, and config
+  const [mcpTool, setMcpTool] = useState({
+    name: '',
+    description: '',
+  });
   const [mcpConfigText, setMcpConfigText] = useState<string>('');
   const [isDiscoveringMcp, setIsDiscoveringMcp] = useState<boolean>(false);
   const [discoveredMcpTools, setDiscoveredMcpTools] = useState<DiscoveredMcpTool[]>([]);
   const [selectedMcpTools, setSelectedMcpTools] = useState<Record<string, boolean>>({});
+  const [isSavingTool, setIsSavingTool] = useState<boolean>(false);
 
   // Step 4: Prompt Form State
   const [systemPrompt, setSystemPrompt] = useState('');
@@ -222,6 +233,7 @@ export const AgentCreationPage: React.FC = () => {
         description: identity.description,
         visibility: identity.visibility,
         status: identity.status,
+        capabilities: [],
         version: '1.0.0',
       };
 
@@ -282,19 +294,24 @@ export const AgentCreationPage: React.FC = () => {
     }
   };
 
-  // Step 3: Tools Next Button
-  const handleToolsSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  // Step 3: Tools Save Button Handler
+  const handleSaveTool = async () => {
     if (!agentId) {
-      setErrorMessage('Please complete Step 1 (Identity) first.');
+      setErrorMessage('Please complete Step 1 (Identity) first before saving tools.');
       return;
     }
 
-    setIsLoading(true);
+    setIsSavingTool(true);
     clearAlerts();
 
     try {
-      if (toolToggle === 'API' && apiTool.url.trim()) {
+      if (toolToggle === 'API') {
+        if (!apiTool.url.trim()) {
+          setErrorMessage('Please provide a target endpoint URL for the API tool.');
+          setIsSavingTool(false);
+          return;
+        }
+
         const headerMap: Record<string, string> = {};
         headers.forEach((h) => {
           if (h.key.trim()) {
@@ -314,8 +331,8 @@ export const AgentCreationPage: React.FC = () => {
 
         const toolConfigPayload = [
           {
-            name: apiTool.name.trim() || `${identity.name} API Tool`,
-            description: apiTool.description.trim() || identity.description,
+            name: apiTool.name.trim() || `${identity.name || 'Agent'} API Tool`,
+            description: apiTool.description.trim() || identity.description || '',
             tool_type: 'API',
             url: apiTool.url.trim(),
             method: apiTool.method,
@@ -328,14 +345,29 @@ export const AgentCreationPage: React.FC = () => {
         ];
 
         await post(API_ENDPOINTS.AGENTS.ADD_TOOLS(agentId), toolConfigPayload);
-      } else if (toolToggle === 'MCP' && mcpConfigText.trim()) {
-        let parsedConfig: Record<string, any>;
-        try {
-          parsedConfig = JSON.parse(mcpConfigText);
-        } catch {
-          setErrorMessage('Invalid MCP JSON configuration format.');
-          setIsLoading(false);
+        setSuccessMessage('API tool saved successfully!');
+        markStepComplete('tools');
+      } else if (toolToggle === 'MCP') {
+        if (!mcpTool.name.trim()) {
+          setErrorMessage('Please enter an MCP Tool Name.');
+          setIsSavingTool(false);
           return;
+        }
+        if (!mcpTool.description.trim()) {
+          setErrorMessage('Please enter an MCP Tool Description.');
+          setIsSavingTool(false);
+          return;
+        }
+
+        let parsedConfig: Record<string, any> = {};
+        if (mcpConfigText.trim()) {
+          try {
+            parsedConfig = JSON.parse(mcpConfigText);
+          } catch {
+            setErrorMessage('Invalid MCP JSON configuration format. Please ensure it is valid JSON.');
+            setIsSavingTool(false);
+            return;
+          }
         }
 
         const selectedToolNames = discoveredMcpTools
@@ -344,27 +376,48 @@ export const AgentCreationPage: React.FC = () => {
 
         const toolConfigPayload = [
           {
-            name: `${identity.name} MCP Tool`,
-            description: identity.description,
-            tool_type: 'MCP',
+            name: mcpTool.name.trim(),
+            description: mcpTool.description.trim(),
+            version: '1.0.0',
+            enabled: true,
             mcp_config: parsedConfig,
             allowed_tools: selectedToolNames,
+            tool_type: 'MCP',
+          },
+        ];
+
+        await post(API_ENDPOINTS.AGENTS.ADD_TOOLS(agentId), toolConfigPayload);
+        setSuccessMessage('MCP tool saved successfully!');
+        markStepComplete('tools');
+      } else if (toolToggle === 'PRECONFIGURED') {
+        const toolConfigPayload = [
+          {
+            name: 'Preconfigured Platform Tools',
+            description: 'Standard platform utilities and tools',
+            tool_type: 'PRECONFIGURED',
+            provider: 'standard',
+            config: {},
             enabled: true,
             version: '1.0.0',
           },
         ];
 
         await post(API_ENDPOINTS.AGENTS.ADD_TOOLS(agentId), toolConfigPayload);
+        setSuccessMessage('Preconfigured tools saved successfully!');
+        markStepComplete('tools');
       }
-
-      setSuccessMessage('Tools configured successfully!');
-      markStepComplete('tools');
-      setActiveStep('prompt');
     } catch (err) {
       setErrorMessage(extractErrorMessage(err));
     } finally {
-      setIsLoading(false);
+      setIsSavingTool(false);
     }
+  };
+
+  // Step 3: Tools Next Button Handler (navigates without calling API)
+  const handleToolsNext = () => {
+    clearAlerts();
+    markStepComplete('tools');
+    setActiveStep('prompt');
   };
 
   // Step 4: Prompt Next Button
@@ -409,6 +462,7 @@ export const AgentCreationPage: React.FC = () => {
     try {
       await put(API_ENDPOINTS.AGENTS.CREATE_OR_UPDATE, {
         _id: agentId,
+        enabled: true,
         status: 'DEPLOYED',
       });
       setSuccessMessage('Agent published and deployed successfully!');
@@ -423,12 +477,12 @@ export const AgentCreationPage: React.FC = () => {
   };
 
   // Steps Registry
-  const steps: { key: StepKey; label: string; number: number }[] = [
-    { key: 'identity', label: 'Identity', number: 1 },
-    { key: 'model', label: 'Model', number: 2 },
-    { key: 'tools', label: 'Tools', number: 3 },
-    { key: 'prompt', label: 'Prompt', number: 4 },
-    { key: 'publish', label: 'Publish', number: 5 },
+  const steps: { key: StepKey; label: string; icon: React.ReactNode }[] = [
+    { key: 'identity', label: 'Identity', icon: <PermIdentityIcon style={{ fontSize: 17 }} /> },
+    { key: 'model', label: 'Model', icon: <AutoAwesomeIcon style={{ fontSize: 17 }} /> },
+    { key: 'tools', label: 'Tools', icon: <HandymanIcon style={{ fontSize: 17 }} /> },
+    { key: 'prompt', label: 'Prompt', icon: <NotesIcon style={{ fontSize: 17 }} /> },
+    { key: 'publish', label: 'Publish', icon: <RocketLaunchIcon style={{ fontSize: 17 }} /> },
   ];
 
   const mcpPlaceholderText = `{\n  "mcpServers": {\n    "filesystem": {\n      "command": "npx",\n      "args": ["-y", "@modelcontextprotocol/server-filesystem", "/path"]\n    }\n  }\n}`;
@@ -474,7 +528,7 @@ export const AgentCreationPage: React.FC = () => {
                       }
                     }}
                   >
-                    <div className="step-number-badge">{step.number}</div>
+                    <div className="step-number-badge">{step.icon}</div>
                     <span>{step.label}</span>
                     {isCompleted && (
                       <TaskAltIcon
@@ -674,32 +728,53 @@ export const AgentCreationPage: React.FC = () => {
                   <h3 className="step-title">Tool Configuration</h3>
                   <p className="step-description">Connect external APIs, preconfigured utilities, or MCP protocol endpoints to your agent.</p>
 
-                  {/* Toggle Pill Selection */}
-                  <div className="toggle-group-pills mb-4">
-                    <button
+                  {/* Toggle Pill Selection & Top-Right Save Button */}
+                  <div className="d-flex align-items-center justify-content-between mb-4 flex-wrap gap-2">
+                    <div className="toggle-group-pills">
+                      <button
+                        type="button"
+                        className={`toggle-pill-btn ${toolToggle === 'PRECONFIGURED' ? 'active' : ''}`}
+                        onClick={() => setToolToggle('PRECONFIGURED')}
+                      >
+                        Preconfigured
+                      </button>
+                      <button
+                        type="button"
+                        className={`toggle-pill-btn ${toolToggle === 'API' ? 'active' : ''}`}
+                        onClick={() => setToolToggle('API')}
+                      >
+                        API
+                      </button>
+                      <button
+                        type="button"
+                        className={`toggle-pill-btn ${toolToggle === 'MCP' ? 'active' : ''}`}
+                        onClick={() => setToolToggle('MCP')}
+                      >
+                        MCP
+                      </button>
+                    </div>
+
+                    <Button
                       type="button"
-                      className={`toggle-pill-btn ${toolToggle === 'PRECONFIGURED' ? 'active' : ''}`}
-                      onClick={() => setToolToggle('PRECONFIGURED')}
+                      className="btn-cyan-primary px-4 py-2 rounded-pill d-flex align-items-center gap-2"
+                      onClick={handleSaveTool}
+                      disabled={isSavingTool}
                     >
-                      Preconfigured
-                    </button>
-                    <button
-                      type="button"
-                      className={`toggle-pill-btn ${toolToggle === 'API' ? 'active' : ''}`}
-                      onClick={() => setToolToggle('API')}
-                    >
-                      API
-                    </button>
-                    <button
-                      type="button"
-                      className={`toggle-pill-btn ${toolToggle === 'MCP' ? 'active' : ''}`}
-                      onClick={() => setToolToggle('MCP')}
-                    >
-                      MCP
-                    </button>
+                      {isSavingTool ? (
+                        <>
+                          <Spinner animation="border" size="sm" />
+                          <span>Saving...</span>
+                        </>
+                      ) : (
+                        <>
+                          <SaveIcon style={{ fontSize: 18 }} />
+                          <span>Save</span>
+                        </>
+                      )}
+                    </Button>
                   </div>
 
-                  <Form onSubmit={handleToolsSubmit}>
+                  <Form onSubmit={(e) => { e.preventDefault(); handleToolsNext(); }}>
                     {/* API TOOL TOGGLE */}
                     {toolToggle === 'API' && (
                       <div>
@@ -915,6 +990,33 @@ export const AgentCreationPage: React.FC = () => {
                     {/* MCP TOOL TOGGLE */}
                     {toolToggle === 'MCP' && (
                       <div>
+                        {/* 1. MCP Tool Name */}
+                        <div className="mb-3">
+                          <InputField
+                            id="mcp-tool-name"
+                            label="MCP Tool Name"
+                            type="text"
+                            name="mcp_tool_name"
+                            value={mcpTool.name}
+                            placeholder="e.g. GitHub MCP Server Tool"
+                            onChange={(e) => setMcpTool({ ...mcpTool, name: e.target.value })}
+                          />
+                        </div>
+
+                        {/* 2. MCP Tool Description */}
+                        <Form.Group className="mb-3" controlId="mcp-tool-description">
+                          <Form.Label className="form-label-custom">MCP Tool Description</Form.Label>
+                          <Form.Control
+                            as="textarea"
+                            rows={2}
+                            className="custom-input"
+                            placeholder="Describes what this MCP tool does..."
+                            value={mcpTool.description}
+                            onChange={(e) => setMcpTool({ ...mcpTool, description: e.target.value })}
+                          />
+                        </Form.Group>
+
+                        {/* 3. MCP Server JSON Configuration */}
                         <Form.Group className="mb-3" controlId="mcp-config-json">
                           <Form.Label className="form-label-custom">MCP Server JSON Configuration</Form.Label>
                           <Form.Control
@@ -964,7 +1066,7 @@ export const AgentCreationPage: React.FC = () => {
                               {discoveredMcpTools.map((t) => {
                                 const isSelected = !!selectedMcpTools[t.tool_name];
                                 return (
-                                  <div
+                                   <div
                                     key={t.tool_name}
                                     className={`mcp-tool-pill d-inline-flex align-items-center gap-2 px-3 py-1.5 border ${
                                       isSelected ? 'selected' : 'unselected'
@@ -972,11 +1074,17 @@ export const AgentCreationPage: React.FC = () => {
                                     onClick={() => handleToggleSingleMcpTool(t.tool_name)}
                                     style={{ cursor: 'pointer' }}
                                   >
-                                    <Form.Check
+                                    <input
                                       type="checkbox"
+                                      className="form-check-input m-0"
                                       id={`mcp-tool-${t.tool_name}`}
                                       checked={isSelected}
-                                      onChange={() => handleToggleSingleMcpTool(t.tool_name)}
+                                      onChange={(e) => {
+                                        e.stopPropagation();
+                                        handleToggleSingleMcpTool(t.tool_name);
+                                      }}
+                                      onClick={(e) => e.stopPropagation()}
+                                      style={{ cursor: 'pointer' }}
                                     />
                                     <OverlayTrigger
                                       placement="top"
@@ -1008,15 +1116,12 @@ export const AgentCreationPage: React.FC = () => {
                       <Button variant="outline-secondary" onClick={() => setActiveStep('model')} className="px-4 rounded-pill">
                         Back
                       </Button>
-                      <Button type="submit" className="btn-cyan-primary px-4 rounded-pill" disabled={isLoading}>
-                        {isLoading ? (
-                          <>
-                            <Spinner animation="border" size="sm" className="me-2" />
-                            Saving...
-                          </>
-                        ) : (
-                          'Next'
-                        )}
+                      <Button
+                        type="button"
+                        className="btn-cyan-primary px-4 rounded-pill"
+                        onClick={handleToolsNext}
+                      >
+                        Next
                       </Button>
                     </div>
                   </Form>
