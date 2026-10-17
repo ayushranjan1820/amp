@@ -1,5 +1,5 @@
 from enum import StrEnum
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, model_validator
 from typing import Literal, Any, Optional, Union, Annotated
 from tools.tool_type import ToolType
 from uuid import uuid8
@@ -83,8 +83,7 @@ class RetreivalStrategy(StrEnum):
 
 class RerankModelProvider(StrEnum):
     COHERE = "cohere"
-    GEMINI = "gemini"
-    OPENAI = "openai"
+    VOYAGE_AI = "voyage_ai"
 
 
 class VectorDBProvider(StrEnum):
@@ -124,11 +123,20 @@ class RAGToolAdvancedConfig(BaseModel):
     chunk_overlap: int = Field(default=200)
     distance_strategy: DistanceStrategy = Field(default_factory=DistanceStrategy.DOTPRODUCT)
     vector_type: Literal["sparse", "dense"] = Field(default="dense")
+    keyword_weight: float = Field(default=0.5, ge=0, le=1)
+    semantic_weight: float = Field(default=0.5, ge=0, le=1)
     
     rerank_enabled: bool = False
     rerank_provider: Optional[RerankModelProvider] = None
     rerank_model: Optional[str] = None
     rerank_top_k: int = Field(default=5)
+
+    @model_validator(mode="after")
+    def confirm_weights(self):
+        if self.retrieval_strategy == RetreivalStrategy.HYBRID:
+            if self.keyword_weight + self.semantic_weight != 1.0:
+                raise ValueError("Keyword and semantic weights must sum to 1")
+        return self
 
 
 class VectorDBConfig(BaseModel):
