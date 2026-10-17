@@ -171,8 +171,8 @@ class ToolCatalogConnection(MongoConnection):
         )
         return await self.collection.find_one({"_id": ObjectId(tool_id)})
 
-    async def add_new_tool(self, tool_config: list[dict]):
-        return await self.collection.insert_many(tool_config)
+    async def add_new_tool(self, tool_config: dict):
+        return await self.collection.insert_one(tool_config)
 
     async def get_all_tool_configs(self, tool_ids: list[str]):
         return await self.collection.find({"_id": {"$in": [ObjectId(tool_id) for tool_id in tool_ids]}}).to_list(length=None)

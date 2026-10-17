@@ -4,15 +4,16 @@ from langchain_core.tools import BaseTool
 from tools.tool_registry import ToolRegistry
 from tools.tool_config import ToolConfig, PreConfiguredToolConfig, BaseToolConfig
 from tools.tool_type import ToolType
-from tools.tool_provider import ApiToolProvider, MCPToolProvider
+from tools.tool_provider import ApiToolProvider, MCPToolProvider, RAGToolProvider
 from errors.global_exception_handler import AgentMartException
 
 class ToolFactory:
 
-    def __init__(self, preconfigured_registry: ToolRegistry, api_provider: ApiToolProvider, mcp_provider: MCPToolProvider):
+    def __init__(self, preconfigured_registry: ToolRegistry, api_provider: ApiToolProvider, mcp_provider: MCPToolProvider, rag_provider: RAGToolProvider):
         self._preconfigured_registry = preconfigured_registry
         self.api_provider = api_provider
         self._mcp_proivder = mcp_provider
+        self._rag_provider = rag_provider
 
     async def _create_preconfigured_tools(self, config: Any) -> list[BaseTool]:
         if not isinstance(config, PreConfiguredToolConfig):
@@ -51,5 +52,7 @@ class ToolFactory:
                 return await self.api_provider.create_tools(config)
             case ToolType.MCP:
                 return await self._mcp_proivder.create_tools(config)
+            case ToolType.RAG: 
+                return await self._rag_provider.create_tools(config)
             case _:
                 raise AgentMartException(f"Unsupported tool type: {tool_type}", status_code=500)

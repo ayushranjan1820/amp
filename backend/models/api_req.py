@@ -3,7 +3,7 @@ from typing import Self
 import re
 from datetime import datetime
 from agents.agent_config import ModelConfig, Visibility, Status, ModelProvider
-from tools.tool_config import ToolType, TokenType
+from tools.tool_config import ToolType, TokenType, ToolConfig
 
 
 def _validate_email_format(val: str):
@@ -126,6 +126,9 @@ class LoginUserReq(BaseModel):
 #     visibility: Visibility = Field(default_factory=lambda: Visibility.PRIVATE)
 #     status: Status = Field(default_factory=lambda: Status.DRAFT)
 
+
+class ToolReq(BaseModel):
+    tool: list[ToolConfig]
 
 class ChatReq(BaseModel):
     message: str

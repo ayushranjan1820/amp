@@ -13,5 +13,6 @@ export const API_ENDPOINTS = {
     ADD_TOOLS: (agentId: string) => `/api/v1/agents/tools/${agentId}`,
     TOOLS_FROM_MCP: '/api/v1/agents/tools-from-mcp',
     FETCH_TOOLS_BY_IDS: '/api/v1/agents/tools/fetch',
+    UPLOAD_DOCUMENT: '/api/v1/agents/upload',
   },
 } as const;

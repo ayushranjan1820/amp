@@ -66,7 +66,7 @@ export const DeployedAgentsPage: React.FC = () => {
             <div className="deployed-empty-icon">🤖</div>
             <h5 className="text-white mb-2">No deployed agents yet</h5>
             <p className="text-muted small">
-              Create and publish an agent to see it appear here.
+              Create and deploy an agent to see it appear here.
             </p>
           </div>
         )}

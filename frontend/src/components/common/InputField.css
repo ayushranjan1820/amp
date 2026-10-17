@@ -18,6 +18,14 @@
   outline: none;
 }
 
+.custom-input:disabled {
+  background-color: rgba(15, 23, 42, 0.4) !important;
+  border-color: rgba(255, 255, 255, 0.05) !important;
+  color: var(--text-muted-dark) !important;
+  cursor: not-allowed !important;
+  opacity: 0.55 !important;
+}
+
 .custom-input::placeholder {
   color: var(--text-muted-dark) !important;
 }

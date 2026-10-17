@@ -2,10 +2,11 @@ from enum import StrEnum
 from pydantic import BaseModel, Field
 from typing import Literal, Any, Optional, Union, Annotated
 from tools.tool_type import ToolType
+from uuid import uuid8
 
 
 class BaseToolConfig(BaseModel):
-    tool_id: str
+    tool_id: Optional[str] = None
     name: str
     description: str
     tool_type: ToolType
@@ -67,6 +68,81 @@ class TokenConfig(BaseModel):
     token: str
 
 
+class ChunkingStrategy(StrEnum):
+    RECURSIVE = "recursive"
+    TOKEN = "token"
+    HIERARCHIAL = "hierarchial"
+    SEMANTIC = "semantic"
+
+
+class RetreivalStrategy(StrEnum):
+    SIMILARITY = "similarity"
+    MMR = "mmr"
+    HYBRID = "hybrid"
+
+
+class RerankModelProvider(StrEnum):
+    COHERE = "cohere"
+    GEMINI = "gemini"
+    OPENAI = "openai"
+
+
+class VectorDBProvider(StrEnum):
+    PINECONE = "pinecone"
+    CHROMA = "chroma"
+    QDRANT = "qdrant"
+    MILVUS = "milvus"
+    FAISS = "faiss"
+    WEAVIATE = "weaviate"
+
+
+class DistanceStrategy(StrEnum):
+    COSINE = "cosine"
+    DOTPRODUCT = "dotproduct"
+    EUCLIDEAN = "euclidean"
+    MANHATTAN = "manhattan"
+
+
+class EmbeddingModelProvider(StrEnum):
+    OPENAI = "openai"
+    GOOGLE = "google"
+    COHERE = "cohere"
+    AZURE_OPENAI = "azure_openai"
+    MISTRAL = "mistral"
+
+
+class EmbeddingModelConfig(BaseModel):
+    provider: EmbeddingModelProvider
+    model: str
+    api_key: str
+
+
+class RAGToolAdvancedConfig(BaseModel):
+    retrieval_strategy: RetreivalStrategy = Field(default_factory=RetreivalStrategy.SIMILARITY)
+    chunking_strategy: ChunkingStrategy = Field(default_factory=ChunkingStrategy.RECURSIVE)
+    chunk_size: int = Field(default=1000)
+    chunk_overlap: int = Field(default=200)
+    distance_strategy: DistanceStrategy = Field(default_factory=DistanceStrategy.DOTPRODUCT)
+    vector_type: Literal["sparse", "dense"] = Field(default="dense")
+    
+    rerank_enabled: bool = False
+    rerank_provider: Optional[RerankModelProvider] = None
+    rerank_model: Optional[str] = None
+    rerank_top_k: int = Field(default=5)
+
+
+class VectorDBConfig(BaseModel):
+    vector_db_provider: VectorDBProvider
+    vector_db_url: Optional[str] = Field(default=None)
+    vector_db_api_key: str
+    collection_name: str
+    namespace: Optional[str] = None
+    vector_db_tenant: str = None
+    vector_dimension: Optional[int] = None
+    top_k: int = Field(default=15)
+    cloud_provider: Optional[Literal["aws", "azure", "gcp"]] = None
+    region: Optional[str] = None
+
 # --------------------------------------------
 #        Tool Config Implementations
 # --------------------------------------------
@@ -104,8 +180,17 @@ class MCPToolConfig(BaseToolConfig):
     allowed_tools: list[str] = Field(default_factory=list, description="List of tool names to allow")
 
 
+class RAGToolConfig(BaseToolConfig):
+    tool_type: Literal[ToolType.RAG] = ToolType.RAG
+
+    vector_db_config: VectorDBConfig
+    document_path: str
+    embedding_model_config: EmbeddingModelConfig
+    rag_advanced_config: RAGToolAdvancedConfig
+
+
 AnyToolConfig = Annotated[
-    Union[PreConfiguredToolConfig, ApiToolConfig, PythonToolConfig, MCPToolConfig],
+    Union[PreConfiguredToolConfig, ApiToolConfig, PythonToolConfig, MCPToolConfig, RAGToolConfig],
     Field(discriminator="tool_type"),
 ]
 

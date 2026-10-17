@@ -31,7 +31,7 @@
 .sidebar-menu {
   background: rgba(15, 23, 42, 0.6);
   border-right: 1px solid var(--card-border);
-  padding: 1.5rem 1rem;
+  padding: 1.5rem 0.65rem;
   /* Fill the full row height and stay put */
   height: 100%;
   overflow: hidden;
@@ -41,15 +41,17 @@
 .sidebar-step-item {
   display: flex;
   align-items: center;
-  gap: 0.85rem;
-  padding: 0.85rem 1rem;
-  border-radius: 12px;
+  gap: 0.6rem;
+  padding: 0.75rem 0.65rem;
+  border-radius: 10px;
   color: var(--text-secondary-dark);
   font-weight: 500;
+  font-size: 0.88rem;
   cursor: pointer;
   transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
-  margin-bottom: 0.5rem;
+  margin-bottom: 0.4rem;
   border: 1px solid transparent;
+  white-space: nowrap;
 }
 
 .sidebar-step-item:hover {
@@ -78,17 +80,19 @@
 }
 
 .step-number-badge {
-  width: 28px;
-  height: 28px;
+  width: 26px;
+  height: 26px;
+  min-width: 26px;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 0.85rem;
+  font-size: 0.82rem;
   font-weight: 700;
   background: rgba(255, 255, 255, 0.08);
   color: var(--text-secondary-dark);
   transition: all 0.2s ease;
+  flex-shrink: 0;
 }
 
 .sidebar-step-item.active .step-number-badge {
@@ -104,7 +108,7 @@
 
 /* Content Area — scrolls independently, sidebar never moves */
 .agent-step-content {
-  padding: 2.5rem;
+  padding: 2rem 2.25rem;
   height: 100%;
   overflow-y: auto;
   /* Custom scrollbar to match the dark theme */
@@ -323,3 +327,303 @@ input.custom-range-slider::-webkit-slider-runnable-track {
   border-color: rgba(255, 255, 255, 0.15) !important;
   color: var(--text-secondary-dark) !important;
 }
+
+/* RAG Document Upload Area */
+.rag-upload-dropzone {
+  border: 2px dashed rgba(56, 189, 248, 0.35);
+  border-radius: 12px;
+  padding: 1.75rem 1.25rem;
+  text-align: center;
+  background: rgba(15, 23, 42, 0.35);
+  transition: all 0.2s ease;
+  cursor: pointer;
+}
+
+.rag-upload-dropzone:hover,
+.rag-upload-dropzone.drag-over {
+  border-color: var(--primary-accent);
+  background: rgba(56, 189, 248, 0.08);
+}
+
+.rag-upload-file-badge {
+  background: rgba(56, 189, 248, 0.12);
+  border: 1px solid rgba(56, 189, 248, 0.3);
+  border-radius: 12px;
+  padding: 0.85rem 1.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.rag-section-header {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--primary-accent);
+  margin-bottom: 0.85rem;
+}
+
+/* Vector DB, Embedding & Model Provider Cards */
+.vector-provider-grid,
+.embedding-provider-grid,
+.model-provider-grid {
+  display: grid;
+  gap: 0.75rem;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.vector-provider-grid {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.embedding-provider-grid {
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+}
+
+.model-provider-grid {
+  grid-template-columns: repeat(auto-fill, minmax(135px, 1fr));
+}
+
+.preconfigured-provider-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  box-sizing: border-box;
+}
+
+.preconfigured-provider-grid .vector-provider-card {
+  width: 220px;
+  flex: 0 0 220px;
+}
+
+@media (max-width: 992px) {
+  .vector-provider-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .embedding-provider-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 576px) {
+  .vector-provider-grid {
+    grid-template-columns: 1fr;
+  }
+  .embedding-provider-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .model-provider-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .preconfigured-provider-grid .vector-provider-card {
+    width: 100%;
+    flex: 1 1 100%;
+  }
+}
+
+.embedding-provider-grid .vector-provider-card,
+.model-provider-grid .vector-provider-card {
+  padding: 0.6rem 0.65rem;
+  gap: 0.5rem;
+}
+
+.embedding-provider-grid .vector-provider-icon-wrapper,
+.model-provider-grid .vector-provider-icon-wrapper {
+  width: 32px;
+  height: 32px;
+  min-width: 32px;
+}
+
+.embedding-provider-grid .vector-provider-icon-wrapper svg,
+.model-provider-grid .vector-provider-icon-wrapper svg {
+  width: 20px;
+  height: 20px;
+}
+
+.embedding-provider-grid .vector-provider-name,
+.model-provider-grid .vector-provider-name {
+  font-size: 0.86rem;
+  letter-spacing: -0.01em;
+}
+
+.vector-provider-card {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  padding: 0.65rem 0.85rem;
+  background: rgba(15, 23, 42, 0.55);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  user-select: none;
+  min-width: 0;
+  box-sizing: border-box;
+  outline: none;
+}
+
+.vector-provider-card:hover {
+  background: rgba(15, 23, 42, 0.85);
+  border-color: rgba(56, 189, 248, 0.4);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.3);
+}
+
+.vector-provider-card:focus-visible {
+  border-color: var(--primary-accent);
+  box-shadow: 0 0 0 2px rgba(56, 189, 248, 0.35);
+}
+
+.vector-provider-card.selected {
+  background: linear-gradient(135deg, rgba(56, 189, 248, 0.16) 0%, rgba(15, 23, 42, 0.8) 100%);
+  border-color: var(--primary-accent);
+  box-shadow: 0 0 14px rgba(56, 189, 248, 0.25), inset 0 0 0 1px rgba(56, 189, 248, 0.3);
+}
+
+.vector-provider-icon-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  min-width: 36px;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+}
+
+.vector-provider-card.selected .vector-provider-icon-wrapper {
+  background: rgba(56, 189, 248, 0.18);
+  border-color: rgba(56, 189, 248, 0.4);
+  box-shadow: 0 0 10px rgba(56, 189, 248, 0.2);
+}
+
+/* Sizing for brand SVG icons from @thesvg/react */
+.vector-provider-icon-wrapper svg,
+.vector-provider-card .h-6,
+.vector-provider-card .w-6 {
+  width: 22px;
+  height: 22px;
+  display: block;
+  flex-shrink: 0;
+}
+
+.vector-provider-name {
+  font-size: 0.92rem;
+  font-weight: 600;
+  color: #f1f5f9;
+  letter-spacing: -0.01em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  min-width: 0;
+}
+
+.vector-provider-card.selected .vector-provider-name {
+  color: var(--primary-accent);
+}
+
+.vector-provider-check {
+  color: var(--primary-accent);
+  display: flex;
+  align-items: center;
+  filter: drop-shadow(0 0 4px rgba(56, 189, 248, 0.6));
+  flex-shrink: 0;
+}
+
+/* Cloud Provider Button Group */
+.cloud-provider-group {
+  display: flex;
+  gap: 0.5rem;
+  width: 100%;
+}
+
+.cloud-provider-btn {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.45rem 0.6rem;
+  background: rgba(15, 23, 42, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  user-select: none;
+  min-height: 38px;
+}
+
+.cloud-provider-btn:hover {
+  background: rgba(15, 23, 42, 0.8);
+  border-color: rgba(56, 189, 248, 0.4);
+  transform: translateY(-1px);
+}
+
+.cloud-provider-btn:focus-visible {
+  border-color: var(--primary-accent);
+  box-shadow: 0 0 0 2px rgba(56, 189, 248, 0.35);
+}
+
+.cloud-provider-btn.selected {
+  background: linear-gradient(135deg, rgba(56, 189, 248, 0.16) 0%, rgba(15, 23, 42, 0.75) 100%);
+  border-color: var(--primary-accent);
+  box-shadow: 0 0 12px rgba(56, 189, 248, 0.22);
+}
+
+.cloud-provider-group.disabled {
+  pointer-events: none;
+  opacity: 0.5;
+}
+
+.cloud-provider-btn.disabled {
+  opacity: 0.45;
+  cursor: not-allowed !important;
+  pointer-events: none;
+  filter: grayscale(80%);
+}
+
+.cloud-provider-btn.disabled:hover {
+  transform: none;
+  background: rgba(15, 23, 42, 0.5);
+  border-color: rgba(255, 255, 255, 0.1);
+  box-shadow: none;
+}
+
+.cloud-provider-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.cloud-provider-icon svg,
+.cloud-provider-btn .h-6,
+.cloud-provider-btn .w-6 {
+  width: 20px;
+  height: 20px;
+  display: block;
+}
+
+.cloud-provider-label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #f1f5f9;
+}
+
+.cloud-provider-btn.selected .cloud-provider-label {
+  color: var(--primary-accent);
+}
+
+/* Action buttons with modern 8px radius (removing pill roundness) */
+.agent-action-btn {
+  border-radius: 8px !important;
+  font-weight: 600;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+

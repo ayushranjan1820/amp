@@ -49,3 +49,8 @@ class TokenRes(BaseModel):
 class MCPToolRes(BaseModel):
     tool_name: str
     tool_description: str
+
+
+class FileUploadRes(BaseModel):
+    file_path: str
+    file_name: str

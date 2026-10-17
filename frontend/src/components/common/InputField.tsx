@@ -16,6 +16,7 @@ interface InputFieldProps {
   required?: boolean;
   autoComplete?: string;
   showPasswordToggle?: boolean;
+  disabled?: boolean;
 }
 
 export const InputField: React.FC<InputFieldProps> = ({
@@ -30,6 +31,7 @@ export const InputField: React.FC<InputFieldProps> = ({
   required = false,
   autoComplete,
   showPasswordToggle = false,
+  disabled = false,
 }) => {
   const [showPassword, setShowPassword] = useState(false);
 
@@ -47,6 +49,7 @@ export const InputField: React.FC<InputFieldProps> = ({
           onChange={onChange}
           required={required}
           autoComplete={autoComplete}
+          disabled={disabled}
           className={`custom-input ${error ? 'is-invalid' : ''}`}
         />
         {showPasswordToggle && (

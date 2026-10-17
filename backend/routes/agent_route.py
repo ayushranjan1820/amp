@@ -8,10 +8,10 @@ from database.mongo_connection import (
 )
 from decorator.token_validation import validate_token
 from dotenv import load_dotenv
-from fastapi import APIRouter, Depends, FastAPI, Request, status
+from fastapi import APIRouter, Depends, FastAPI, Request, status, UploadFile, File
 from fastapi.responses import JSONResponse, StreamingResponse
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
-from models.api_req import ChatReq, TokenReq, ToolIdsReq
+from models.api_req import ChatReq, TokenReq, ToolIdsReq, ToolReq
 from models.api_res import ServerResponseWrapper, TokenRes
 from services.agent_service import get_agents, register_new_agent
 from services.chat_service import chat_with_agent, chat_with_agent_stream
@@ -19,11 +19,12 @@ from services.tool_service import (
     add_new_tools_to_agent,
     fetch_tools_by_tool_ids,
     get_all_tools_from_mcp_config,
+    upload_document_to_rag_tool,
 )
 from tools.api import ApiInputSchemaFactory, ApiToolExecutor, ApiValidator
 from tools.preconfigured import create_preconfigured_registry
 from tools.tool_factory import ToolFactory
-from tools.tool_provider import ApiToolProvider, MCPToolProvider
+from tools.tool_provider import ApiToolProvider, MCPToolProvider, RAGToolProvider
 from utils.logger import get_logger
 from tools.mcp.mcp_tools_filter import MCPToolFilter
 from typing import Optional, List
@@ -60,11 +61,15 @@ async def lifespan(app: FastAPI):
     tool_filter = MCPToolFilter()
     mcp_tool_provider = MCPToolProvider(tool_filter)
 
+    # ----- RAG Tools -----
+    rag_tool_provider = RAGToolProvider()
+
     # ----- Common ToolFactory -----
     tool_factory = ToolFactory(
         preconfigured_registry=preconfigured_registry,
         api_provider=api_tool_provider,
         mcp_provider=mcp_tool_provider,
+        rag_provider=rag_tool_provider
     )
 
     agent_factory = AgentFactory(
@@ -163,6 +168,29 @@ async def chat(
     """
     user_id = getattr(request.app.state, "id", None)
     agent_factory: AgentFactory = request.app.state.agent_factory
+    # agent_response = await chat_with_agent(
+    #     agent_id,
+    #     user_id,
+    #     req.message,
+    #     agent_factory,
+    #     agent_catalog_collection,
+    #     tool_catalog_collection,
+    # )
+    
+    # response_data = ServerResponseWrapper(
+    #     data=agent_response,
+    #     message="Agent chat completed successfully",
+    #     status_code=status.HTTP_200_OK,
+    # )
+    # logger.info(
+    #     "Agent chat completed successfully for user: %s",
+    #     user_id,
+    # )
+    # return JSONResponse(
+    #     status_code=status.HTTP_200_OK,
+    #     content=response_data.model_dump(mode="json"),
+    # )
+    
     event_generator = chat_with_agent_stream(
         agent_id,
         user_id,
@@ -243,7 +271,7 @@ async def fetch_tool_configs_by_tool_ids(
 async def add_tools_to_an_agent(
     request: Request,
     agent_id: str,
-    tool_config: list[dict],
+    tool_config: ToolReq,
     agent_catalog_collection: AgentCatalogConnection = Depends(
         get_agent_catalog_collection
     ),
@@ -288,6 +316,29 @@ async def get_tools_from_config(
     response_data = ServerResponseWrapper(
         data=tools,
         message="All available tools from MCP config fetched successfully",
+        status_code=status.HTTP_200_OK,
+    )
+    return JSONResponse(
+        status_code=status.HTTP_200_OK,
+        content=response_data.model_dump(mode="json"),
+    )
+
+
+@router.post("/upload")
+@validate_token
+async def upload_document(
+    request: Request,
+    file: UploadFile = File(...),
+    credentials: HTTPAuthorizationCredentials = Depends(security),
+):
+    """
+    Upload a document for RAG tool ingestion and store in blob/{user_id}.
+    """
+    user_id = getattr(request.app.state, "id", None)
+    file_upload_res = await upload_document_to_rag_tool(user_id, file)
+    response_data = ServerResponseWrapper(
+        data=file_upload_res.model_dump(),
+        message="Document uploaded successfully",
         status_code=status.HTTP_200_OK,
     )
     return JSONResponse(

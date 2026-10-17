@@ -8,6 +8,7 @@ class ToolType(StrEnum):
     API = "API"
     CODE = "CODE"
     MCP = "MCP"
+    RAG = "RAG"
 
 
 # class PreconfiguredTool(StrEnum):
