@@ -1,12 +1,10 @@
 import logging
+import os
 import sys
 from typing import Optional
-import os
 
 # Custom log template
-CUSTOM_LOG_TEMPLATE = (
-    "[%(asctime)s] | [%(levelname)-8s] | [%(name)s] | [%(filename)s:%(lineno)d] - %(message)s"
-)
+CUSTOM_LOG_TEMPLATE = "[%(asctime)s] | [%(levelname)-8s] | [%(name)s] | [%(filename)s:%(lineno)d] - %(message)s"
 DATE_FORMAT = "%Y-%m-%d %H:%M:%S"
 
 
@@ -16,11 +14,11 @@ class CustomLogFormatter(logging.Formatter):
     """
 
     COLORS = {
-        logging.DEBUG: "\033[36m",      # Cyan
-        logging.INFO: "\033[32m",       # Green
-        logging.WARNING: "\033[33m",    # Yellow
-        logging.ERROR: "\033[31m",      # Red
-        logging.CRITICAL: "\033[1;31m", # Bold Red
+        logging.DEBUG: "\033[36m",  # Cyan
+        logging.INFO: "\033[32m",  # Green
+        logging.WARNING: "\033[33m",  # Yellow
+        logging.ERROR: "\033[31m",  # Red
+        logging.CRITICAL: "\033[1;31m",  # Bold Red
     }
     RESET = "\033[0m"
 

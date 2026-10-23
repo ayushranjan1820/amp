@@ -1,4 +1,6 @@
 from langchain_core.tools import BaseTool
+
+
 class MCPToolFilter:
 
     def filter(self, tools: list[BaseTool], mcp_config: dict) -> list[BaseTool]:
@@ -17,4 +19,3 @@ class MCPToolFilter:
             if tool.name in allowed_tools:
                 result.append(tool)
         return result
-                

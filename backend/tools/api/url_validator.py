@@ -1,6 +1,7 @@
-from urllib.parse import urlparse
-from errors.global_exception_handler import AgentMartException
 from ipaddress import ip_address
+from urllib.parse import urlparse
+
+from errors.global_exception_handler import AgentMartException
 
 
 class ApiValidator:

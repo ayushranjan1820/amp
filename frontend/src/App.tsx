@@ -25,6 +25,7 @@ function App() {
           <Route element={<ProtectedRoute />}>
             <Route path="/" element={<LandingPage />} />
             <Route path="/agent" element={<AgentCreationPage />} />
+            <Route path="/agent/:agentId" element={<AgentCreationPage />} />
             <Route path="/deployed" element={<DeployedAgentsPage />} />
             <Route path="/chat/:agentId" element={<ChatPage />} />
           </Route>

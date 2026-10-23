@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { useNavigate, useParams, useLocation } from 'react-router-dom';
 import { Container, Row, Col, Form, Button, Alert, Spinner, Badge } from 'react-bootstrap';
 import TaskAltIcon from '@mui/icons-material/TaskAlt';
 import PermIdentityIcon from '@mui/icons-material/PermIdentity';
@@ -7,6 +7,7 @@ import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome';
 import HandymanIcon from '@mui/icons-material/Handyman';
 import NotesIcon from '@mui/icons-material/Notes';
 import RocketLaunchIcon from '@mui/icons-material/RocketLaunch';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { 
   Openai, Gemini, Cohere, AzureAzureOpenai, Mistral,
   Anthropic, Xai, Groq, Azureai, Deepseek, Openrouter, Ollama, HuggingFace
@@ -14,8 +15,9 @@ import {
 import { Navbar } from '../components/layout/Navbar';
 import { InputField } from '../components/common/InputField';
 import { ToolsStep } from '../components/agents/ToolsStep';
-import { put, extractErrorMessage } from '../services/apiWrapper';
+import { get, put, extractErrorMessage } from '../services/apiWrapper';
 import { API_ENDPOINTS } from '../constants';
+import type { AgentItem } from '../types/agent';
 import './AgentCreationPage.css';
 
 type StepKey = 'identity' | 'model' | 'tools' | 'prompt' | 'deploy';
@@ -105,9 +107,18 @@ const MODEL_PROVIDERS = [
 
 export const AgentCreationPage: React.FC = () => {
   const navigate = useNavigate();
+  const { agentId: routeAgentId } = useParams<{ agentId: string }>();
+  const location = useLocation();
+
   // Navigation & Agent State
   const [activeStep, setActiveStep] = useState<StepKey>('identity');
-  const [agentId, setAgentId] = useState<string | null>(null);
+  const [agentId, setAgentId] = useState<string | null>(routeAgentId || null);
+  const [initialAgent, setInitialAgent] = useState<AgentItem | null>(
+    (location.state as { agent?: AgentItem } | undefined)?.agent || null
+  );
+  const [isFetchingAgent, setIsFetchingAgent] = useState<boolean>(false);
+  const isEditing = Boolean(routeAgentId || initialAgent);
+
   // Tracks which steps have been successfully saved — gates sidebar navigation
   const [completedSteps, setCompletedSteps] = useState<Set<StepKey>>(new Set());
 
@@ -147,9 +158,149 @@ export const AgentCreationPage: React.FC = () => {
     setSuccessMessage(null);
   };
 
+  const populateAgentData = (agent: AgentItem) => {
+    const id = agent._id || agent.agent_id || agent.id || routeAgentId || null;
+    if (id) {
+      setAgentId(id);
+    }
+    setIdentity({
+      name: agent.name || '',
+      description: agent.description || '',
+      visibility: agent.visibility || 'PRIVATE',
+      status: agent.status || 'DRAFT',
+    });
+
+    if (agent.model) {
+      if (typeof agent.model === 'object') {
+        const rawProvider = (agent.model.provider || '').toLowerCase();
+        const matchedProvider = MODEL_PROVIDERS.find(
+          (p) => p.id === rawProvider || p.id === rawProvider.replace(/[^a-z0-9_]/g, '')
+        )?.id || (MODEL_PROVIDERS.some((p) => p.id === rawProvider) ? rawProvider : 'openai');
+
+        setModel({
+          provider: matchedProvider,
+          name: agent.model.name || agent.model.model_name || 'gpt-4o',
+          temperature: typeof agent.model.temperature === 'number' ? agent.model.temperature : 0.7,
+          max_tokens: typeof agent.model.max_tokens === 'number' ? agent.model.max_tokens : 2048,
+          api_key: (agent.model.api_key as string) || '',
+        });
+      } else if (typeof agent.model === 'string') {
+        setModel((prev) => ({
+          ...prev,
+          name: agent.model as string,
+        }));
+      }
+    }
+
+    if (agent.system_prompt) {
+      setSystemPrompt(agent.system_prompt);
+    }
+
+    // Mark as completed only those menu options that are present in Agent Config or completed_steps
+    const initialCompleted = new Set<StepKey>();
+
+    if (Array.isArray(agent.completed_steps) && agent.completed_steps.length > 0) {
+      agent.completed_steps.forEach((stepName: string) => {
+        const normalized = stepName?.toLowerCase()?.trim() as StepKey;
+        if (['identity', 'model', 'tools', 'prompt', 'deploy'].includes(normalized)) {
+          initialCompleted.add(normalized);
+        }
+      });
+    }
+
+    // Verify presence in Agent Config
+    if (agent.name && agent.name.trim().length > 0) {
+      initialCompleted.add('identity');
+    }
+    if (agent.model) {
+      if (typeof agent.model === 'string' && agent.model.trim().length > 0) {
+        initialCompleted.add('model');
+      } else if (typeof agent.model === 'object' && (agent.model.name || agent.model.provider || agent.model.model_name)) {
+        initialCompleted.add('model');
+      }
+    }
+    if (Array.isArray(agent.tools) && agent.tools.length > 0) {
+      initialCompleted.add('tools');
+    }
+    if (typeof agent.system_prompt === 'string' && agent.system_prompt.trim().length > 0) {
+      initialCompleted.add('prompt');
+    }
+    if (agent.status?.toUpperCase() === 'DEPLOYED') {
+      initialCompleted.add('deploy');
+    }
+
+    setCompletedSteps(initialCompleted);
+  };
+
+  useEffect(() => {
+    if (routeAgentId) {
+      if (
+        initialAgent &&
+        (initialAgent._id === routeAgentId ||
+          initialAgent.agent_id === routeAgentId ||
+          initialAgent.id === routeAgentId)
+      ) {
+        populateAgentData(initialAgent);
+        return;
+      }
+
+      const fetchAgent = async () => {
+        setIsFetchingAgent(true);
+        clearAlerts();
+        try {
+          const res: any = await get(API_ENDPOINTS.AGENTS.FETCH);
+          const list: AgentItem[] = Array.isArray(res) ? res : res?.data || [];
+          const found = list.find(
+            (a) => a._id === routeAgentId || a.agent_id === routeAgentId || a.id === routeAgentId
+          );
+          if (found) {
+            setInitialAgent(found);
+            populateAgentData(found);
+          } else {
+            setErrorMessage('Agent not found.');
+          }
+        } catch (err) {
+          setErrorMessage(extractErrorMessage(err));
+        } finally {
+          setIsFetchingAgent(false);
+        }
+      };
+
+      fetchAgent();
+    } else {
+      // Reset if navigated back to /agent (new agent)
+      setAgentId(null);
+      setInitialAgent(null);
+      setIdentity({
+        name: '',
+        description: '',
+        visibility: 'PRIVATE',
+        status: 'DRAFT',
+      });
+      setModel({
+        provider: 'openai',
+        name: 'gpt-4o',
+        temperature: 0.7,
+        max_tokens: 2048,
+        api_key: '',
+      });
+      setSystemPrompt('');
+      setCompletedSteps(new Set());
+      setActiveStep('identity');
+    }
+  }, [routeAgentId]);
+
   // ------------------------------------------------------------------
   // Step Submission Handlers
   // ------------------------------------------------------------------
+
+  const stepOrder: StepKey[] = ['identity', 'model', 'tools', 'prompt', 'deploy'];
+
+  const getUpdatedCompletedSteps = (currentStep: StepKey): string[] => {
+    const updated = new Set(completedSteps);
+    updated.add(currentStep);
+    return stepOrder.filter((s) => updated.has(s));
+  };
 
   // Step 1: Identity Next Button
   const handleIdentitySubmit = async (e: React.FormEvent) => {
@@ -163,14 +314,16 @@ export const AgentCreationPage: React.FC = () => {
     clearAlerts();
 
     try {
+      const nextCompleted = getUpdatedCompletedSteps('identity');
       const payload: Record<string, any> = {
         name: identity.name,
         description: identity.description,
         visibility: identity.visibility,
         status: identity.status,
-        enabled: false,
-        capabilities: [],
-        version: '1.0.0',
+        completed_steps: nextCompleted,
+        enabled: initialAgent?.enabled !== undefined ? initialAgent.enabled : false,
+        capabilities: initialAgent?.capabilities || [],
+        version: initialAgent?.version || '1.0.0',
       };
 
       if (agentId) {
@@ -207,6 +360,7 @@ export const AgentCreationPage: React.FC = () => {
     clearAlerts();
 
     try {
+      const nextCompleted = getUpdatedCompletedSteps('model');
       const payload = {
         _id: agentId,
         model: {
@@ -216,6 +370,7 @@ export const AgentCreationPage: React.FC = () => {
           temperature: Number(model.temperature),
           api_key: model.api_key,
         },
+        completed_steps: nextCompleted,
       };
 
       await put(API_ENDPOINTS.AGENTS.CREATE_OR_UPDATE, payload);
@@ -230,6 +385,29 @@ export const AgentCreationPage: React.FC = () => {
     }
   };
 
+  // Step 3: Tools Next Button
+  const handleToolsNext = async () => {
+    if (agentId) {
+      setIsLoading(true);
+      clearAlerts();
+      try {
+        const nextCompleted = getUpdatedCompletedSteps('tools');
+        await put(API_ENDPOINTS.AGENTS.CREATE_OR_UPDATE, {
+          _id: agentId,
+          completed_steps: nextCompleted,
+        });
+        markStepComplete('tools');
+      } catch (err) {
+        setErrorMessage(extractErrorMessage(err));
+      } finally {
+        setIsLoading(false);
+      }
+    } else {
+      markStepComplete('tools');
+    }
+    setActiveStep('prompt');
+  };
+
   // Step 4: Prompt Next Button
   const handlePromptSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -242,9 +420,11 @@ export const AgentCreationPage: React.FC = () => {
     clearAlerts();
 
     try {
+      const nextCompleted = getUpdatedCompletedSteps('prompt');
       const payload = {
         _id: agentId,
         system_prompt: systemPrompt,
+        completed_steps: nextCompleted,
       };
 
       await put(API_ENDPOINTS.AGENTS.CREATE_OR_UPDATE, payload);
@@ -270,12 +450,14 @@ export const AgentCreationPage: React.FC = () => {
     clearAlerts();
 
     try {
+      const nextCompleted = getUpdatedCompletedSteps('deploy');
       await put(API_ENDPOINTS.AGENTS.CREATE_OR_UPDATE, {
         _id: agentId,
         enabled: true,
         status: 'DEPLOYED',
+        completed_steps: nextCompleted,
       });
-      setSuccessMessage('Agent deployed successfully!');
+      setSuccessMessage(isEditing ? 'Agent updated and deployed successfully!' : 'Agent deployed successfully!');
       markStepComplete('deploy');
       // Navigate to deployed agents page after a short delay for the user to see the success message
       setTimeout(() => navigate('/deployed'), 800);
@@ -305,7 +487,7 @@ export const AgentCreationPage: React.FC = () => {
             {/* Left Vertical Menu */}
             <Col md={2} className="sidebar-menu">
               <h6 className="text-uppercase text-muted fw-bold px-3 mb-3 small tracking-wider">
-                Agent Workflow
+                {isEditing ? 'Edit Agent' : 'Agent Workflow'}
               </h6>
               {steps.map((step) => {
                 const isActive = activeStep === step.key;
@@ -317,7 +499,7 @@ export const AgentCreationPage: React.FC = () => {
                 const maxUnlockedIndex = steps.reduce((max, s, i) =>
                   completedSteps.has(s.key) ? i + 1 : max, 0
                 );
-                const isClickable = stepIndex <= maxUnlockedIndex;
+                const isClickable = isEditing || stepIndex <= maxUnlockedIndex;
 
                 return (
                   <div
@@ -362,11 +544,32 @@ export const AgentCreationPage: React.FC = () => {
                 </div>
               )}
 
+              {isFetchingAgent && (
+                <div className="d-flex justify-content-center align-items-center py-5">
+                  <Spinner animation="border" style={{ color: 'var(--primary-accent)' }} />
+                </div>
+              )}
+
               {/* STEP 1: IDENTITY */}
-              {activeStep === 'identity' && (
+              {!isFetchingAgent && activeStep === 'identity' && (
                 <div>
-                  <h3 className="step-title">AI Identity</h3>
-                  <p className="step-description">Define the foundational name, description, and visibility for your AI agent.</p>
+                  <div className="d-flex justify-content-between align-items-center mb-3">
+                    <div>
+                      <h3 className="step-title">{isEditing ? 'AI Identity' : 'AI Identity'}</h3>
+                      <p className="step-description mb-0">Define the foundational name, description, and visibility for your AI agent.</p>
+                    </div>
+                    {isEditing && (
+                      <Button
+                        variant="outline-secondary"
+                        size="sm"
+                        onClick={() => navigate('/deployed')}
+                        className="d-flex align-items-center gap-1 agent-action-btn"
+                      >
+                        <ArrowBackIcon style={{ fontSize: 16 }} />
+                        <span>My Agents</span>
+                      </Button>
+                    )}
+                  </div>
 
                   <Form onSubmit={handleIdentitySubmit}>
                     <InputField
@@ -567,7 +770,7 @@ export const AgentCreationPage: React.FC = () => {
                   agentId={agentId}
                   agentName={identity.name}
                   agentDescription={identity.description}
-                  onNext={() => setActiveStep('prompt')}
+                  onNext={handleToolsNext}
                   onBack={() => setActiveStep('model')}
                   onSuccess={setSuccessMessage}
                   onError={setErrorMessage}
@@ -658,10 +861,10 @@ export const AgentCreationPage: React.FC = () => {
                       {isLoading ? (
                         <>
                           <Spinner animation="border" size="sm" className="me-2" />
-                          Deploying...
+                          {isEditing ? 'Saving...' : 'Deploying...'}
                         </>
                       ) : (
-                        'Deploy Agent'
+                        isEditing ? 'Save & Deploy Agent' : 'Deploy Agent'
                       )}
                     </Button>
                   </div>

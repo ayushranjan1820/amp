@@ -1,7 +1,8 @@
-from pydantic import BaseModel, Field
-from typing import Optional, Any
 from datetime import datetime
-from agents.agent_config import ToolConfig, ModelConfig, Visibility, Status, ModelProvider
+from typing import Any, Optional
+
+from agents.agent_config import ModelConfig, Status, Visibility
+from pydantic import BaseModel, Field
 from tools.tool_config import TokenType
 
 
@@ -31,6 +32,7 @@ class AgentRes(BaseModel):
     description: str
     system_prompt: str = ""
     tools: list[str] = []
+    completed_steps: list[str] = []
     model: ModelConfig = None
     capabilities: list[str] = []
     enabled: bool = True

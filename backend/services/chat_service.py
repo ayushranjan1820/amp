@@ -1,13 +1,11 @@
 import json
-from pydantic import TypeAdapter
-from langchain_core.messages import AIMessageChunk, ToolMessage
-from database.mongo_connection import (
-    AgentCatalogConnection,
-    ToolCatalogConnection,
-)
-from errors.global_exception_handler import AgentMartException
+
 from agents.agent_config import AgentConfig
 from agents.agent_factory import AgentFactory
+from database.mongo_connection import AgentCatalogConnection, ToolCatalogConnection
+from errors.global_exception_handler import AgentMartException
+from langchain_core.messages import ToolMessage
+from pydantic import TypeAdapter
 from tools.tool_config import ToolConfig
 from utils.logger import get_logger
 
@@ -140,9 +138,15 @@ async def chat_with_agent_stream(
 
             # 2. Reasoning / Thinking content (e.g. DeepSeek or thinking models)
             reasoning_delta = ""
-            if hasattr(chunk, "additional_kwargs") and isinstance(chunk.additional_kwargs, dict):
+            if hasattr(chunk, "additional_kwargs") and isinstance(
+                chunk.additional_kwargs, dict
+            ):
                 reasoning_delta = chunk.additional_kwargs.get("reasoning_content", "")
-            if not reasoning_delta and hasattr(chunk, "response_metadata") and isinstance(chunk.response_metadata, dict):
+            if (
+                not reasoning_delta
+                and hasattr(chunk, "response_metadata")
+                and isinstance(chunk.response_metadata, dict)
+            ):
                 reasoning_delta = chunk.response_metadata.get("reasoning_content", "")
 
             if reasoning_delta:
@@ -215,7 +219,9 @@ async def chat_with_agent_stream(
                         if p_type == "text":
                             text_delta += part.get("text", "")
                         elif p_type in ("thinking", "reasoning"):
-                            thinking_delta += part.get("thinking", "") or part.get("reasoning", "")
+                            thinking_delta += part.get("thinking", "") or part.get(
+                                "reasoning", ""
+                            )
                     elif isinstance(part, str):
                         text_delta += part
 

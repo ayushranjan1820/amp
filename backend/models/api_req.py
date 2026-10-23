@@ -1,9 +1,8 @@
-from pydantic import BaseModel, field_validator, model_validator, Field
-from typing import Self
 import re
-from datetime import datetime
-from agents.agent_config import ModelConfig, Visibility, Status, ModelProvider
-from tools.tool_config import ToolType, TokenType, ToolConfig
+from typing import Self
+
+from pydantic import BaseModel, field_validator, model_validator
+from tools.tool_config import TokenType, ToolConfig
 
 
 def _validate_email_format(val: str):
@@ -129,6 +128,7 @@ class LoginUserReq(BaseModel):
 
 class ToolReq(BaseModel):
     tool: list[ToolConfig]
+
 
 class ChatReq(BaseModel):
     message: str

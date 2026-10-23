@@ -1,4 +1,5 @@
 from typing import Any
+
 from langchain_community.tools import DuckDuckGoSearchResults
 from langchain_community.utilities import DuckDuckGoSearchAPIWrapper
 from langchain_core.tools import BaseTool
@@ -21,8 +22,6 @@ class DuckDuckGoToolProvider(ToolProvider):
         )
 
         tool = DuckDuckGoSearchResults(
-            api_wrapper=api_wrapper,
-            handle_tool_error=True,
-            backend="google"
+            api_wrapper=api_wrapper, handle_tool_error=True, backend="google"
         )
         return [tool]

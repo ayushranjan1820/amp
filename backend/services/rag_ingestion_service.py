@@ -1,13 +1,5 @@
-from typing import Optional
-from langchain_core.embeddings import Embeddings
-from tools.rag.vector_store import (
-    VectorStore,
-    PineconeVectorStoreImpl,
-    QdrantVectorStoreImpl,
-    ChromaVectorStoreImpl,
-    WeaviateVectorStoreImpl,
-)
-from tools.tool_config import RAGToolAdvancedConfig, VectorDBConfig
+from tools.rag.vector_store import VectorStore
+from tools.tool_config import RAGToolAdvancedConfig
 
 
 async def ingest_document(

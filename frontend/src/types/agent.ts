@@ -15,6 +15,7 @@ export interface AgentItem {
   description: string;
   system_prompt?: string;
   tools?: string[];
+  completed_steps?: string[];
   model?: AgentModelConfig | string;
   capabilities?: string[];
   enabled?: boolean;

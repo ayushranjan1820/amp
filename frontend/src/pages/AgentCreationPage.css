@@ -1,9 +1,9 @@
-/* Agent Creation Page Styles */
+/* Agent Creation Page Styles - Soft Glassmorphic Theme */
 
 .agent-creation-container {
   height: calc(100vh - 90px);
-  padding-top: 2rem;
-  padding-bottom: 2rem;
+  padding-top: 1.5rem;
+  padding-bottom: 1.5rem;
   display: flex;
   flex-direction: column;
 }
@@ -18,9 +18,10 @@
 .agent-creation-card {
   background: var(--card-dark);
   border: 1px solid var(--card-border);
-  border-radius: 20px;
-  backdrop-filter: blur(16px);
-  box-shadow: var(--shadow-soft);
+  border-radius: var(--radius-xl);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  box-shadow: var(--shadow-soft), var(--shadow-inner-highlight);
   overflow: hidden;
   /* Fixed height — fills the container without growing */
   flex: 1;
@@ -29,9 +30,9 @@
 
 /* Sidebar Menu — fixed height, does NOT scroll */
 .sidebar-menu {
-  background: rgba(15, 23, 42, 0.6);
-  border-right: 1px solid var(--card-border);
-  padding: 1.5rem 0.65rem;
+  background: rgba(15, 23, 42, 0.55);
+  border-right: 1px solid rgba(255, 255, 255, 0.07);
+  padding: 1.5rem 0.75rem;
   /* Fill the full row height and stay put */
   height: 100%;
   overflow: hidden;
@@ -41,28 +42,29 @@
 .sidebar-step-item {
   display: flex;
   align-items: center;
-  gap: 0.6rem;
-  padding: 0.75rem 0.65rem;
-  border-radius: 10px;
+  gap: 0.65rem;
+  padding: 0.75rem 0.75rem;
+  border-radius: var(--radius-sm);
   color: var(--text-secondary-dark);
   font-weight: 500;
   font-size: 0.88rem;
   cursor: pointer;
   transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
-  margin-bottom: 0.4rem;
+  margin-bottom: 0.35rem;
   border: 1px solid transparent;
   white-space: nowrap;
 }
 
 .sidebar-step-item:hover {
-  background: rgba(255, 255, 255, 0.04);
+  background: rgba(255, 255, 255, 0.05);
   color: var(--text-primary-dark);
 }
 
 .sidebar-step-item.active {
   background: rgba(56, 189, 248, 0.12);
   color: var(--primary-accent);
-  border-color: rgba(56, 189, 248, 0.3);
+  border-color: rgba(56, 189, 248, 0.28);
+  box-shadow: 0 2px 10px rgba(56, 189, 248, 0.15);
 }
 
 .sidebar-step-item.completed {
@@ -89,7 +91,8 @@
   justify-content: center;
   font-size: 0.82rem;
   font-weight: 700;
-  background: rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.08);
   color: var(--text-secondary-dark);
   transition: all 0.2s ease;
   flex-shrink: 0;
@@ -97,23 +100,24 @@
 
 .sidebar-step-item.active .step-number-badge {
   background: var(--primary-accent);
+  border-color: var(--primary-accent);
   color: var(--bg-deep-dark);
 }
 
 .sidebar-step-item.completed .step-number-badge {
-  background: rgba(34, 197, 94, 0.2);
+  background: rgba(34, 197, 94, 0.18);
   color: #4ade80;
-  border: 1px solid rgba(34, 197, 94, 0.3);
+  border: 1px solid rgba(34, 197, 94, 0.35);
 }
 
 /* Content Area — scrolls independently, sidebar never moves */
 .agent-step-content {
-  padding: 2rem 2.25rem;
+  padding: 2rem 2.5rem;
   height: 100%;
   overflow-y: auto;
   /* Custom scrollbar to match the dark theme */
   scrollbar-width: thin;
-  scrollbar-color: rgba(56, 189, 248, 0.3) transparent;
+  scrollbar-color: rgba(56, 189, 248, 0.25) transparent;
 }
 
 .agent-step-content::-webkit-scrollbar {
@@ -125,25 +129,26 @@
 }
 
 .agent-step-content::-webkit-scrollbar-thumb {
-  background: rgba(56, 189, 248, 0.3);
-  border-radius: 10px;
+  background: rgba(56, 189, 248, 0.25);
+  border-radius: 9999px;
 }
 
 .agent-step-content::-webkit-scrollbar-thumb:hover {
-  background: rgba(56, 189, 248, 0.55);
+  background: rgba(56, 189, 248, 0.45);
 }
 
 .step-title {
   color: var(--text-primary-dark);
-  font-size: 1.5rem;
+  font-size: 1.45rem;
   font-weight: 700;
-  margin-bottom: 0.5rem;
+  letter-spacing: -0.02em;
+  margin-bottom: 0.4rem;
 }
 
 .step-description {
   color: var(--text-secondary-dark);
-  font-size: 0.95rem;
-  margin-bottom: 2rem;
+  font-size: 0.92rem;
+  margin-bottom: 1.8rem;
 }
 
 /* Custom Range Slider */
@@ -263,9 +268,11 @@ input.custom-range-slider::-webkit-slider-runnable-track {
   align-items: center;
   gap: 0.65rem;
   padding: 0.65rem 0.85rem;
-  background: rgba(15, 23, 42, 0.55);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 10px;
+  background: rgba(15, 23, 42, 0.5);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: var(--radius-sm);
   cursor: pointer;
   transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
   user-select: none;
@@ -275,10 +282,10 @@ input.custom-range-slider::-webkit-slider-runnable-track {
 }
 
 .vector-provider-card:hover {
-  background: rgba(15, 23, 42, 0.85);
-  border-color: rgba(56, 189, 248, 0.4);
-  transform: translateY(-1px);
-  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.3);
+  background: rgba(15, 23, 42, 0.75);
+  border-color: rgba(56, 189, 248, 0.35);
+  transform: translateY(-1.5px);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.35);
 }
 
 .vector-provider-card:focus-visible {
@@ -289,17 +296,17 @@ input.custom-range-slider::-webkit-slider-runnable-track {
 .vector-provider-card.selected {
   background: linear-gradient(135deg, rgba(56, 189, 248, 0.16) 0%, rgba(15, 23, 42, 0.8) 100%);
   border-color: var(--primary-accent);
-  box-shadow: 0 0 14px rgba(56, 189, 248, 0.25), inset 0 0 0 1px rgba(56, 189, 248, 0.3);
+  box-shadow: 0 0 16px rgba(56, 189, 248, 0.22), inset 0 0 0 1px rgba(56, 189, 248, 0.3);
 }
 
 .vector-provider-icon-wrapper {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 36px;
-  height: 36px;
-  min-width: 36px;
-  border-radius: 8px;
+  width: 34px;
+  height: 34px;
+  min-width: 34px;
+  border-radius: var(--radius-xs);
   background: rgba(255, 255, 255, 0.05);
   border: 1px solid rgba(255, 255, 255, 0.08);
   transition: all 0.2s ease;
@@ -316,14 +323,14 @@ input.custom-range-slider::-webkit-slider-runnable-track {
 .vector-provider-icon-wrapper svg,
 .vector-provider-card .h-6,
 .vector-provider-card .w-6 {
-  width: 22px;
-  height: 22px;
+  width: 20px;
+  height: 20px;
   display: block;
   flex-shrink: 0;
 }
 
 .vector-provider-name {
-  font-size: 0.92rem;
+  font-size: 0.9rem;
   font-weight: 600;
   color: #f1f5f9;
   letter-spacing: -0.01em;
@@ -345,9 +352,9 @@ input.custom-range-slider::-webkit-slider-runnable-track {
   flex-shrink: 0;
 }
 
-/* Action buttons with modern 8px radius (removing pill roundness) */
+/* Action buttons with modern soft radius */
 .agent-action-btn {
-  border-radius: 8px !important;
+  border-radius: var(--radius-md) !important;
   font-weight: 600;
   transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
 }

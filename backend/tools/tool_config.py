@@ -1,8 +1,8 @@
 from enum import StrEnum
+from typing import Annotated, Any, Literal, Optional, Union
+
 from pydantic import BaseModel, Field, model_validator
-from typing import Literal, Any, Optional, Union, Annotated
 from tools.tool_type import ToolType
-from uuid import uuid8
 
 
 class BaseToolConfig(BaseModel):
@@ -117,15 +117,15 @@ class EmbeddingModelConfig(BaseModel):
 
 
 class RAGToolAdvancedConfig(BaseModel):
-    retrieval_strategy: RetreivalStrategy = Field(default_factory=RetreivalStrategy.SIMILARITY)
-    chunking_strategy: ChunkingStrategy = Field(default_factory=ChunkingStrategy.RECURSIVE)
+    retrieval_strategy: RetreivalStrategy = RetreivalStrategy.SIMILARITY
+    chunking_strategy: ChunkingStrategy = ChunkingStrategy.RECURSIVE
     chunk_size: int = Field(default=1000)
     chunk_overlap: int = Field(default=200)
-    distance_strategy: DistanceStrategy = Field(default_factory=DistanceStrategy.DOTPRODUCT)
+    distance_strategy: DistanceStrategy = DistanceStrategy.DOTPRODUCT
     vector_type: Literal["sparse", "dense"] = Field(default="dense")
     keyword_weight: float = Field(default=0.5, ge=0, le=1)
     semantic_weight: float = Field(default=0.5, ge=0, le=1)
-    
+
     rerank_enabled: bool = False
     rerank_provider: Optional[RerankModelProvider] = None
     rerank_model: Optional[str] = None
@@ -146,10 +146,11 @@ class VectorDBConfig(BaseModel):
     collection_name: str
     namespace: Optional[str] = None
     vector_db_tenant: str = None
-    vector_dimension: Optional[int] = None
+    vector_dimension: int | None = None
     top_k: int = Field(default=15)
     cloud_provider: Optional[Literal["aws", "azure", "gcp"]] = None
     region: Optional[str] = None
+
 
 # --------------------------------------------
 #        Tool Config Implementations
@@ -185,7 +186,9 @@ class MCPToolConfig(BaseToolConfig):
     tool_type: Literal[ToolType.MCP] = ToolType.MCP
 
     mcp_config: dict[str, Any] = Field(..., description="MCP server configuration")
-    allowed_tools: list[str] = Field(default_factory=list, description="List of tool names to allow")
+    allowed_tools: list[str] = Field(
+        default_factory=list, description="List of tool names to allow"
+    )
 
 
 class RAGToolConfig(BaseToolConfig):
@@ -198,7 +201,13 @@ class RAGToolConfig(BaseToolConfig):
 
 
 AnyToolConfig = Annotated[
-    Union[PreConfiguredToolConfig, ApiToolConfig, PythonToolConfig, MCPToolConfig, RAGToolConfig],
+    Union[
+        PreConfiguredToolConfig,
+        ApiToolConfig,
+        PythonToolConfig,
+        MCPToolConfig,
+        RAGToolConfig,
+    ],
     Field(discriminator="tool_type"),
 ]
 

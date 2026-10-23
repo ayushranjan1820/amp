@@ -1,18 +1,15 @@
 from contextlib import asynccontextmanager
+from typing import Optional
 
-from agents.agent_config import AgentConfig
 from agents.agent_factory import AgentFactory
-from database.mongo_connection import (
-    AgentCatalogConnection,
-    ToolCatalogConnection,
-)
+from database.mongo_connection import AgentCatalogConnection, ToolCatalogConnection
 from decorator.token_validation import validate_token
 from dotenv import load_dotenv
-from fastapi import APIRouter, Depends, FastAPI, Request, status, UploadFile, File
+from fastapi import APIRouter, Depends, FastAPI, File, Request, UploadFile, status
 from fastapi.responses import JSONResponse, StreamingResponse
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
-from models.api_req import ChatReq, TokenReq, ToolIdsReq, ToolReq
-from models.api_res import ServerResponseWrapper, TokenRes
+from models.api_req import ChatReq, ToolIdsReq, ToolReq
+from models.api_res import ServerResponseWrapper
 from services.agent_service import get_agents, register_new_agent
 from services.chat_service import chat_with_agent, chat_with_agent_stream
 from services.tool_service import (
@@ -22,12 +19,11 @@ from services.tool_service import (
     upload_document_to_rag_tool,
 )
 from tools.api import ApiInputSchemaFactory, ApiToolExecutor, ApiValidator
+from tools.mcp.mcp_tools_filter import MCPToolFilter
 from tools.preconfigured import create_preconfigured_registry
 from tools.tool_factory import ToolFactory
 from tools.tool_provider import ApiToolProvider, MCPToolProvider, RAGToolProvider
 from utils.logger import get_logger
-from tools.mcp.mcp_tools_filter import MCPToolFilter
-from typing import Optional, List
 
 load_dotenv()
 
@@ -69,7 +65,7 @@ async def lifespan(app: FastAPI):
         preconfigured_registry=preconfigured_registry,
         api_provider=api_tool_provider,
         mcp_provider=mcp_tool_provider,
-        rag_provider=rag_tool_provider
+        rag_provider=rag_tool_provider,
     )
 
     agent_factory = AgentFactory(
@@ -176,7 +172,7 @@ async def chat(
     #     agent_catalog_collection,
     #     tool_catalog_collection,
     # )
-    
+
     # response_data = ServerResponseWrapper(
     #     data=agent_response,
     #     message="Agent chat completed successfully",
@@ -190,7 +186,7 @@ async def chat(
     #     status_code=status.HTTP_200_OK,
     #     content=response_data.model_dump(mode="json"),
     # )
-    
+
     event_generator = chat_with_agent_stream(
         agent_id,
         user_id,

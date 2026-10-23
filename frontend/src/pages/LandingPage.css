@@ -1,4 +1,4 @@
-/* Landing Page and Agent Card styles - LangChain Theme */
+/* Landing Page and Agent Card styles - Soft Glassmorphic Theme */
 .agent-desc-clamp {
   display: -webkit-box;
   -webkit-line-clamp: 3;
@@ -8,23 +8,25 @@
   text-overflow: ellipsis;
   min-height: 4.2em;
   color: var(--text-secondary-dark);
+  line-height: 1.55;
 }
 
 .extra-small {
-  font-size: 0.75rem;
+  font-size: 0.74rem;
+  letter-spacing: 0.02em;
 }
 
 /* Animations for Landing Page */
 .fade-in-up {
-  animation: fadeInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation: fadeInUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
   opacity: 0;
-  transform: translateY(20px);
+  transform: translateY(16px);
 }
 
-.stagger-1 { animation-delay: 0.1s; }
-.stagger-2 { animation-delay: 0.2s; }
-.stagger-3 { animation-delay: 0.3s; }
-.stagger-4 { animation-delay: 0.4s; }
+.stagger-1 { animation-delay: 0.08s; }
+.stagger-2 { animation-delay: 0.16s; }
+.stagger-3 { animation-delay: 0.24s; }
+.stagger-4 { animation-delay: 0.32s; }
 
 @keyframes fadeInUp {
   to {
@@ -35,38 +37,48 @@
 
 /* Edit Button on Agent Cards */
 .btn-edit-agent {
-  color: var(--text-primary-dark);
-  border-color: rgba(255, 255, 255, 0.2);
-  background: rgba(255, 255, 255, 0.05);
-  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
-  border-radius: 9999px !important; /* Pill */
+  color: var(--text-primary-dark) !important;
+  border: 1px solid rgba(255, 255, 255, 0.15) !important;
+  background: rgba(255, 255, 255, 0.04) !important;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  border-radius: var(--radius-sm) !important;
+  font-weight: 600;
+  font-size: 0.85rem;
+  letter-spacing: 0.02em;
 }
 
 .btn-edit-agent:hover, .btn-edit-agent:focus {
-  background: rgba(255, 255, 255, 0.1);
-  border-color: rgba(255, 255, 255, 0.4);
-  color: var(--text-primary-dark);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-  transform: translateY(-1px);
+  background: rgba(255, 255, 255, 0.12) !important;
+  border-color: var(--primary-accent) !important;
+  color: #ffffff !important;
+  box-shadow: 0 4px 14px rgba(56, 189, 248, 0.25);
+  transform: translateY(-1.5px);
 }
 
 /* Agent Card badges overriding Bootstrap */
 .badge-custom {
-  background-color: rgba(255, 255, 255, 0.08) !important;
-  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  background-color: rgba(255, 255, 255, 0.06) !important;
+  border: 1px solid rgba(255, 255, 255, 0.09) !important;
   color: var(--text-primary-dark) !important;
-  border-radius: 6px !important;
+  border-radius: var(--radius-xs) !important;
   font-weight: 500;
+  letter-spacing: 0.02em;
 }
 
 .badge-success-custom {
   background-color: rgba(34, 197, 94, 0.1) !important;
-  border: 1px solid rgba(34, 197, 94, 0.2) !important;
+  border: 1px solid rgba(34, 197, 94, 0.25) !important;
   color: #4ade80 !important;
+  border-radius: var(--radius-xs) !important;
+  font-weight: 600;
 }
 
 .badge-warning-custom {
   background-color: rgba(234, 179, 8, 0.1) !important;
-  border: 1px solid rgba(234, 179, 8, 0.2) !important;
+  border: 1px solid rgba(234, 179, 8, 0.25) !important;
   color: #facc15 !important;
+  border-radius: var(--radius-xs) !important;
+  font-weight: 600;
 }

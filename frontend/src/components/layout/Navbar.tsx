@@ -31,7 +31,7 @@ export const Navbar: React.FC = () => {
 
   // Determine which tab is active for the capsule toggle
   const isDeployed = location.pathname === '/deployed';
-  const isCreateAgent = location.pathname === '/agent';
+  const isCreateAgent = location.pathname.startsWith('/agent');
 
   const handleLogout = () => {
     setShowPopup(false);
@@ -62,7 +62,7 @@ export const Navbar: React.FC = () => {
               to="/deployed"
               className={`nav-capsule-btn ${isDeployed ? 'active' : ''}`}
             >
-              Deployed Agents
+              My Agents
             </Link>
           </div>
         )}

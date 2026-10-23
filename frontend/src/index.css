@@ -1,34 +1,52 @@
 /* Global CSS Design System & Theme Variables */
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
 
 :root {
-  /* Colors */
+  /* Colors - Preserved exactly */
   --bg-deep-dark: #070a10;
   --bg-light: #ebf3fb;
-  --bg-dark-radial: radial-gradient(circle at 50% -20%, #1c2638 0%, #070a10 60%);
+  --bg-dark-radial: radial-gradient(ellipse at 50% -10%, #172338 0%, #070a10 70%);
   
-  --card-dark: rgba(15, 23, 42, 0.4);
-  --card-border: rgba(255, 255, 255, 0.1);
-  --card-border-hover: rgba(56, 189, 248, 0.5);
+  /* Glassmorphic Surfaces */
+  --card-dark: rgba(15, 23, 42, 0.52);
+  --card-dark-elevated: rgba(15, 23, 42, 0.72);
+  --card-border: rgba(255, 255, 255, 0.08);
+  --card-border-hover: rgba(56, 189, 248, 0.35);
+  --card-border-active: rgba(56, 189, 248, 0.55);
   
+  /* Accents */
   --primary-accent: #38bdf8; /* Vibrant Cyan */
   --secondary-accent: #818cf8; /* Electric Blue */
   
-  --text-primary-dark: #ffffff;
+  /* Typography Colors */
+  --text-primary-dark: #f8fafc;
   --text-secondary-dark: #94a3b8;
   --text-muted-dark: #64748b;
   
   --text-primary-light: #0f172a;
   --text-secondary-light: #334155;
   
-  --input-bg-dark: rgba(255, 255, 255, 0.05);
-  --input-border-dark: rgba(255, 255, 255, 0.1);
+  /* Inputs */
+  --input-bg-dark: rgba(255, 255, 255, 0.04);
+  --input-border-dark: rgba(255, 255, 255, 0.09);
+  --input-border-focus: rgba(56, 189, 248, 0.5);
   
-  --shadow-soft: 0 10px 40px -10px rgba(0,0,0,0.5);
-  --shadow-glow: 0 0 20px rgba(56, 189, 248, 0.2);
+  /* Soft Shadows & Ambient Glows */
+  --shadow-soft: 0 12px 36px -8px rgba(0, 0, 0, 0.55);
+  --shadow-elevated: 0 20px 48px -10px rgba(0, 0, 0, 0.7);
+  --shadow-glow: 0 0 24px -4px rgba(56, 189, 248, 0.22);
+  --shadow-glow-subtle: 0 0 14px rgba(56, 189, 248, 0.14);
+  --shadow-inner-highlight: inset 0 1px 0 rgba(255, 255, 255, 0.1);
+
+  /* Radius Scale */
+  --radius-xl: 20px;
+  --radius-lg: 16px;
+  --radius-md: 14px;
+  --radius-sm: 10px;
+  --radius-xs: 6px;
 
   /* Typography */
-  --sans: 'Inter', system-ui, -apple-system, sans-serif;
+  --sans: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   
   color-scheme: dark;
 }
@@ -38,22 +56,27 @@ body {
   padding: 0;
   font-family: var(--sans);
   background-color: var(--bg-deep-dark);
+  background-image: var(--bg-dark-radial);
+  background-attachment: fixed;
   color: var(--text-primary-dark);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  letter-spacing: -0.011em;
 }
 
-/* Custom Scrollbar */
+/* Custom Scrollbar - Sleek & Minimal */
 ::-webkit-scrollbar {
-  width: 8px;
+  width: 6px;
+  height: 6px;
 }
 ::-webkit-scrollbar-track {
-  background: var(--bg-deep-dark);
+  background: transparent;
 }
 ::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.2);
-  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.14);
+  border-radius: 9999px;
+  transition: background 0.2s ease;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(255, 255, 255, 0.4);
+  background: rgba(56, 189, 248, 0.4);
 }

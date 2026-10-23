@@ -1,17 +1,13 @@
 from contextlib import asynccontextmanager
-from fastapi import APIRouter, Depends, FastAPI, Request, status
-from fastapi.responses import JSONResponse
-from pymongo.asynchronous.collection import AsyncCollection
 
 from database import UserProfileCollection
-from models.api_req import RegisterUserReq, LoginUserReq
-from models.api_res import ServerResponseWrapper, LoginUserRes
-from services.user_service import (
-    register_new_user as register_user_service,
-    login_user as login_user_service,
-)
+from fastapi import APIRouter, Depends, FastAPI, Request, status
+from fastapi.responses import JSONResponse
+from models.api_req import LoginUserReq, RegisterUserReq
+from models.api_res import ServerResponseWrapper
+from services.user_service import login_user as login_user_service
+from services.user_service import register_new_user as register_user_service
 from utils.logger import get_logger
-
 
 logger = get_logger("routes.user")
 

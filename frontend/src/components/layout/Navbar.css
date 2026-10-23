@@ -1,9 +1,10 @@
-/* Navbar component styles - LangChain Theme */
+/* Navbar component styles - Soft Glassmorphic Theme */
 .navbar-custom {
-  background: rgba(7, 10, 16, 0.8) !important; /* Deep dark with opacity */
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  background: rgba(7, 10, 16, 0.65) !important;
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+  box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.4);
   z-index: 1040;
   transition: all 0.3s ease;
 }
@@ -11,9 +12,9 @@
 .brand-glow-icon-sm {
   width: 36px;
   height: 36px;
-  border-radius: 8px;
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: var(--radius-sm);
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
   color: var(--text-primary-dark);
   display: flex;
   align-items: center;
@@ -24,7 +25,7 @@
   color: var(--text-secondary-dark);
   text-decoration: none;
   font-weight: 500;
-  font-size: 0.95rem;
+  font-size: 0.92rem;
   transition: color 0.2s ease;
 }
 
@@ -37,19 +38,22 @@
   display: flex;
   align-items: center;
   gap: 3px;
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(15, 23, 42, 0.65);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.09);
   border-radius: 9999px;
   padding: 4px;
   position: absolute;
   left: 50%;
   transform: translateX(-50%);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06), 0 4px 16px rgba(0, 0, 0, 0.25);
 }
 
 .nav-capsule-btn {
   padding: 6px 18px;
   border-radius: 9999px;
-  font-size: 0.85rem;
+  font-size: 0.84rem;
   font-weight: 600;
   color: var(--text-secondary-dark);
   text-decoration: none;
@@ -64,8 +68,8 @@
 
 .nav-capsule-btn.active {
   background: var(--primary-accent);
-  color: #0a0f1a;
-  box-shadow: 0 2px 12px rgba(56, 189, 248, 0.35);
+  color: #070a10;
+  box-shadow: 0 2px 14px rgba(56, 189, 248, 0.4);
 }
 /* ─────────────────────────────────────────────────────────────── */
 
@@ -75,62 +79,70 @@
   padding: 4px 12px 4px 4px !important;
   border-radius: 9999px; /* Pill */
   background: rgba(255, 255, 255, 0.05) !important;
-  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  border: 1px solid rgba(255, 255, 255, 0.09) !important;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
 }
 
 .user-profile-btn:hover {
-  background: rgba(255, 255, 255, 0.1) !important;
+  background: rgba(255, 255, 255, 0.09) !important;
+  border-color: rgba(255, 255, 255, 0.18) !important;
   transform: translateY(-1px);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
 }
 
 .avatar-circle {
-  width: 32px;
-  height: 32px;
+  width: 30px;
+  height: 30px;
   border-radius: 50%;
-  background: var(--text-primary-dark);
-  color: var(--bg-deep-dark);
-  font-weight: 600;
-  font-size: 0.85rem;
+  background: linear-gradient(135deg, #ffffff 0%, #cbd5e1 100%);
+  color: #070a10;
+  font-weight: 700;
+  font-size: 0.8rem;
   display: flex;
   align-items: center;
   justify-content: center;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
 }
 
 .avatar-circle-lg {
   width: 44px;
   height: 44px;
   border-radius: 50%;
-  background: var(--text-primary-dark);
-  color: var(--bg-deep-dark);
-  font-weight: 600;
-  font-size: 1.1rem;
+  background: linear-gradient(135deg, #ffffff 0%, #cbd5e1 100%);
+  color: #070a10;
+  font-weight: 700;
+  font-size: 1.05rem;
   display: flex;
   align-items: center;
   justify-content: center;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.35);
 }
 
 /* User Dropdown Popup */
 .user-popup-menu {
   position: absolute;
-  top: calc(100% + 10px);
+  top: calc(100% + 12px);
   right: 0;
   left: auto;
   min-width: 280px;
-  background: var(--card-dark);
-  border: 1px solid var(--card-border);
-  backdrop-filter: blur(24px);
-  border-radius: 16px;
-  box-shadow: var(--shadow-soft);
+  background: rgba(15, 23, 42, 0.88);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(28px);
+  -webkit-backdrop-filter: blur(28px);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-elevated), var(--shadow-glow-subtle);
   z-index: 1050;
-  animation: fadeInDown 0.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-  padding: 1rem;
+  animation: fadeInDown 0.22s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  padding: 1.15rem;
 }
 
 @keyframes fadeInDown {
   from {
     opacity: 0;
-    transform: translateY(-10px) scale(0.98);
+    transform: translateY(-8px) scale(0.98);
   }
   to {
     opacity: 1;

@@ -1,9 +1,9 @@
-from datetime import datetime
+import json
 from enum import Enum
 from typing import Optional
+
 from pydantic import BaseModel, Field
 from tools.tool_config import ToolConfig
-import json
 
 
 class Visibility(str, Enum):
@@ -32,7 +32,7 @@ class ModelProvider(str, Enum):
     OLLAMA = "ollama"
     MISTRAL = "mistralai"
     HUGGINGFACE = "huggingface"
-    
+
 
 class ModelConfig(BaseModel):
     provider: ModelProvider
@@ -40,7 +40,6 @@ class ModelConfig(BaseModel):
     max_tokens: Optional[int] = None
     temperature: Optional[float] = 0.7
     api_key: str
-
 
 
 class AgentConfig(BaseModel):

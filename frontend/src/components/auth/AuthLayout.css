@@ -1,15 +1,16 @@
-/* Auth Layout and Card styles - LangChain Theme */
+/* Auth Layout and Card styles - Soft Glassmorphic Theme */
 .auth-card {
   background: var(--card-dark);
   backdrop-filter: blur(24px);
   -webkit-backdrop-filter: blur(24px);
   border: 1px solid var(--card-border);
-  border-radius: 24px;
-  box-shadow: var(--shadow-soft);
-  transition: border-color 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-  animation: scaleUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-soft), var(--shadow-inner-highlight);
+  transition: border-color 0.25s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.25s cubic-bezier(0.16, 1, 0.3, 1), transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  animation: scaleUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
   opacity: 0;
   transform: translateY(10px) scale(0.98);
+  position: relative;
 }
 
 @keyframes scaleUp {
@@ -21,14 +22,14 @@
 
 .auth-card:hover {
   border-color: var(--card-border-hover);
-  box-shadow: var(--shadow-soft), var(--shadow-glow);
+  box-shadow: var(--shadow-elevated), var(--shadow-glow-subtle);
 }
 
 /* Glowing Brand Badge / Logo Icon */
 .brand-glow-icon {
-  width: 54px;
-  height: 54px;
-  border-radius: 16px;
+  width: 52px;
+  height: 52px;
+  border-radius: var(--radius-md);
   background: rgba(255, 255, 255, 0.05);
   border: 1px solid rgba(255, 255, 255, 0.1);
   color: var(--text-primary-dark);
@@ -36,5 +37,5 @@
   align-items: center;
   justify-content: center;
   margin: 0 auto 16px auto;
-  box-shadow: var(--shadow-glow);
+  box-shadow: var(--shadow-glow-subtle);
 }

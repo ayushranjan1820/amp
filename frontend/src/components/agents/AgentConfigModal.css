@@ -1,14 +1,25 @@
-/* AgentConfigModal Component Styles */
+/* AgentConfigModal Component Styles - Soft Glassmorphic Theme */
 
 .agent-config-modal .modal-content {
-  background-color: var(--card-dark);
-  border: 1px solid var(--card-border);
-  border-radius: 16px;
-  backdrop-filter: blur(12px);
-  box-shadow: var(--shadow-soft);
+  background-color: rgba(15, 23, 42, 0.88);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: var(--radius-xl);
+  backdrop-filter: blur(28px);
+  -webkit-backdrop-filter: blur(28px);
+  box-shadow: var(--shadow-elevated), var(--shadow-glow-subtle);
+}
+
+.modal-content.auth-card {
+  border-radius: var(--radius-xl) !important;
+  background-color: rgba(15, 23, 42, 0.88) !important;
+  border: 1px solid rgba(255, 255, 255, 0.12) !important;
+  backdrop-filter: blur(28px) !important;
+  -webkit-backdrop-filter: blur(28px) !important;
+  box-shadow: var(--shadow-elevated), var(--shadow-glow-subtle) !important;
 }
 
 .form-check-input-custom:checked {
-  background-color: var(--primary-accent);
-  border-color: var(--primary-accent);
+  background-color: var(--primary-accent) !important;
+  border-color: var(--primary-accent) !important;
+  box-shadow: 0 0 12px rgba(56, 189, 248, 0.5) !important;
 }

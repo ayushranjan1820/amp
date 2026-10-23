@@ -2,8 +2,8 @@ from enum import StrEnum
 
 
 class ToolType(StrEnum):
-    """ Top-level tool categories"""
-    
+    """Top-level tool categories"""
+
     PRECONFIGURED = "PRECONFIGURED"
     API = "API"
     CODE = "CODE"

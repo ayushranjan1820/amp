@@ -17,6 +17,7 @@ from langchain_text_splitters import RecursiveCharacterTextSplitter
 from pinecone import Pinecone, ServerlessSpec
 from qdrant_client import QdrantClient
 from qdrant_client.http.models.models import Distance, VectorParams
+from errors.global_exception_handler import AgentMartException
 from tools.tool_config import (
     DistanceStrategy,
     RetreivalStrategy,
@@ -121,7 +122,7 @@ class VectorStore(ABC):
     ) -> BaseRetriever:
         bm25_retriever = BM25Retriever.from_documents(documents)
         hybrid_retriever = EnsembleRetriever(
-            retrievers=[semantic_retriever, bm25_retriever],
+            retrievers=[bm25_retriever, semantic_retriever],
             weights=[
                 self.advanced_config.keyword_weight,
                 self.advanced_config.semantic_weight,

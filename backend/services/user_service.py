@@ -1,16 +1,13 @@
-import bcrypt
-from pymongo.asynchronous.collection import AsyncCollection
+import os
 from datetime import datetime, timedelta
 
-from models.api_req import RegisterUserReq
-from models.api_res import RegisterUserRes
-from utils.logger import get_logger
+import bcrypt
+import jwt
 from database.mongo_connection import UserProfileCollection
 from database.schema import UserProfile
-import jwt
-from models.api_req import LoginUserReq
-from models.api_res import LoginUserRes
-import os
+from models.api_req import LoginUserReq, RegisterUserReq
+from models.api_res import LoginUserRes, RegisterUserRes
+from utils.logger import get_logger
 
 logger = get_logger("services.user")
 
@@ -82,7 +79,7 @@ async def login_user(
         req.password.encode("utf-8"), existing_user["password"].encode("utf-8")
     ):
         raise ValueError("Invalid password.")
-    
+
     current_time = datetime.now()
 
     # generate access token
@@ -97,9 +94,7 @@ async def login_user(
 
     token = await _generate_token(claim)
     return LoginUserRes(
-        name=existing_user.get("name"),
-        email=existing_user.get("email"),
-        token=token
+        name=existing_user.get("name"), email=existing_user.get("email"), token=token
     )
 
 

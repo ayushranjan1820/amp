@@ -1,10 +1,10 @@
-from fastapi import FastAPI
 import uvicorn
-from routes.user_route import router as user_router
+from fastapi import FastAPI
 from routes.agent_route import router as agent_router
+from routes.user_route import router as user_router
 from utils.logger import get_logger
 
-logger = get_logger("main")
+logger = get_logger(__name__)
 
 app = FastAPI(title="Agent Mart API")
 

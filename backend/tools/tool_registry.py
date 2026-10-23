@@ -1,8 +1,7 @@
 from collections.abc import Callable
 
-from tools.tool_provider import ToolProvider
 from tools.tool_config import ToolConfig
-from tools.tool_type import ToolType
+from tools.tool_provider import ToolProvider
 
 ProviderFactory = Callable[[ToolConfig], ToolProvider]
 
